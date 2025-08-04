@@ -41,12 +41,33 @@ export default function Connexion() {
       window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientID}&redirect_uri=${redirectURI}`;
     };
 
-    return <button onClick={loginWithGitHub}>Login with GitHub</button>;
+    return <button onClick={loginWithGitHub}>Se connecter avec GitHub</button>;
   }
 
   const handleLogin = (credentialResponse) => {
-    setUser(jwtDecode(credentialResponse.credential));
-    router.push("/homePage");
+    const userInfo = jwtDecode(credentialResponse.credential);
+    fetch("http://localhost:3000/users/signingoogle", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: userInfo.email,
+        username: userInfo.name,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          setUser(userInfo);
+          dispatch(
+            signIn({
+              username: data.username,
+              token: data.token,
+              email: data.email,
+            })
+          );
+          router.push("/homePage");
+        }
+      });
   };
 
   const handleRegister = () => {
@@ -196,31 +217,6 @@ export default function Connexion() {
         >
           Suivant
         </button>
-
-        <GoogleOAuthProvider clientId={clientId}>
-          <div style={{ textAlign: "center", marginTop: "20px" }}>
-            {user ? (
-              <div>
-                <h4>Welcome {user.name}!</h4>
-                <p>Email: {user.email}</p>
-              </div>
-            ) : (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "10px",
-                }}
-              >
-                <GoogleLogin
-                  onSuccess={handleLogin}
-                  onError={(error) => console.error(error)}
-                />
-                <GitHubLoginButton />
-              </div>
-            )}
-          </div>
-        </GoogleOAuthProvider>
       </div>
     </div>
   );
