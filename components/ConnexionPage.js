@@ -52,6 +52,7 @@ export default function Connexion() {
       body: JSON.stringify({
         email: userInfo.email,
         username: userInfo.name,
+        googleId: userInfo.sub,
       }),
     })
       .then((response) => response.json())
@@ -114,7 +115,7 @@ export default function Connexion() {
           setSignInUsername("");
           setSignInPassword("");
           setSignUpMail("");
-          router.push("/");
+          router.push("/homePage");
         }
       });
   };

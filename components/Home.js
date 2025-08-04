@@ -1,13 +1,24 @@
-import styles from '../styles/Home.module.css';
+import styles from "../styles/Home.module.css";
+import { useRouter } from "next/router";
 
 function Home() {
+  const router = useRouter();
+
+  const handleLogin = () => {
+    router.push("/connexionPage");
+  };
+
   return (
     <div>
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-      </main>
+      <header
+        style={{
+          position: "absolute",
+          top: "400px",
+          right: "800px",
+        }}
+      >
+        <button onClick={handleLogin}>Se Connecter</button>
+      </header>
     </div>
   );
 }
