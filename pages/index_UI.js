@@ -1,13 +1,13 @@
 import { useState } from "react";
-import MainLayout from "../components/template/MainLayout";
-import Button from "../components/atoms/Button";
-import Input from "../components/atoms/Input";
-import SearchBar from "../components/molecules/SearchBar";
-import PostsList from "../components/organisms/PostsList";
-import UserProfileCard from "../components/molecules/UserProfileCard";
-import UiKitSection from "../components/molecules/UiKitSection";
-import TextArea from "../components/atoms/TextArea";
-import Checkbox from "../components/atoms/Checkbox";
+import MainLayout from "../ui-kit/template/MainLayout";
+import Button from "../ui-kit/atoms/Button";
+import Input from "../ui-kit/atoms/Input";
+import SearchBar from "../ui-kit/molecules/SearchBar";
+import PostsList from "../ui-kit/organisms/PostsList";
+import UserProfileCard from "../ui-kit/molecules/UserProfileCard";
+import UiKitSection from "../ui-kit/molecules/UiKitSection";
+import TextArea from "../ui-kit/atoms/TextArea";
+import Checkbox from "../ui-kit/atoms/Checkbox";
 
 import {
   PythonIcon,
@@ -20,7 +20,7 @@ import {
   SqlIcon,
   VisualBasicIcon,
   ScratchIcon,
-} from "../components/atoms/icons";
+} from "../ui-kit/atoms/icons";
 
 export default function Home() {
   const [option1, setOption1] = useState(true);
