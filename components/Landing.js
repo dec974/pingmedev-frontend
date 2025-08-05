@@ -14,6 +14,7 @@ export default function Home() {
           right: "20px",
         }}
       >
+        <button onClick={() => {}}>Visiter</button>
         <img
           src="/landingImage.png"
           alt="Landing Image"
