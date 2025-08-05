@@ -1,23 +1,10 @@
 import { useState } from "react";
+import { useRouter } from "next/router";
+import Button from "../ui-kit/atoms/Button";
 
 export default function Profil() {
-  const [checkedItems, setCheckedItems] = useState({
-    option1: false,
-    option2: false,
-    option3: false,
-    option4: false,
-    option5: false,
-    tech1: false,
-    tech2: false,
-    tech3: false,
-    tech4: false,
-    tech5: false,
-    tech6: false,
-    tech7: false,
-    tech8: false,
-    tech9: false,
-    tech10: false,
-  });
+  const [checkedItems, setCheckedItems] = useState({});
+  const router = useRouter();
 
   const handleCheckboxChange = (itemName) => {
     setCheckedItems((prev) => ({
@@ -26,9 +13,70 @@ export default function Profil() {
     }));
   };
 
+  const handleCreateProfile = () => {
+    router.push("/landingPage");
+    //a modifier avec la homePage des que prete
+  };
+
+  const experienceOptions = [
+    "Débutant",
+    "Junior",
+    "Confirmé",
+    "Sénior",
+    "Mentor / Formateur",
+  ];
+
+  const techOptions = [
+    "JavaScript",
+    "Vue.js",
+    "React",
+    "TypeScript",
+    "Node.js",
+    "MongoDB",
+    "Python",
+    "AWS",
+    "Docker",
+    "Git",
+  ];
+
+  const CheckboxItem = ({ name, label }) => (
+    <label
+      style={{
+        display: "flex",
+        alignItems: "center",
+        cursor: "pointer",
+      }}
+    >
+      <input
+        type="checkbox"
+        checked={checkedItems[name] || false}
+        onChange={() => handleCheckboxChange(name)}
+        style={{
+          marginRight: "10px",
+          transform: "scale(1.2)",
+        }}
+      />
+      <span>{label}</span>
+    </label>
+  );
+
   return (
     <div style={{ padding: "20px", minHeight: "100vh" }}>
-      <h1 style={{ marginBottom: "20px", textAlign: "center" }}>
+      <div style={{ textAlign: "center", marginBottom: "30px" }}>
+        <img
+          src="/logo.png"
+          alt="Logo"
+          style={{
+            width: "200px",
+            height: "auto",
+            objectFit: "contain",
+          }}
+        />
+      </div>
+
+      <h1
+        style={{ marginBottom: "20px", textAlign: "center", color: "#1761ab" }}
+      >
         Crée ton profil
       </h1>
 
@@ -36,7 +84,7 @@ export default function Profil() {
         style={{
           width: "60%",
           border: "none",
-          borderTop: "6px solid black ",
+          borderTop: "6px solid #1761ab",
           marginBottom: "30px",
           margin: "0 auto 30px auto",
         }}
@@ -49,15 +97,11 @@ export default function Profil() {
           gap: "80px",
           maxWidth: "800px",
           margin: "0 auto",
+          marginBottom: "50px",
         }}
       >
-        <div
-          style={{
-            width: "300px",
-          }}
-        >
-          <h3 style={{ marginBottom: "20px", color: "#333" }}>Expérience</h3>
-
+        <div style={{ width: "300px" }}>
+          <h3 style={{ marginBottom: "20px", color: "#1761ab" }}>Expérience</h3>
           <div
             style={{
               display: "flex",
@@ -65,115 +109,24 @@ export default function Profil() {
               gap: "15px",
             }}
           >
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                cursor: "pointer",
-              }}
-            >
-              <input
-                type="checkbox"
-                checked={checkedItems.option1}
-                onChange={() => handleCheckboxChange("option1")}
-                style={{
-                  marginRight: "10px",
-                  transform: "scale(1.2)",
-                }}
+            {experienceOptions.map((option, index) => (
+              <CheckboxItem
+                key={`exp-${index}`}
+                name={`experience-${index}`}
+                label={option}
               />
-              <span>Débutant</span>
-            </label>
-
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                cursor: "pointer",
-              }}
-            >
-              <input
-                type="checkbox"
-                checked={checkedItems.option2}
-                onChange={() => handleCheckboxChange("option2")}
-                style={{
-                  marginRight: "10px",
-                  transform: "scale(1.2)",
-                }}
-              />
-              <span>Junior</span>
-            </label>
-
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                cursor: "pointer",
-              }}
-            >
-              <input
-                type="checkbox"
-                checked={checkedItems.option3}
-                onChange={() => handleCheckboxChange("option3")}
-                style={{
-                  marginRight: "10px",
-                  transform: "scale(1.2)",
-                }}
-              />
-              <span>Confirmé</span>
-            </label>
-
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                cursor: "pointer",
-              }}
-            >
-              <input
-                type="checkbox"
-                checked={checkedItems.option4}
-                onChange={() => handleCheckboxChange("option4")}
-                style={{
-                  marginRight: "10px",
-                  transform: "scale(1.2)",
-                }}
-              />
-              <span>Sénior</span>
-            </label>
-
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                cursor: "pointer",
-              }}
-            >
-              <input
-                type="checkbox"
-                checked={checkedItems.option5}
-                onChange={() => handleCheckboxChange("option5")}
-                style={{
-                  marginRight: "10px",
-                  transform: "scale(1.2)",
-                }}
-              />
-              <span>Mentor / Formateur</span>
-            </label>
+            ))}
           </div>
         </div>
 
-        <div
-          style={{
-            width: "600px",
-          }}
-        >
-          <h3 style={{ marginBottom: "20px", color: "#333" }}>
-            Actuellement sur:{" "}
+        <div style={{ width: "600px" }}>
+          <h3 style={{ marginBottom: "20px", color: "#1761ab" }}>
+            Actuellement sur:
           </h3>
-
           <div
             style={{
-              display: "flex",
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
               gap: "40px",
             }}
           >
@@ -182,103 +135,15 @@ export default function Profil() {
                 display: "flex",
                 flexDirection: "column",
                 gap: "15px",
-                flex: 1,
               }}
             >
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  cursor: "pointer",
-                }}
-              >
-                <input
-                  type="checkbox"
-                  checked={checkedItems.tech1}
-                  onChange={() => handleCheckboxChange("tech1")}
-                  style={{
-                    marginRight: "10px",
-                    transform: "scale(1.2)",
-                  }}
+              {techOptions.slice(0, 5).map((tech, index) => (
+                <CheckboxItem
+                  key={`tech-${index}`}
+                  name={`tech-${index}`}
+                  label={tech}
                 />
-                <span>JavaScript</span>
-              </label>
-
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  cursor: "pointer",
-                }}
-              >
-                <input
-                  type="checkbox"
-                  checked={checkedItems.tech2}
-                  onChange={() => handleCheckboxChange("tech2")}
-                  style={{
-                    marginRight: "10px",
-                    transform: "scale(1.2)",
-                  }}
-                />
-                <span>React</span>
-              </label>
-
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  cursor: "pointer",
-                }}
-              >
-                <input
-                  type="checkbox"
-                  checked={checkedItems.tech3}
-                  onChange={() => handleCheckboxChange("tech3")}
-                  style={{
-                    marginRight: "10px",
-                    transform: "scale(1.2)",
-                  }}
-                />
-                <span>Node.js</span>
-              </label>
-
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  cursor: "pointer",
-                }}
-              >
-                <input
-                  type="checkbox"
-                  checked={checkedItems.tech4}
-                  onChange={() => handleCheckboxChange("tech4")}
-                  style={{
-                    marginRight: "10px",
-                    transform: "scale(1.2)",
-                  }}
-                />
-                <span>Python</span>
-              </label>
-
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  cursor: "pointer",
-                }}
-              >
-                <input
-                  type="checkbox"
-                  checked={checkedItems.tech5}
-                  onChange={() => handleCheckboxChange("tech5")}
-                  style={{
-                    marginRight: "10px",
-                    transform: "scale(1.2)",
-                  }}
-                />
-                <span>Docker</span>
-              </label>
+              ))}
             </div>
 
             <div
@@ -286,106 +151,41 @@ export default function Profil() {
                 display: "flex",
                 flexDirection: "column",
                 gap: "15px",
-                flex: 1,
               }}
             >
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  cursor: "pointer",
-                }}
-              >
-                <input
-                  type="checkbox"
-                  checked={checkedItems.tech6}
-                  onChange={() => handleCheckboxChange("tech6")}
-                  style={{
-                    marginRight: "10px",
-                    transform: "scale(1.2)",
-                  }}
+              {techOptions.slice(5, 10).map((tech, index) => (
+                <CheckboxItem
+                  key={`tech-${index + 5}`}
+                  name={`tech-${index + 5}`}
+                  label={tech}
                 />
-                <span>Vue.js</span>
-              </label>
-
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  cursor: "pointer",
-                }}
-              >
-                <input
-                  type="checkbox"
-                  checked={checkedItems.tech7}
-                  onChange={() => handleCheckboxChange("tech7")}
-                  style={{
-                    marginRight: "10px",
-                    transform: "scale(1.2)",
-                  }}
-                />
-                <span>TypeScript</span>
-              </label>
-
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  cursor: "pointer",
-                }}
-              >
-                <input
-                  type="checkbox"
-                  checked={checkedItems.tech8}
-                  onChange={() => handleCheckboxChange("tech8")}
-                  style={{
-                    marginRight: "10px",
-                    transform: "scale(1.2)",
-                  }}
-                />
-                <span>MongoDB</span>
-              </label>
-
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  cursor: "pointer",
-                }}
-              >
-                <input
-                  type="checkbox"
-                  checked={checkedItems.tech9}
-                  onChange={() => handleCheckboxChange("tech9")}
-                  style={{
-                    marginRight: "10px",
-                    transform: "scale(1.2)",
-                  }}
-                />
-                <span>AWS</span>
-              </label>
-
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  cursor: "pointer",
-                }}
-              >
-                <input
-                  type="checkbox"
-                  checked={checkedItems.tech10}
-                  onChange={() => handleCheckboxChange("tech10")}
-                  style={{
-                    marginRight: "10px",
-                    transform: "scale(1.2)",
-                  }}
-                />
-                <span>Git</span>
-              </label>
+              ))}
             </div>
           </div>
         </div>
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "30px",
+          marginBottom: "30px",
+        }}
+      >
+        <Button
+          onClick={handleCreateProfile}
+          variant="primary"
+          style={{
+            height: "60px",
+            width: "200px",
+            fontSize: "18px",
+            marginRight: "15px",
+            marginBottom: "20px",
+          }}
+        >
+          Créer ton profil
+        </Button>
       </div>
     </div>
   );
