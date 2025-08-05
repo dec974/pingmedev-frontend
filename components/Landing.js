@@ -1,3 +1,5 @@
+import Header from "../ui-kit/organisms/Header";
+
 export default function Home() {
   return (
     <div
@@ -7,6 +9,7 @@ export default function Home() {
         width: "100%",
       }}
     >
+      <Header />
       <div
         style={{
           position: "absolute",
@@ -29,11 +32,12 @@ export default function Home() {
         <button
           style={{
             padding: "15px 30px",
+            marginBottom: "20px",
           }}
         >
           Visiter
         </button>
-        <text
+        <p
           style={{
             fontSize: "24px",
             color: "#333",
@@ -44,7 +48,7 @@ export default function Home() {
         >
           *Vous devrez vous connecter pour échanger avec les autres
           utilisateurs.
-        </text>
+        </p>
       </div>
 
       <div>
