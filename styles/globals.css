@@ -4,22 +4,20 @@
   box-sizing: border-box;
 }
 
-
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   background-color: var(--background-color-white);
   color: #1f2937;
 }
 
-
 :root {
-  --background-color-white: #F2F2F2;
-  --background-color-grey : #dfdfdf;
-  --primary-color : #1761ab;
-  --secondary-color: #FFB454;
-  --input-focus: #FFB454;
+  --background-color-white: #f2f2f2;
+  --background-color-grey: #dfdfdf;
+  --primary-color: #1761ab;
+  --secondary-color: #ffb454;
+  --input-focus: #ffb454;
   --text-color: #1f2937;
-  --radius: 0.4rem
+  --radius: 0.4rem;
 }
 
 .container {

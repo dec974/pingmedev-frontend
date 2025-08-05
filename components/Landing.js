@@ -1,37 +1,86 @@
-import HeaderLanding from "../ui-kit/organisms/HeaderLanding";
+import { useRouter } from "next/router";
+
 export default function Home() {
+  const router = useRouter();
+
+  const handleConnexionClick = () => {
+    router.push("/connexionPage");
+  };
   return (
-    <>  
-    <HeaderLanding />
-    <div
-      style={{
-        position: "relative",
-        minHeight: "100vh",
-        width: "100%",
-      }}
-    >
+    <>
       <div
         style={{
-          position: "absolute",
-          bottom: "20px",
-          right: "20px",
+          position: "relative",
+          minHeight: "100vh",
+          width: "100%",
         }}
       >
-        <button onClick={() => {}}>Visiter</button>
-        <img
-          src="/landingImage.png"
-          alt="Landing Image"
+        <div
           style={{
-            maxWidth:
-              window.innerWidth < 768
-                ? //768px est la limite entre phone/tablette et ecran pc
-                  "600px"
-                : "1000px",
-            height: "auto",
+            position: "absolute",
+            left: "300px",
+            top: "50%",
           }}
-        />
+        >
+          <h1
+            style={{
+              fontSize: "24px",
+              fontWeight: "bold",
+              color: "#333",
+              marginBottom: "20px",
+              maxWidth: "400px",
+              lineHeight: "1.4",
+            }}
+          >
+            La plateforme des développeurs ouverte à tous les parcours.
+          </h1>
+          <button
+            style={{
+              padding: "15px 30px",
+              marginBottom: "20px",
+            }}
+          >
+            Visiter
+          </button>
+          <button
+            style={{
+              padding: "15px 30px",
+              marginBottom: "20px",
+              marginLeft: "20px",
+            }}
+            onClick={handleConnexionClick}
+          >
+            Connexion
+          </button>
+          <p
+            style={{
+              fontSize: "24px",
+              color: "#333",
+              marginBottom: "20px",
+              maxWidth: "400px",
+              lineHeight: "1.4",
+            }}
+          >
+            *Vous devrez vous connecter pour échanger avec les autres
+            utilisateurs.
+          </p>
+        </div>
+
+        <div>
+          <img
+            src="/landingImage.png"
+            alt="Landing Image"
+            style={{
+              position: "absolute",
+              bottom: "20px",
+              right: "50px",
+              objectFit: "contain",
+              width: "50%",
+              height: "auto",
+            }}
+          />
+        </div>
       </div>
-    </div></>
-  
+    </>
   );
 }

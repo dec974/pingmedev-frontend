@@ -1,7 +1,7 @@
-import ConnexionPage from "../components/ConnexionPage";
+import Connexion from "../components/Connexion";
 
 function log() {
-  return <ConnexionPage />;
+  return <Connexion />;
 }
 
 export default log;

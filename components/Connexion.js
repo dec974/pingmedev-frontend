@@ -66,7 +66,7 @@ export default function Connexion() {
               email: data.email,
             })
           );
-          router.push("/homePage");
+          router.push("/profilPage");
         }
       });
   };
@@ -94,7 +94,7 @@ export default function Connexion() {
           setSignUpUsername("");
           setSignUpPassword("");
           setSignUpMail("");
-          router.push("/homePage");
+          router.push("/profilPage");
         }
       });
   };
@@ -115,7 +115,7 @@ export default function Connexion() {
           setSignInUsername("");
           setSignInPassword("");
           setSignUpMail("");
-          router.push("/homePage");
+          router.push("/profilPage");
         }
       });
   };

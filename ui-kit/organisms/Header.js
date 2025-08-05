@@ -9,7 +9,12 @@ export default function Header({ unreadCount = 0, onLoginClick }) {
     <header className={styles.header}>
       <div className={styles.navbar}>
         <Link href="/" className={styles.logo}>
-          <Image src="/logo.png" width={175} height={100} className={styles.logoImg}/>
+          <Image
+            src="/logo.png"
+            width={100}
+            height={65}
+            className={styles.logoImg}
+          />
           PingMe.dev
         </Link>
 
@@ -29,4 +34,3 @@ export default function Header({ unreadCount = 0, onLoginClick }) {
     </header>
   );
 }
-
