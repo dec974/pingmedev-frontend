@@ -1,0 +1,13 @@
+.input {
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: var(--radius);
+  width: 100%;
+  max-width: 768px;
+}
+
+.input:focus {
+  border: 1px solid var(--input-focus);
+  outline: none;
+}
+

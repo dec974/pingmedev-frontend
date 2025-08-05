@@ -1,0 +1,77 @@
+.header {
+  background-color: var(--background-color-grey);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.navbar {
+  max-width: 1920px;
+  margin: auto;
+  margin-right: 1rem;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--primary-color);
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.logoImg {
+  position: relative;
+  left: 1rem;
+}
+
+
+.navLinks {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.navLinks a {
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+.navLinks a:hover {
+  color: var(--primary);
+}
+
+.iconLink {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  font-size: 2rem;
+  margin-right: 4rem;
+  color: var(--primary-color);
+  transition: color 0.2s ease;
+}
+
+.icon:hover {
+  color: var(--primary-color); 
+}
+
+.badge {
+  position: absolute;
+  margin-right: 4rem;
+  top: -5px;
+  right: -8px;
+  background-color: red;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: bold;
+  border-radius: 50%;
+  padding: 2px 6px;
+  line-height: 1;
+}

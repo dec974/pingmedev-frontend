@@ -1,5 +1,8 @@
+import HeaderLanding from "../ui-kit/organisms/HeaderLanding";
 export default function Home() {
   return (
+    <>  
+    <HeaderLanding />
     <div
       style={{
         position: "relative",
@@ -28,6 +31,7 @@ export default function Home() {
           }}
         />
       </div>
-    </div>
+    </div></>
+  
   );
 }
