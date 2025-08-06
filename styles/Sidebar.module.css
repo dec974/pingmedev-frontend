@@ -1,44 +1,64 @@
 .sidebar {
   width: 25%;
   padding: 20px;
-  background-color: var(--background-color-white);
+  background-color: white;
   border-right: 1px solid var(--background-color-grey);
+}
+
+.profile {
+  margin-top: 20px;
+  background-color: var(--background-color-white);
+  border: 1px solid var(--background-color-grey);
+  border-radius: var(--radius);
+  padding: 15px;
 }
 
 .avatar {
   width: 80px;
-  border-radius: 50%;
+  border-radius: var(--radius);
+  margin: 30px 0 20px 0;
+}
+
+.userName {
+  color: var(--primary-color);
+  margin-bottom: 5px;
+}
+
+.pencil {
+  color: var(--secondary-color);
 }
 
 .links {
-  margin-top: 10px;
+  margin-top: px;
 }
 
 .follows {
-  margin-top: 30px;
+  margin-top: 50px;
+}
+
+.followsTitle {
+   margin-bottom: 10px;
 }
 
 .followedUser {
-  margin-bottom: 15px;
+  display: flex;
 }
 
 .userLine {
   display: flex;
+  width: 140px;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
 }
 
 .smallAvatar {
-  width: 30px;
+  width: 35px;
   border-radius: 50%;
 }
 
 .techIcons {
   font-size: 12px;
   color: #666;
-}
-
-.notes {
-  width: 100%;
-  margin-top: 5px;
 }
