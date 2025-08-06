@@ -1,0 +1,63 @@
+.userContent {
+  flex: 1;
+  padding: 20px;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.tab {
+  padding: 8px 16px;
+  border: 1px solid #0070f3;
+  background: white;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.active {
+  background: #0070f3;
+  color: white;
+}
+
+.sort {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.postCard {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  background: #fff;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.avatar {
+  width: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.rating {
+  font-size: 12px;
+  color: #888;
+}
+
+.content {
+  margin: 10px 0;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
