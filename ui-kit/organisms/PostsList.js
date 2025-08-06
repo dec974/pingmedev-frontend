@@ -18,8 +18,8 @@ export default function PostsList({ posts }) {
               <h3 className={styles.title}>{post.title}</h3>
 
               <div className={styles.meta}>
-                <span className={styles.username}>@{post.username}</span>
-                <time className={styles.date}>{post.timeAgo}</time>
+                <span className={styles.username}>@{post.userId.username}</span>
+                <time className={styles.date}>{post.createdAt}</time>
               </div>
             </div>
             <p className={styles.content}>{post.content}</p>

@@ -1,14 +1,14 @@
-import styles from "./MainLayout.module.css";
 import Header from "../organisms/Header";
-import Avatar from "../atoms/Avatar"
 import Footer from "../organisms/Footer";
+import styles from "../template/MainLayout.module.css";
 
-export default function MainLayout({ children }) {
+export default function MainLayout({ children, className }) {
   return (
-    <div className={styles.layout}>
-      <Header unreadCount={3}/>
-      <main className={`${styles.main} container`}>{children}</main>
+    <div>
+      <Header unreadCount={3} />
+      <div className={className}>{children}</div>
       <Footer />
     </div>
   );
 }
+

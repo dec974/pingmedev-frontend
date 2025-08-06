@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import styles from "../styles/UserContent.module.css";
 import Button from "../ui-kit/atoms/Button";
+import PostsList from "../ui-kit/organisms/PostsList"
 
 function UserContent() {
   const [activeTab, setActiveTab] = useState("posts");
+
+  
 
   return (
     <main className={styles.userContent}>
@@ -36,7 +39,7 @@ function UserContent() {
             <img src="/avatar.png" className={styles.avatar} alt="avatar" />
             <div>
               <strong>John Doe</strong>
-              <p>133 reviews</p>
+
             </div>
           </div>
 
