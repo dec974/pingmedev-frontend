@@ -18,6 +18,7 @@ export default function Home() {
       });
 }, []);
 
+//voici le composant Home qui affiche les posts
   return (
     <MainLayout>
       <h1 className={styles.title}>Bienvenue sur PingMeDev</h1>
