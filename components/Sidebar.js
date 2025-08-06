@@ -1,6 +1,8 @@
 import React from "react";
 import Image from "next/image";
 import styles from "../styles/Sidebar.module.css";
+import TextArea from "../ui-kit/atoms/TextArea"
+
 
 
 function Sidebar() {
@@ -28,7 +30,7 @@ function Sidebar() {
               <span>Jean Bont</span>
               <span className={styles.techIcons}>JS 🧠 🗓️</span>
             </div>
-            <textarea placeholder="Notes" className={styles.notes} />
+            <TextArea placeholder="Notes" className={styles.notes} />
           </div>
         ))}
       </div>

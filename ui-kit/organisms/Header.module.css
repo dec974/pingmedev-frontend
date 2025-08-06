@@ -1,10 +1,11 @@
 .header {
   background-color: var(--background-color-grey);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 10px 20px;
 }
 
 .navbar {
-  max-width: 1920px;
+
   margin: auto;
   margin-right: 1rem;
   padding: 1rem;
@@ -73,4 +74,8 @@
   border-radius: 50%;
   padding: 2px 6px;
   line-height: 1;
+}
+
+.avatar {
+  font-size: 1rem;
 }

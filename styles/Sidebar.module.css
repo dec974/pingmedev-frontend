@@ -1,8 +1,8 @@
 .sidebar {
-  width: 300px;
+  width: 25%;
   padding: 20px;
-  background-color: #f3f4f6;
-  border-right: 1px solid #ccc;
+  background-color: var(--background-color-white);
+  border-right: 1px solid var(--background-color-grey);
 }
 
 .avatar {

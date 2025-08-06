@@ -11,14 +11,14 @@
 
 .tab {
   padding: 8px 16px;
-  border: 1px solid #0070f3;
+  border: 1px solid var(--primary-color);
   background: white;
   cursor: pointer;
   border-radius: 5px;
 }
 
 .active {
-  background: #0070f3;
+  background: var(--primary-color);
   color: white;
 }
 
@@ -48,16 +48,6 @@
   margin-right: 10px;
 }
 
-.rating {
-  font-size: 12px;
-  color: #888;
-}
-
 .content {
   margin: 10px 0;
-}
-
-.actions {
-  display: flex;
-  gap: 10px;
 }
