@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Button from "../ui-kit/atoms/Button";
+import styles from "../styles/Profil.module.css";
+import Checkbox from "../ui-kit/atoms/Checkbox";
 
 export default function Profil() {
   const [checkedItems, setCheckedItems] = useState({});
@@ -14,7 +16,7 @@ export default function Profil() {
   };
 
   const handleCreateProfile = () => {
-    router.push("/landingPage");
+    router.push("/index_UI");
     //a modifier avec la homePage des que prete
   };
 
@@ -40,68 +42,26 @@ export default function Profil() {
   ];
 
   const CheckboxItem = ({ name, label }) => (
-    <label
-      style={{
-        display: "flex",
-        alignItems: "center",
-        cursor: "pointer",
-      }}
-    >
-      <input
-        type="checkbox"
-        checked={checkedItems[name] || false}
-        onChange={() => handleCheckboxChange(name)}
-        style={{
-          marginRight: "10px",
-          transform: "scale(1.2)",
-        }}
-      />
-      <span>{label}</span>
-    </label>
+    <Checkbox
+      label={label}
+      checked={checkedItems[name] || false}
+      onChange={() => handleCheckboxChange(name)}
+    />
   );
 
   return (
-    <div style={{ padding: "20px", minHeight: "100vh" }}>
-      <div style={{ textAlign: "center", marginBottom: "30px" }}>
-        <img
-          src="/logo.png"
-          alt="Logo"
-          style={{
-            width: "200px",
-            height: "auto",
-            objectFit: "contain",
-          }}
-        />
+    <div className={styles.container}>
+      <div className={styles.imgContainer}>
+        <img src="/logo.png" alt="Logo" />
       </div>
 
-      <h1
-        style={{ marginBottom: "20px", textAlign: "center", color: "#1761ab" }}
-      >
-        Crée ton profil
-      </h1>
+      <h1 className={styles.h1}>Crée ton profil</h1>
 
-      <hr
-        style={{
-          width: "60%",
-          border: "none",
-          borderTop: "6px solid #1761ab",
-          marginBottom: "30px",
-          margin: "0 auto 30px auto",
-        }}
-      />
+      <hr className={styles.hrContainer} />
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          gap: "80px",
-          maxWidth: "800px",
-          margin: "0 auto",
-          marginBottom: "50px",
-        }}
-      >
+      <div className={styles.divContainer}>
         <div style={{ width: "300px" }}>
-          <h3 style={{ marginBottom: "20px", color: "#1761ab" }}>Expérience</h3>
+          <h3 className={styles.h3}>Expérience</h3>
           <div
             style={{
               display: "flex",
@@ -165,14 +125,7 @@ export default function Profil() {
         </div>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          marginTop: "30px",
-          marginBottom: "30px",
-        }}
-      >
+      <div className={styles.buttonContainer}>
         <Button
           onClick={handleCreateProfile}
           variant="primary"
