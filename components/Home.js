@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import MainLayout from '../ui-kit/template/MainLayout';
+import Header from '../ui-kit/organisms/Header';
 import Input from '../ui-kit/atoms/Input';
 import styles from '../styles/Home.module.css';
 import PostsList from '../ui-kit/organisms/PostsList';
 import Button from '../ui-kit/atoms/Button';
+import Footer from '../ui-kit/organisms/Footer';
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
@@ -21,13 +22,17 @@ export default function Home() {
 
 //voici le composant Home qui affiche les posts
   return (
-    <MainLayout>
+    <>
+    <Header></Header>
+    
+    <div className={styles.home}>
       <h1 className={styles.title}>Bienvenue sur PingMeDev</h1>
       <h2>John Doe</h2>
-      <div className={styles.blabla}>
+      <div className={styles.returnBtn}>
       <Button variant={"primary"} onClick={() => alert('Button clicked!')}>Retour</Button>
-      <Input type="text" placeholder="Rechercher un sujet ..." />
       </div>
+      <Input type="text" placeholder="Rechercher un sujet ..." />
+      
       <h2> Derniers posts</h2>
       {loading ? (
         <p> Chargement en cours</p>
@@ -48,6 +53,10 @@ export default function Home() {
           </div>
         ))*/
       )}
-      </MainLayout>
+      </div>
+      <div classname={styles.footer}>
+      <Footer ></Footer>
+      </div>
+      </>
     );
   }
