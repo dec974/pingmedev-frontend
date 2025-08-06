@@ -3,6 +3,7 @@ import MainLayout from '../ui-kit/template/MainLayout';
 import Input from '../ui-kit/atoms/Input';
 import styles from '../styles/Home.module.css';
 import PostsList from '../ui-kit/organisms/PostsList';
+import Button from '../ui-kit/atoms/Button';
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
@@ -23,14 +24,18 @@ export default function Home() {
     <MainLayout>
       <h1 className={styles.title}>Bienvenue sur PingMeDev</h1>
       <h2>John Doe</h2>
+      <div className={styles.blabla}>
+      <Button variant={"primary"} onClick={() => alert('Button clicked!')}>Retour</Button>
       <Input type="text" placeholder="Rechercher un sujet ..." />
+      </div>
       <h2> Derniers posts</h2>
       {loading ? (
         <p> Chargement en cours</p>
       ) : (
-        posts.map((post) => (
+        <PostsList posts={posts}/>
+        
+        /*posts.map((post) => (
           <div key={post._id}>
-            <PostsList></PostsList>
             <h3>{post.title}</h3>
             
             <p>{post.content}</p>
@@ -41,7 +46,7 @@ export default function Home() {
             <p>Créé le: {new Date(post.createdAt).toLocaleDateString()}</p>
             
           </div>
-        ))
+        ))*/
       )}
       </MainLayout>
     );
