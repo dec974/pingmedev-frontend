@@ -12,8 +12,8 @@ export default function Header({ unreadCount = 0, onLoginClick }) {
         <Link href="/" className={styles.logo}>
           <Image
             src="/logo.png"
-            width={100}
-            height={65}
+            width={140}
+            height={90}
             className={styles.logoImg}
             alt="PingMe logo"
           />
