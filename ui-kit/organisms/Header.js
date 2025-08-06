@@ -3,17 +3,24 @@ import Button from "../atoms/Button";
 import styles from "./Header.module.css";
 import { FaEnvelope } from "react-icons/fa";
 import Image from "next/image";
+import Avatar from "../atoms/Avatar";
 
 export default function Header({ unreadCount = 0, onLoginClick }) {
   return (
     <header className={styles.header}>
       <div className={styles.navbar}>
         <Link href="/" className={styles.logo}>
-          <Image src="/logo.png" width={100} height={65} className={styles.logoImg}/>
+          <Image
+            src="/logo.png"
+            width={100}
+            height={65}
+            className={styles.logoImg}
+            alt="PingMe logo"
+          />
           PingMe.dev
         </Link>
 
-        <nav className={styles.navLinks}>
+        <div className={styles.navLinks}>
           <Link href="/messages" className={styles.iconLink}>
             <FaEnvelope className={styles.icon} />
             {unreadCount > 0 && (
@@ -21,12 +28,11 @@ export default function Header({ unreadCount = 0, onLoginClick }) {
             )}
           </Link>
 
-          <Button variant="primary" onClick={onLoginClick}>
-            Connexion
-          </Button>
-        </nav>
+          <Link href="/profile" className={styles.avatarLink}>
+            <Avatar />
+          </Link>
+        </div>
       </div>
     </header>
   );
 }
-
