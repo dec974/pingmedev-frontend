@@ -9,7 +9,7 @@ export default function Home() {
     router.push("/connexionPage");
   };
   const handleVisitClick = () => {
-    router.push("/index_UI");
+    router.push("/home");
   };
 
   return (

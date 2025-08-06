@@ -25,85 +25,54 @@ export default function Connexion() {
   const [signInErrorMessage, setSignInErrorMessage] = useState("");
   const [showPopover, setShowPopover] = useState(false);
 
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get("code");
-    //ligne de log github
-
-    if (code) {
-      fetch("http://localhost:3000/auth/github/callback", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code }),
-      })
-        .then((response) => response.json())
-        .then((data) => {});
-    }
-  }, []);
-  //condition de log github
-
   function GitHubLoginButton() {
     const loginWithGitHub = () => {
       const clientID = "Ov23lio8tZ02RbB9eJUC";
-      const redirectURI = "http://localhost:3000/auth/github/callback";
+      const redirectURI = "http://localhost:3001/githubPage";
       window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientID}&redirect_uri=${redirectURI}`;
     };
-
     return <button onClick={loginWithGitHub}>Se connecter avec GitHub</button>;
   }
 
-  function GitHubCallback() {
-    useEffect(() => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const code = urlParams.get("code");
-
-      if (code) {
-        // Send code to backend
-        fetch("http://localhost:3000/auth/callback/github", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ code }),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            console.log(data);
-            // Handle the response from your backend. Maybe store an authentication token or set user data.
-          });
-      }
-    }, []);
-
-    return <div>Processing GitHub login...</div>;
-  }
-  //function pour se co via github
-
-  const handleLogup = (credentialResponse) => {
-    const userInfo = jwtDecode(credentialResponse.credential);
-    fetch("http://localhost:3000/users/signupgoogle", {
+  // Fonction pour gérer le retour de GitHub
+  const handleGitHubCallback = (githubUserData) => {
+    fetch("http://localhost:3000/users/signingithub", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        email: userInfo.email,
-        username: userInfo.name,
-        googleId: userInfo.sub,
+        email: githubUserData.email,
+        username: githubUserData.login,
+        githubId: githubUserData.id.toString(),
+        avatarUrl: githubUserData.avatar_url,
+        name: githubUserData.name || githubUserData.login,
       }),
     })
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
-          setUser(userInfo);
           dispatch(
-            signUp({
+            signIn({
               username: data.username,
               token: data.token,
               email: data.email,
             })
           );
-          router.push("/profilPage");
+          if (data.isNewUser) {
+            router.push("/profilPage");
+          } else {
+            router.push("/home");
+          }
+        } else {
+          setErrorMessage(data.error || "Erreur lors de la connexion GitHub");
         }
+      })
+      .catch((error) => {
+        console.error("Erreur de connexion GitHub:", error);
+        setErrorMessage("Erreur de connexion au serveur");
       });
   };
 
-  const handleLogin = (credentialResponse) => {
+  const handleSignInGoogle = (credentialResponse) => {
     const userInfo = jwtDecode(credentialResponse.credential);
     fetch("http://localhost:3000/users/signingoogle", {
       method: "POST",
@@ -125,12 +94,55 @@ export default function Connexion() {
               email: data.email,
             })
           );
-          router.push("/profilPage");
+          router.push("/home");
+        } else {
+          setSignInErrorMessage(data.error || "Utilisateur inexistant");
         }
+      })
+      .catch((error) => {
+        console.error("Erreur de connexion:", error);
+        setSignInErrorMessage("Erreur de connexion au serveur");
       });
   };
-  //function pour se co via google
-  const handleRegister = () => {
+
+  const handleSignUpGoogle = (credentialResponse) => {
+    const userInfo = jwtDecode(credentialResponse.credential);
+    fetch("http://localhost:3000/users/signingoogle", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: userInfo.email,
+        username: userInfo.name,
+        googleId: userInfo.sub,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          setUser(userInfo);
+          dispatch(
+            signIn({
+              username: data.username,
+              token: data.token,
+              email: data.email,
+            })
+          );
+          if (data.isNewUser) {
+            router.push("/profilPage");
+          } else {
+            router.push("/home");
+          }
+        } else {
+          console.error("Erreur lors de la connexion Google:", data.error);
+          setErrorMessage(data.error || "Erreur lors de la connexion");
+        }
+      })
+      .catch((error) => {
+        console.error("Erreur de connexion:", error);
+        setErrorMessage("Erreur de connexion au serveur");
+      });
+  };
+  const handleSignUp = () => {
     if (!signUpUsername || !signUpMail || !signUpPassword || !acceptTerms) {
       setErrorMessage("Champs vides ou conditions non acceptées");
       return;
@@ -160,11 +172,17 @@ export default function Connexion() {
           setSignUpPassword("");
           setSignUpMail("");
           router.push("/profilPage");
+        } else {
+          setErrorMessage(data.error || "Username ou email déjà utilisé");
         }
+      })
+      .catch((error) => {
+        console.error("Erreur lors de l'inscription:", error);
+        setErrorMessage("Erreur de connexion au serveur");
       });
   };
 
-  const handleConnection = () => {
+  const handleSignIn = () => {
     if (!signInUsername || !signInPassword) {
       setSignInErrorMessage("Champs vides");
       return;
@@ -187,11 +205,21 @@ export default function Connexion() {
           setSignInUsername("");
           setSignInPassword("");
           setSignUpMail("");
-          router.push("/index_UI");
-          //a changer pour homePage quand sera dispo
+          router.push("/home");
         }
       });
   };
+
+  useEffect(() => {
+    if (router.query.github === "callback") {
+      const githubUser = localStorage.getItem("githubUser");
+      if (githubUser) {
+        const userData = JSON.parse(githubUser);
+        handleGitHubCallback(userData);
+        localStorage.removeItem("githubUser");
+      }
+    }
+  }, [router.query]);
 
   return (
     <div className={styles.container}>
@@ -225,7 +253,6 @@ export default function Connexion() {
               value={signUpMail}
               onChange={(e) => {
                 setSignUpMail(e.target.value);
-                // Efface le message derreur quand lutilisateur tape
                 if (errorMessage && e.target.value.trim()) {
                   setErrorMessage("");
                 }
@@ -290,7 +317,6 @@ export default function Connexion() {
             checked={acceptTerms}
             onChange={() => {
               setAcceptTerms(!acceptTerms);
-              // Efface le message derreur quand lutilisateur coche la case
               if (!acceptTerms) {
                 setErrorMessage("");
               }
@@ -302,7 +328,7 @@ export default function Connexion() {
           )}
 
           <Button
-            onClick={handleRegister}
+            onClick={handleSignUp}
             variant="primary"
             style={{
               height: "60px",
@@ -333,7 +359,7 @@ export default function Connexion() {
                   }}
                 >
                   <GoogleLogin
-                    onSuccess={handleLogin}
+                    onSuccess={handleSignUpGoogle}
                     onError={(error) => console.error(error)}
                     text="signup_with"
                   />
@@ -343,7 +369,6 @@ export default function Connexion() {
             </div>
           </GoogleOAuthProvider>
         </div>
-        {/* voir google connect si besoin (cours ariane) */}
 
         <div className={styles.logContainer}>
           <h2 className={styles.textLog} style={{}}>
@@ -387,7 +412,7 @@ export default function Connexion() {
           )}
 
           <Button
-            onClick={handleConnection}
+            onClick={handleSignIn}
             variant="primary"
             style={{
               height: "60px",
@@ -416,7 +441,7 @@ export default function Connexion() {
                   }}
                 >
                   <GoogleLogin
-                    onSuccess={handleConnection}
+                    onSuccess={handleSignInGoogle}
                     onError={(error) => console.error(error)}
                     text="signin_with"
                   />

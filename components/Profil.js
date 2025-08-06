@@ -16,7 +16,7 @@ export default function Profil() {
   };
 
   const handleCreateProfile = () => {
-    router.push("/index_UI");
+    router.push("/home");
     //a modifier avec la homePage des que prete
   };
 
@@ -52,7 +52,7 @@ export default function Profil() {
   return (
     <div className={styles.container}>
       <div className={styles.imgContainer}>
-        <img src="/logo.png" alt="Logo" />
+        <img className={styles.img} src="/logo.png" alt="Logo" />
       </div>
 
       <h1 className={styles.h1}>Crée ton profil</h1>
