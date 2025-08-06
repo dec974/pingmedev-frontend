@@ -23,15 +23,17 @@ export default function PostsList({ posts }) {
       
         //formatage du temps
         let timeAgo = '';
-        if (duration.asDays() >= 1) {
+        if (duration.asDays() >= 15) {
+          timeAgo = moment(post.createdAt).format('DD/MM/YYYY');
+        }else if (duration.asDays() >= 1 && duration.asDays() < 15) {
           // Si + d'un jour, afficher en jours
-          timeAgo = `${Math.floor(duration.asDays())}j`;
-        } else if (duration.asHours() >= 1) { // Correction : else if sur une seule ligne
+          timeAgo = `il y a ${Math.floor(duration.asDays())}j`;
+        } else if (duration.asHours() >= 1) { 
           // Si + d'une heure, afficher en heures
-          timeAgo = `${Math.floor(duration.asHours())}h`;
-        } else { // Correction : else sur une seule ligne
+          timeAgo = `il y a ${Math.floor(duration.asHours())}h`;
+        } else { 
           // Sinon afficher les minutes
-          timeAgo = `${Math.floor(duration.asMinutes())}min`;
+          timeAgo = `il y a ${Math.floor(duration.asMinutes())}min`;
         }
                 
                 
@@ -44,7 +46,7 @@ export default function PostsList({ posts }) {
               <div className={styles.meta}>
                 <span className={styles.username}>@{post.userId.username}</span>
                 {/*affichage du temps calculté avec timeAgo*/}
-                <time className={styles.date}>il y a {timeAgo}</time>
+                <time className={styles.date}>{timeAgo}</time>
               </div>
             </div>
             <p className={styles.content}>{post.content}</p>
