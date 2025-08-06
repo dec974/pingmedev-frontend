@@ -1,5 +1,6 @@
 import "../styles/globals.css";
 import Head from "next/head";
+import Header from "../components/Header";
 
 // redux imports
 import { Provider } from "react-redux";
@@ -27,8 +28,9 @@ function App({ Component, pageProps }) {
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <Head>
-          <title>PingMeDev</title>
+          <title>PingMe.Dev</title>
         </Head>
+        <Header />
         <Component {...pageProps} />
       </PersistGate>
     </Provider>

@@ -1,10 +1,27 @@
-body {
-  padding: 0;
+* {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-* {
-  box-sizing: border-box;
+body {
+  font-family: "Inter", sans-serif;
+  background-color: var(--background-color-white);
+  color: #1f2937;
+}
+
+:root {
+  --background-color-white: #f2f2f2;
+  --background-color-grey: #dfdfdf;
+  --primary-color: #1761ab;
+  --secondary-color: #ffb454;
+  --input-focus: #ffb454;
+  --text-color: #1f2937;
+  --radius: 0.4rem;
+}
+
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 1rem;
 }

@@ -1,0 +1,37 @@
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.checkbox input {
+  display: none;
+}
+
+.custom {
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--primary-color);
+  border-radius: 3px;
+  display: inline-block;
+  position: relative;
+  background-color: white;
+}
+
+.checkbox input:checked + .custom {
+  background-color: var(--primary-color);
+}
+
+.checkbox input:checked + .custom::after {
+  content: "✔";
+  position: absolute;
+  top: -3px;
+  left: 2px;
+  color: white;
+  font-size: 16px;
+}
+
+.label {
+  font-size: 0.95rem;
+}
