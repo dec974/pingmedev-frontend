@@ -36,58 +36,14 @@ export default function Home() {
               //clamp permet d avoir une taille responsive
 
               fontWeight: "bold",
-              color: "#1761ab",
+              color: "var(--primary-color)",
               fontFamily: "JetBrains Mono, monospace",
               marginBottom: "30px",
               maxWidth: "60%",
               lineHeight: "1.4",
               textAlign: "left",
-            }}
-          >
-            La plateforme des développeurs ouverte à tous les parcours.
-          </h1>
-
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              gap: "15px",
-              marginBottom: "30px",
-            }}
-          >
-            <Button
-              onClick={handleConnexionClick}
-              variant="primary"
-              style={{
-                height: "60px",
-                width: "200px",
-                fontSize: "18px",
-                minWidth: "150px",
-              }}
-            >
-              Visiter
-            </Button>
-
-            <Button
-              onClick={handleConnexionClick}
-              variant="primary"
-              style={{
-                height: "60px",
-                width: "200px",
-                fontSize: "18px",
-                minWidth: "150px",
-              }}
-            >
-              Connexion
-            </Button>
-          </div>
-
-          <p
-            style={{
-              fontSize: "clamp(16px, 2.5vw, 24px)",
               //clamp permet d avoir une taille responsive
 
-              color: "#1761ab",
               marginBottom: "20px",
               maxWidth: "600px",
               lineHeight: "1.4",
@@ -95,7 +51,7 @@ export default function Home() {
           >
             *Vous devrez vous connecter pour échanger avec les autres
             utilisateurs.
-          </p>
+          </h1>
         </div>
 
         <div>
