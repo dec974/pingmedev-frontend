@@ -9,7 +9,6 @@ export default function Avatar({ src = "/avatar.png", size = 50 }) {
       height={50}
       alt="avatar"
       className={styles.avatar}
-      style={{ width: size, height: size }}
     />
   );
 }
