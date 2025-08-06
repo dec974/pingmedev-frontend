@@ -57,12 +57,9 @@ export default function Connexion() {
               email: data.email,
             })
           );
-          // Vérifier si l'utilisateur est nouveau ou existant
           if (data.isNewUser) {
-            // Nouvel utilisateur -> redirection vers profilPage
             router.push("/profilPage");
           } else {
-            // Utilisateur existant -> redirection vers home
             router.push("/home");
           }
         } else {
@@ -74,8 +71,6 @@ export default function Connexion() {
         setErrorMessage("Erreur de connexion au serveur");
       });
   };
-
-  //function pour se co via github
 
   const handleSignInGoogle = (credentialResponse) => {
     const userInfo = jwtDecode(credentialResponse.credential);
@@ -99,9 +94,8 @@ export default function Connexion() {
               email: data.email,
             })
           );
-          router.push("/home"); // Redirection vers home si utilisateur existe
+          router.push("/home");
         } else {
-          // Afficher le message d'erreur si utilisateur n'existe pas
           setSignInErrorMessage(data.error || "Utilisateur inexistant");
         }
       })
@@ -148,7 +142,6 @@ export default function Connexion() {
         setErrorMessage("Erreur de connexion au serveur");
       });
   };
-  //function pour se co via google
   const handleSignUp = () => {
     if (!signUpUsername || !signUpMail || !signUpPassword || !acceptTerms) {
       setErrorMessage("Champs vides ou conditions non acceptées");
@@ -180,7 +173,6 @@ export default function Connexion() {
           setSignUpMail("");
           router.push("/profilPage");
         } else {
-          // Afficher le message d'erreur retourné par le backend
           setErrorMessage(data.error || "Username ou email déjà utilisé");
         }
       })
@@ -214,10 +206,20 @@ export default function Connexion() {
           setSignInPassword("");
           setSignUpMail("");
           router.push("/home");
-          //a changer pour homePage quand sera dispo
         }
       });
   };
+
+  useEffect(() => {
+    if (router.query.github === "callback") {
+      const githubUser = localStorage.getItem("githubUser");
+      if (githubUser) {
+        const userData = JSON.parse(githubUser);
+        handleGitHubCallback(userData);
+        localStorage.removeItem("githubUser");
+      }
+    }
+  }, [router.query]);
 
   return (
     <div className={styles.container}>
@@ -367,7 +369,6 @@ export default function Connexion() {
             </div>
           </GoogleOAuthProvider>
         </div>
-        {/* voir google connect si besoin (cours ariane) */}
 
         <div className={styles.logContainer}>
           <h2 className={styles.textLog} style={{}}>
