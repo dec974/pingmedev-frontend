@@ -36,7 +36,7 @@ export default function Home() {
               //clamp permet d avoir une taille responsive
 
               fontWeight: "bold",
-              color: "#1761ab",
+              color: "var(--primary-color)",
               fontFamily: "JetBrains Mono, monospace",
               marginBottom: "30px",
               maxWidth: "60%",
