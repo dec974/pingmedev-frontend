@@ -1,12 +1,46 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import styles from "../styles/UserContent.module.css";
 import Button from "../ui-kit/atoms/Button";
-import PostsList from "../ui-kit/organisms/PostsList"
+import PostsList from "../ui-kit/organisms/PostsList";
 
 function UserContent() {
   const [activeTab, setActiveTab] = useState("posts");
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [followedPosts, setFollowedPosts] = useState([]);
+  const user = useSelector((state) => state.user.value);
 
-  
+  useEffect(() => {
+    setLoading(true);
+
+    if (activeTab === "posts") {
+      fetch(`http://localhost:3000/users/user/${user.token}`)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("data reçue (posts):", data);
+         
+          setPosts(userPosts);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error("Erreur lors du fetch des posts :", err);
+          setLoading(false);
+        });
+    }
+
+    if (activeTab === "topics") {
+      fetch(`http://localhost:3000/users/followed-posts/${user.token}`)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("data reçue (followedPosts):", data);
+          if (data.result) {
+            setFollowedPosts(data.followedPosts);
+          }
+          setLoading(false);
+        });
+    }
+  }, [activeTab, user.token]);
 
   return (
     <main className={styles.userContent}>
@@ -33,22 +67,13 @@ function UserContent() {
 
       <div className={styles.sort}>Du + récent au + ancien</div>
 
-      {[1, 2].map((_, i) => (
-        <div key={i} className={styles.postCard}>
-          <div className={styles.cardHeader}>
-            <img src="/avatar.png" className={styles.avatar} alt="avatar" />
-            <div>
-              <strong>John Doe</strong>
-
-            </div>
-          </div>
-
-          <p className={styles.content}>
-            How can I calculate delta-latitude and delta-longitude values
-            from...
-          </p>
-        </div>
-      ))}
+      {loading ? (
+        <p>Chargement des posts...</p>
+      ) : activeTab === "posts" ? (
+        <PostsList posts={posts} />
+      ) : (
+        <PostsList posts={followedPosts} />
+      )}
     </main>
   );
 }
