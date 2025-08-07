@@ -8,6 +8,7 @@ import Button from "../ui-kit/atoms/Button";
 import Input from "../ui-kit/atoms/Input";
 import styles from "../styles/Connexion.module.css";
 import Checkbox from "../ui-kit/atoms/Checkbox";
+
 const clientId =
   "492308766796-4rukpcc44v9mhjrtk98ibj9eoan212qa.apps.googleusercontent.com";
 
@@ -122,6 +123,13 @@ export default function Connexion() {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
+          // ✅ STOCKER LE TOKEN GITHUB DANS LOCALSTORAGE
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("username", data.username);
+          localStorage.setItem("email", data.email);
+
+          console.log("Token GitHub stocké:", data.token);
+
           dispatch(
             signIn({
               username: data.username,
@@ -129,6 +137,7 @@ export default function Connexion() {
               email: data.email,
             })
           );
+
           if (data.isNewUser) {
             router.push("/profilPage");
           } else {
@@ -158,6 +167,13 @@ export default function Connexion() {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
+          // ✅ STOCKER LE TOKEN GOOGLE DANS LOCALSTORAGE
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("username", data.username);
+          localStorage.setItem("email", data.email);
+
+          console.log("Token Google stocké:", data.token);
+
           setUser(userInfo);
           dispatch(
             signIn({
@@ -196,6 +212,13 @@ export default function Connexion() {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
+          // ✅ STOCKER LE TOKEN GOOGLE DANS LOCALSTORAGE
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("username", data.username);
+          localStorage.setItem("email", data.email);
+
+          console.log("Token Google stocké:", data.token);
+
           setUser(userInfo);
           dispatch(
             signIn({
@@ -204,6 +227,7 @@ export default function Connexion() {
               email: data.email,
             })
           );
+
           if (data.isNewUser) {
             router.push("/profilPage");
           } else {
@@ -238,6 +262,13 @@ export default function Connexion() {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
+          // ✅ STOCKER LE TOKEN SIGNUP DANS LOCALSTORAGE
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("username", data.username);
+          localStorage.setItem("email", data.email);
+
+          console.log("Token inscription stocké:", data.token);
+
           dispatch(
             signUp({
               username: signUpUsername,
@@ -245,6 +276,7 @@ export default function Connexion() {
               email: signUpMail,
             })
           );
+
           setSignUpUsername("");
           setSignUpPassword("");
           setSignUpMail("");
@@ -278,12 +310,35 @@ export default function Connexion() {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
-          dispatch(signIn({ username: signInUsername, token: data.token }));
+          // ✅ STOCKER LE TOKEN SIGNIN DANS LOCALSTORAGE
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("username", data.username);
+          if (data.email) {
+            localStorage.setItem("email", data.email);
+          }
+
+          console.log("Token connexion stocké:", data.token);
+
+          dispatch(
+            signIn({
+              username: signInUsername,
+              token: data.token,
+              email: data.email,
+            })
+          );
           setSignInUsername("");
           setSignInPassword("");
           setSignUpMail("");
           router.push("/home");
+        } else {
+          setSignInErrorMessage(
+            data.error || "Nom d'utilisateur ou mot de passe incorrect"
+          );
         }
+      })
+      .catch((error) => {
+        console.error("Erreur lors de la connexion:", error);
+        setSignInErrorMessage("Erreur de connexion au serveur");
       });
   };
 
@@ -298,13 +353,21 @@ export default function Connexion() {
     }
   }, [router.query]);
 
+  // ✅ DEBUG - Afficher le contenu du localStorage au chargement
+  useEffect(() => {
+    console.log("=== CONTENU LOCALSTORAGE ===");
+    console.log("token:", localStorage.getItem("token"));
+    console.log("username:", localStorage.getItem("username"));
+    console.log("email:", localStorage.getItem("email"));
+  }, []);
+
   return (
     <div className={styles.container}>
       <div className={styles.containerImg}>
         <img className={styles.logo} src="/logo.png" alt="Logo" />
       </div>
 
-      <div className={styles.section} style={{}}>
+      <div className={styles.section}>
         <div className={styles.logContainer}>
           <h2 className={styles.textLog}>S'inscrire</h2>
 
@@ -448,9 +511,7 @@ export default function Connexion() {
         </div>
 
         <div className={styles.logContainer}>
-          <h2 className={styles.textLog} style={{}}>
-            Se connecter
-          </h2>
+          <h2 className={styles.textLog}>Se connecter</h2>
 
           <div className={styles.inputWrapper}>
             <Input

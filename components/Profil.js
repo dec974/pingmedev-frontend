@@ -1,19 +1,102 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Button from "../ui-kit/atoms/Button";
 import styles from "../styles/Profil.module.css";
+import Checkbox from "../ui-kit/atoms/Checkbox";
 
 export default function Profil() {
   const [selectedExperience, setSelectedExperience] = useState("");
   const [locality, setLocality] = useState("");
+  const [selectedTech, setSelectedTech] = useState({
+    language: "",
+    frontend: "",
+    backend: "",
+    database: "",
+    tool: "",
+    other: "",
+  });
   const router = useRouter();
+
+  // Fonction pour récupérer le token utilisateur
+  const getUserToken = () => {
+    // Récupérer le token depuis localStorage
+    const token = localStorage.getItem("token");
+    if (token) {
+      console.log("Token récupéré:", token);
+      return token;
+    }
+
+    console.log("Aucun token trouvé");
+    return null;
+  };
+
+  // Debug: Afficher le contenu du localStorage
+  useEffect(() => {
+    console.log("=== DEBUG LOCALSTORAGE ===");
+    console.log("token:", localStorage.getItem("token"));
+    console.log("username:", localStorage.getItem("username"));
+    console.log("email:", localStorage.getItem("email"));
+    console.log("=== FIN DEBUG ===");
+  }, []);
 
   const handleExperienceChange = (experience) => {
     setSelectedExperience(experience);
+    console.log("Expérience sélectionnée:", experience);
   };
 
-  const handleCreateProfile = () => {
-    router.push("/home");
+  const handleTechChange = (category, value) => {
+    setSelectedTech((prev) => ({
+      ...prev,
+      [category]: value,
+    }));
+  };
+
+  const handleCreateProfile = async () => {
+    try {
+      const token = getUserToken();
+
+      if (!token) {
+        alert("Veuillez vous connecter d'abord");
+        router.push("/connexion");
+        return;
+      }
+
+      if (!selectedExperience) {
+        alert("Veuillez sélectionner votre niveau d'expérience");
+        return;
+      }
+
+      const profileData = {
+        token: token, // Envoyer le token au lieu de l'userId
+        experience: selectedExperience,
+        selectedTech: selectedTech,
+        locality: locality,
+      };
+
+      console.log("Données à envoyer:", profileData);
+
+      const response = await fetch("http://localhost:3000/users/profile", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(profileData),
+      });
+
+      const data = await response.json();
+
+      if (data.result) {
+        console.log("Profil créé avec succès:", data.profile);
+        alert("Profil créé avec succès !");
+        router.push("/home");
+      } else {
+        console.error("Erreur:", data.error);
+        alert("Erreur lors de la création du profil: " + data.error);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la création du profil:", error);
+      alert("Erreur lors de la création du profil");
+    }
   };
 
   const experienceOptions = [
@@ -93,6 +176,8 @@ export default function Profil() {
               style={{ display: "flex", flexDirection: "column", gap: "15px" }}
             >
               <select
+                value={selectedTech.language}
+                onChange={(e) => handleTechChange("language", e.target.value)}
                 style={{
                   padding: "10px",
                   borderRadius: "6px",
@@ -101,10 +186,9 @@ export default function Profil() {
                   backgroundColor: "white",
                   cursor: "pointer",
                 }}
-                defaultValue=""
               >
                 <option value="" disabled>
-                  Sélectionner une option
+                  Langage principal
                 </option>
                 <option value="javascript">JavaScript</option>
                 <option value="python">Python</option>
@@ -115,6 +199,8 @@ export default function Profil() {
               </select>
 
               <select
+                value={selectedTech.frontend}
+                onChange={(e) => handleTechChange("frontend", e.target.value)}
                 style={{
                   padding: "10px",
                   borderRadius: "6px",
@@ -123,10 +209,9 @@ export default function Profil() {
                   backgroundColor: "white",
                   cursor: "pointer",
                 }}
-                defaultValue=""
               >
                 <option value="" disabled>
-                  Sélectionner une option
+                  Framework Frontend
                 </option>
                 <option value="react">React</option>
                 <option value="vue">Vue.js</option>
@@ -137,6 +222,8 @@ export default function Profil() {
               </select>
 
               <select
+                value={selectedTech.backend}
+                onChange={(e) => handleTechChange("backend", e.target.value)}
                 style={{
                   padding: "10px",
                   borderRadius: "6px",
@@ -145,10 +232,9 @@ export default function Profil() {
                   backgroundColor: "white",
                   cursor: "pointer",
                 }}
-                defaultValue=""
               >
                 <option value="" disabled>
-                  Sélectionner une option
+                  Framework Backend
                 </option>
                 <option value="nodejs">Node.js</option>
                 <option value="express">Express.js</option>
@@ -163,6 +249,8 @@ export default function Profil() {
               style={{ display: "flex", flexDirection: "column", gap: "15px" }}
             >
               <select
+                value={selectedTech.database}
+                onChange={(e) => handleTechChange("database", e.target.value)}
                 style={{
                   padding: "10px",
                   borderRadius: "6px",
@@ -171,10 +259,9 @@ export default function Profil() {
                   backgroundColor: "white",
                   cursor: "pointer",
                 }}
-                defaultValue=""
               >
                 <option value="" disabled>
-                  Sélectionner une option
+                  Base de données
                 </option>
                 <option value="mongodb">MongoDB</option>
                 <option value="mysql">MySQL</option>
@@ -185,6 +272,8 @@ export default function Profil() {
               </select>
 
               <select
+                value={selectedTech.tool}
+                onChange={(e) => handleTechChange("tool", e.target.value)}
                 style={{
                   padding: "10px",
                   borderRadius: "6px",
@@ -193,10 +282,9 @@ export default function Profil() {
                   backgroundColor: "white",
                   cursor: "pointer",
                 }}
-                defaultValue=""
               >
                 <option value="" disabled>
-                  Sélectionner une option
+                  Outils / Plateformes
                 </option>
                 <option value="docker">Docker</option>
                 <option value="aws">AWS</option>
@@ -207,6 +295,8 @@ export default function Profil() {
               </select>
 
               <select
+                value={selectedTech.other}
+                onChange={(e) => handleTechChange("other", e.target.value)}
                 style={{
                   padding: "10px",
                   borderRadius: "6px",
@@ -215,10 +305,9 @@ export default function Profil() {
                   backgroundColor: "white",
                   cursor: "pointer",
                 }}
-                defaultValue=""
               >
                 <option value="" disabled>
-                  Sélectionner une option
+                  Autres
                 </option>
                 <option value="graphql">GraphQL</option>
                 <option value="tailwind">Tailwind CSS</option>
