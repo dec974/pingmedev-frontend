@@ -4,7 +4,7 @@
   cursor: pointer;
   margin-bottom: 15px;
   font-size: 14px;
-  color: #1761ab;
+  color: var(--primary-color);
 }
 
 .logo {
@@ -37,12 +37,13 @@
   flex-direction: column;
   gap: 10px;
   align-items: center;
+  width: 440px;
 }
 
 .textLog {
   font-size: clamp(28px, 4vw, 50px);
   font-weight: bold;
-  color: #1761ab;
+  color: var(--primary-color);
   font-family: "JetBrains Mono", monospace;
   margin-bottom: 30px;
   max-width: 100%;
@@ -65,7 +66,7 @@
 .blueLine {
   width: 200px;
   height: 3px;
-  background-color: #1761ab;
+  background-color: var(--primary-color);
   margin-bottom: 20px;
 }
 
@@ -161,7 +162,25 @@
   font-size: 12px;
   float: right;
 }
-
-.closeButton:hover {
-  background: #0056b3;
+.githubButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background-color: #24292e;
+  color: white;
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  width: 100%;
+  min-height: 40px;
+}
+.button {
+  height: 60px;
+  width: 200px;
+  font-size: 18px;
+  margin-bottom: 20px;
 }

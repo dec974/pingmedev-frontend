@@ -25,16 +25,56 @@ export default function Connexion() {
   const [signInErrorMessage, setSignInErrorMessage] = useState("");
   const [showPopover, setShowPopover] = useState(false);
 
-  function GitHubLoginButton() {
-    const loginWithGitHub = () => {
+  function GitHubSignUpButton() {
+    const signUpWithGitHub = () => {
+      if (!acceptTerms) {
+        setErrorMessage("Vous devez accepter les conditions d'utilisation");
+        return;
+      }
       const clientID = "Ov23lio8tZ02RbB9eJUC";
-      const redirectURI = "http://localhost:3001/githubPage";
+      const redirectURI = "http://localhost:3001/githubPage?action=signup";
       window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientID}&redirect_uri=${redirectURI}`;
     };
-    return <button onClick={loginWithGitHub}>Se connecter avec GitHub</button>;
+
+    //
+
+    return (
+      //<Button
+
+      <Button
+        onClick={signUpWithGitHub}
+        variant="primary"
+        // className={styles.githubButton} pour les couleurs github standard desactiver le com
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+        </svg>
+        S'inscrire avec GitHub
+      </Button>
+    );
+  }
+  // svg sert à avoir la petite tete github le chat la
+  function GitHubSignInButton() {
+    const signInWithGitHub = () => {
+      const clientID = "Ov23lio8tZ02RbB9eJUC";
+      const redirectURI = "http://localhost:3001/githubPage?action=signin";
+      window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientID}&redirect_uri=${redirectURI}`;
+    };
+    // voir dans le Notion dans github auth le lien pour explication de ces lignes
+    return (
+      <Button
+        onClick={signInWithGitHub}
+        variant="primary"
+        // className={styles.githubButton} pareil que 20 lignes au dessus
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+        </svg>
+        Se connecter avec GitHub
+      </Button>
+    );
   }
 
-  // Fonction pour gérer le retour de GitHub
   const handleGitHubCallback = (githubUserData) => {
     fetch("http://localhost:3000/users/signingithub", {
       method: "POST",
@@ -50,6 +90,9 @@ export default function Connexion() {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("username", data.username);
+          localStorage.setItem("email", data.email);
           dispatch(
             signIn({
               username: data.username,
@@ -57,21 +100,22 @@ export default function Connexion() {
               email: data.email,
             })
           );
+          // voir dans Notion dans localstorage pour explication de ces lignes
           if (data.isNewUser) {
             router.push("/profilPage");
           } else {
             router.push("/home");
           }
         } else {
-          setErrorMessage(data.error || "Erreur lors de la connexion GitHub");
+          setErrorMessage(data.error || "Erreur de connexion GitHub");
         }
       })
       .catch((error) => {
         console.error("Erreur de connexion GitHub:", error);
-        setErrorMessage("Erreur de connexion au serveur");
+        setErrorMessage("Erreur de connexion GitHub");
       });
   };
-
+  // voir le exo Ariane Google Connect pour explications de lignes dessous
   const handleSignInGoogle = (credentialResponse) => {
     const userInfo = jwtDecode(credentialResponse.credential);
     fetch("http://localhost:3000/users/signingoogle", {
@@ -86,6 +130,10 @@ export default function Connexion() {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("username", data.username);
+          localStorage.setItem("email", data.email);
+
           setUser(userInfo);
           dispatch(
             signIn({
@@ -101,11 +149,16 @@ export default function Connexion() {
       })
       .catch((error) => {
         console.error("Erreur de connexion:", error);
-        setSignInErrorMessage("Erreur de connexion au serveur");
+        setSignInErrorMessage("Erreur de connexion ");
       });
   };
 
   const handleSignUpGoogle = (credentialResponse) => {
+    if (!acceptTerms) {
+      setErrorMessage("Vous devez accepter les conditions d'utilisation");
+      return;
+    }
+
     const userInfo = jwtDecode(credentialResponse.credential);
     fetch("http://localhost:3000/users/signingoogle", {
       method: "POST",
@@ -119,7 +172,9 @@ export default function Connexion() {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
-          setUser(userInfo);
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("username", data.username);
+          localStorage.setItem("email", data.email);
           dispatch(
             signIn({
               username: data.username,
@@ -127,13 +182,13 @@ export default function Connexion() {
               email: data.email,
             })
           );
+
           if (data.isNewUser) {
             router.push("/profilPage");
           } else {
             router.push("/home");
           }
         } else {
-          console.error("Erreur lors de la connexion Google:", data.error);
           setErrorMessage(data.error || "Erreur lors de la connexion");
         }
       })
@@ -161,6 +216,10 @@ export default function Connexion() {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("username", data.username);
+          localStorage.setItem("email", data.email);
+
           dispatch(
             signUp({
               username: signUpUsername,
@@ -168,6 +227,7 @@ export default function Connexion() {
               email: signUpMail,
             })
           );
+
           setSignUpUsername("");
           setSignUpPassword("");
           setSignUpMail("");
@@ -181,7 +241,7 @@ export default function Connexion() {
         setErrorMessage("Erreur de connexion au serveur");
       });
   };
-
+  // voir Notion dans local storage le lien pour explication
   const handleSignIn = () => {
     if (!signInUsername || !signInPassword) {
       setSignInErrorMessage("Champs vides");
@@ -201,12 +261,32 @@ export default function Connexion() {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
-          dispatch(signIn({ username: signInUsername, token: data.token }));
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("username", data.username);
+          if (data.email) {
+            localStorage.setItem("email", data.email);
+          }
+
+          dispatch(
+            signIn({
+              username: signInUsername,
+              token: data.token,
+              email: data.email,
+            })
+          );
           setSignInUsername("");
           setSignInPassword("");
           setSignUpMail("");
           router.push("/home");
+        } else {
+          setSignInErrorMessage(
+            data.error || "Nom d'utilisateur ou mot de passe incorrect"
+          );
         }
+      })
+      .catch((error) => {
+        console.error("Erreur lors de la connexion:", error);
+        setSignInErrorMessage("Erreur de connexion au serveur");
       });
   };
 
@@ -227,10 +307,9 @@ export default function Connexion() {
         <img className={styles.logo} src="/logo.png" alt="Logo" />
       </div>
 
-      <div className={styles.section} style={{}}>
+      <div className={styles.section}>
         <div className={styles.logContainer}>
           <h2 className={styles.textLog}>S'inscrire</h2>
-
           <div className={styles.inputWrapper}>
             <Input
               type="text"
@@ -246,6 +325,7 @@ export default function Connexion() {
             />
             <label className={styles.floatingLabel}>Username</label>
           </div>
+          {/* label sert a avoir le texte qui flotte au dessus de l'input */}
           <div className={styles.inputWrapper}>
             <Input
               type="email"
@@ -253,7 +333,7 @@ export default function Connexion() {
               value={signUpMail}
               onChange={(e) => {
                 setSignUpMail(e.target.value);
-                if (errorMessage && e.target.value.trim()) {
+                if (errorMessage && e.target.value) {
                   setErrorMessage("");
                 }
               }}
@@ -276,7 +356,6 @@ export default function Connexion() {
             />
             <label className={styles.floatingLabel}>Password</label>
           </div>
-
           <div className={styles.termsSection}>
             <button
               type="button"
@@ -311,7 +390,6 @@ export default function Connexion() {
               </div>
             )}
           </div>
-
           <Checkbox
             label="J'accepte les conditions d'utilisation"
             checked={acceptTerms}
@@ -322,11 +400,9 @@ export default function Connexion() {
               }
             }}
           />
-
           {errorMessage && (
             <div className={styles.errorMessage}>{errorMessage}</div>
           )}
-
           <Button
             onClick={handleSignUp}
             variant="primary"
@@ -340,30 +416,20 @@ export default function Connexion() {
           >
             S'inscrire
           </Button>
-
           <div className={styles.blueLine}></div>
-
           <GoogleOAuthProvider clientId={clientId}>
             <div style={{ textAlign: "center", marginTop: "20px" }}>
               {user ? (
-                <div>
-                  <h4>Welcome {user.name}!</h4>
-                  <p>Email: {user.email}</p>
-                </div>
+                console.log("Utilisateur connecté :", user)
               ) : (
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "10px",
-                  }}
-                >
+                <div className={styles.logContainer}>
                   <GoogleLogin
                     onSuccess={handleSignUpGoogle}
                     onError={(error) => console.error(error)}
                     text="signup_with"
+                    theme="filled_blue"
                   />
-                  <GitHubLoginButton />
+                  <GitHubSignUpButton />
                 </div>
               )}
             </div>
@@ -371,9 +437,7 @@ export default function Connexion() {
         </div>
 
         <div className={styles.logContainer}>
-          <h2 className={styles.textLog} style={{}}>
-            Se connecter
-          </h2>
+          <h2 className={styles.textLog}>Se connecter</h2>
 
           <div className={styles.inputWrapper}>
             <Input
@@ -428,24 +492,16 @@ export default function Connexion() {
           <GoogleOAuthProvider clientId={clientId}>
             <div style={{ textAlign: "center", marginTop: "20px" }}>
               {user ? (
-                <div>
-                  <h4>Welcome {user.name}!</h4>
-                  <p>Email: {user.email}</p>
-                </div>
+                console.log("User already signed in")
               ) : (
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "10px",
-                  }}
-                >
+                <div className={styles.logContainer}>
                   <GoogleLogin
                     onSuccess={handleSignInGoogle}
                     onError={(error) => console.error(error)}
                     text="signin_with"
+                    theme="filled_blue"
                   />
-                  <GitHubLoginButton />
+                  <GitHubSignInButton />
                 </div>
               )}
             </div>
