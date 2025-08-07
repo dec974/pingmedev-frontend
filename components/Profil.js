@@ -282,7 +282,7 @@ export default function Profil() {
           </p>
           <input
             type="text"
-            placeholder="localité :"
+            placeholder="Inscris ta ville :"
             value={locality}
             onChange={(e) => setLocality(e.target.value)}
             style={{
@@ -298,13 +298,9 @@ export default function Profil() {
 
       <div
         style={{
-          position: "fixed",
-          bottom: "20px",
-          left: "0",
-          right: "0",
           display: "flex",
           justifyContent: "center",
-          zIndex: 1000,
+          marginBottom: "40px",
         }}
       >
         <Button

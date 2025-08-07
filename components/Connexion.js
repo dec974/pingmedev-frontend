@@ -333,7 +333,7 @@ export default function Connexion() {
               value={signUpMail}
               onChange={(e) => {
                 setSignUpMail(e.target.value);
-                if (errorMessage && e.target.value.trim()) {
+                if (errorMessage && e.target.value) {
                   setErrorMessage("");
                 }
               }}
@@ -420,22 +420,14 @@ export default function Connexion() {
           <GoogleOAuthProvider clientId={clientId}>
             <div style={{ textAlign: "center", marginTop: "20px" }}>
               {user ? (
-                <div>
-                  <h4>Welcome {user.name}!</h4>
-                  <p>Email: {user.email}</p>
-                </div>
+                console.log("Utilisateur connecté :", user)
               ) : (
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "10px",
-                  }}
-                >
+                <div className={styles.logContainer}>
                   <GoogleLogin
                     onSuccess={handleSignUpGoogle}
                     onError={(error) => console.error(error)}
                     text="signup_with"
+                    theme="filled_blue"
                   />
                   <GitHubSignUpButton />
                 </div>
@@ -500,22 +492,14 @@ export default function Connexion() {
           <GoogleOAuthProvider clientId={clientId}>
             <div style={{ textAlign: "center", marginTop: "20px" }}>
               {user ? (
-                <div>
-                  <h4>Welcome {user.name}!</h4>
-                  <p>Email: {user.email}</p>
-                </div>
+                console.log("User already signed in")
               ) : (
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "10px",
-                  }}
-                >
+                <div className={styles.logContainer}>
                   <GoogleLogin
                     onSuccess={handleSignInGoogle}
                     onError={(error) => console.error(error)}
                     text="signin_with"
+                    theme="filled_blue"
                   />
                   <GitHubSignInButton />
                 </div>
