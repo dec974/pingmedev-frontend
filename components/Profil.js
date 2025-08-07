@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Button from "../ui-kit/atoms/Button";
 import styles from "../styles/Profil.module.css";
-import Checkbox from "../ui-kit/atoms/Checkbox";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
+import Checkbox from "../ui-kit/atoms/Checkbox";
+
 export default function Profil() {
   const [selectedExperience, setSelectedExperience] = useState("");
   const [locality, setLocality] = useState("");
@@ -54,12 +55,10 @@ export default function Profil() {
 
   const handleExperienceChange = (experience) => {
     setSelectedExperience(experience);
-    console.log("Expérience sélectionnée:", experience);
   };
 
   const handleLanguageChange = (selectedOptions) => {
-    setSelectedLanguage(selectedOptions || []); // ✅ Gérer le tableau
-    console.log("Langages sélectionnés:", selectedOptions);
+    setSelectedLanguage(selectedOptions || []);
   };
 
   const handleCreateProfile = async () => {
@@ -74,7 +73,7 @@ export default function Profil() {
       const profileData = {
         token: token,
         experience: selectedExperience,
-        selectedLanguage: selectedLanguage.map((lang) => lang.value), // ✅ Envoyer un tableau des valeurs
+        selectedLanguage: selectedLanguage.map((lang) => lang.value),
         locality: locality,
       };
 
@@ -227,13 +226,11 @@ export default function Profil() {
             }}
           >
             {experienceOptions.map((option, index) => (
-              <RadioItem
+              <Checkbox
                 key={`exp-${index}`}
-                name="experience"
-                value={option}
                 label={option}
-                selectedValue={selectedExperience}
-                onChange={handleExperienceChange}
+                checked={selectedExperience === option}
+                onChange={() => handleExperienceChange(option)}
               />
             ))}
           </div>

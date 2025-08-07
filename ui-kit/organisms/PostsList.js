@@ -1,9 +1,7 @@
 import styles from "./PostsList.module.css";
 import { SiJavascript, SiReact } from "react-icons/si";
 
-import moment from 'moment';
-
-
+import moment from "moment";
 
 const iconMap = {
   javascript: SiJavascript,
@@ -20,23 +18,22 @@ export default function PostsList({ posts }) {
         let date = moment(post.createdAt);
         let now = moment();
         let duration = moment.duration(now.diff(date));
-      
+
         //formatage du temps
-        let timeAgo = '';
+        let timeAgo = "";
         if (duration.asDays() >= 15) {
-          timeAgo = moment(post.createdAt).format('DD/MM/YYYY');
-        }else if (duration.asDays() >= 1 && duration.asDays() < 15) {
+          timeAgo = moment(post.createdAt).format("DD/MM/YYYY");
+        } else if (duration.asDays() >= 1 && duration.asDays() < 15) {
           // Si + d'un jour, afficher en jours
           timeAgo = `il y a ${Math.floor(duration.asDays())}j`;
-        } else if (duration.asHours() >= 1) { 
+        } else if (duration.asHours() >= 1) {
           // Si + d'une heure, afficher en heures
           timeAgo = `il y a ${Math.floor(duration.asHours())}h`;
-        } else { 
+        } else {
           // Sinon afficher les minutes
           timeAgo = `il y a ${Math.floor(duration.asMinutes())}min`;
         }
-                
-                
+
         return (
           <div key={post.id} className={styles.post}>
             <div className={styles.header}>
@@ -44,7 +41,7 @@ export default function PostsList({ posts }) {
               <h3 className={styles.title}>{post.title}</h3>
 
               <div className={styles.meta}>
-                <span className={styles.username}>@{post.userId.username}</span>
+                {/* <span className={styles.username}>@{post.userId.username}</span> */}
                 {/*affichage du temps calculté avec timeAgo*/}
                 <time className={styles.date}>{timeAgo}</time>
               </div>
