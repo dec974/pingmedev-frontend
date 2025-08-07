@@ -3,11 +3,12 @@ import { useRouter } from "next/router";
 import Button from "../ui-kit/atoms/Button";
 import styles from "../styles/Profil.module.css";
 import Checkbox from "../ui-kit/atoms/Checkbox";
-
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
 export default function Profil() {
   const [selectedExperience, setSelectedExperience] = useState("");
   const [locality, setLocality] = useState("");
-  const [selectedLanguage, setSelectedLanguage] = useState("");
+  const [selectedLanguage, setSelectedLanguage] = useState([]); // ✅ Changer en tableau
   const [languages, setLanguages] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -23,7 +24,6 @@ export default function Profil() {
     return null;
   };
 
-  // Récupérer les langages depuis la route /languages
   useEffect(() => {
     const fetchLanguages = async () => {
       try {
@@ -49,17 +49,7 @@ export default function Profil() {
         setLoading(false);
       }
     };
-
     fetchLanguages();
-  }, []);
-
-  // Debug: Afficher le contenu du localStorage
-  useEffect(() => {
-    console.log("=== DEBUG LOCALSTORAGE ===");
-    console.log("token:", localStorage.getItem("token"));
-    console.log("username:", localStorage.getItem("username"));
-    console.log("email:", localStorage.getItem("email"));
-    console.log("=== FIN DEBUG ===");
   }, []);
 
   const handleExperienceChange = (experience) => {
@@ -67,20 +57,14 @@ export default function Profil() {
     console.log("Expérience sélectionnée:", experience);
   };
 
-  const handleLanguageChange = (language) => {
-    setSelectedLanguage(language);
-    console.log("Langage sélectionné:", language);
+  const handleLanguageChange = (selectedOptions) => {
+    setSelectedLanguage(selectedOptions || []); // ✅ Gérer le tableau
+    console.log("Langages sélectionnés:", selectedOptions);
   };
 
   const handleCreateProfile = async () => {
     try {
       const token = getUserToken();
-
-      if (!token) {
-        alert("Veuillez vous connecter d'abord");
-        router.push("/connexion");
-        return;
-      }
 
       if (!selectedExperience) {
         alert("Veuillez sélectionner votre niveau d'expérience");
@@ -90,11 +74,9 @@ export default function Profil() {
       const profileData = {
         token: token,
         experience: selectedExperience,
-        selectedLanguage: selectedLanguage,
+        selectedLanguage: selectedLanguage.map((lang) => lang.value), // ✅ Envoyer un tableau des valeurs
         locality: locality,
       };
-
-      console.log("Données à envoyer:", profileData);
 
       const response = await fetch("http://localhost:3000/users/profile", {
         method: "POST",
@@ -107,16 +89,13 @@ export default function Profil() {
       const data = await response.json();
 
       if (data.result) {
-        console.log("Profil créé avec succès:", data.profile);
-        alert("Profil créé avec succès !");
         router.push("/home");
       } else {
         console.error("Erreur:", data.error);
-        alert("Erreur lors de la création du profil: " + data.error);
+        alert("Erreur  " + data.error);
       }
     } catch (error) {
-      console.error("Erreur lors de la création du profil:", error);
-      alert("Erreur lors de la création du profil");
+      console.error("Erreur ", error);
     }
   };
 
@@ -148,6 +127,84 @@ export default function Profil() {
       <span>{label}</span>
     </label>
   );
+
+  const languageOptions = languages
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map((lang) => ({
+      value: lang.name,
+      label: lang.name,
+      color: lang.color || "#1761ab",
+      icon: lang.icon,
+    }));
+
+  const customStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      padding: "10px",
+      borderRadius: "8px",
+      fontSize: "16px",
+      minHeight: "50px",
+    }),
+    placeholder: (provided) => ({
+      ...provided,
+      color: "#666",
+      fontSize: "16px",
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      color: "#1761ab",
+      fontWeight: "500",
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: "#1761ab",
+      color: "#333",
+      padding: "12px 20px",
+      fontSize: "14px",
+      cursor: "pointer",
+    }),
+    menu: (provided) => ({
+      ...provided,
+      borderRadius: "8px",
+      border: "1px solid #e1e5e9",
+    }),
+    menuList: (provided) => ({
+      ...provided,
+      maxHeight: "200px",
+      overflowY: "auto",
+    }),
+  };
+
+  const CustomOption = ({ children, ...props }) => {
+    const { data } = props;
+    return (
+      <div
+        {...props.innerProps}
+        style={{
+          padding: "12px 20px",
+          cursor: "pointer",
+          backgroundColor: "#c4c8ccff",
+
+          color: "#333",
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+        }}
+      >
+        <div
+          style={{
+            width: "12px",
+            height: "12px",
+            backgroundColor: data.color,
+            borderRadius: "50%",
+          }}
+        />
+        <span>{children}</span>
+      </div>
+    );
+  };
+
+  const animatedComponents = makeAnimated();
 
   return (
     <div className={styles.container}>
@@ -184,80 +241,24 @@ export default function Profil() {
 
         <div style={{ width: "600px" }}>
           <h3 style={{ marginBottom: "20px", color: "#1761ab" }}>
-            Ton langage/technologie principal:
+            Actuellement sur:
           </h3>
 
           <div style={{ display: "flex", justifyContent: "center" }}>
-            <select
-              value={selectedLanguage}
-              onChange={(e) => handleLanguageChange(e.target.value)}
-              style={{
-                padding: "15px",
-                borderRadius: "8px",
-                border: "2px solid #1761ab",
-                fontSize: "16px",
-                backgroundColor: "white",
-                cursor: "pointer",
-                width: "300px",
-                minHeight: "50px",
-              }}
-            >
-              <option value="" disabled>
-                {loading
-                  ? "Chargement..."
-                  : "Sélectionne ton langage/techno principal"}
-              </option>
-              {!loading && languages.length > 0 ? (
-                languages
-                  .sort((a, b) => a.name.localeCompare(b.name))
-                  .map((lang) => (
-                    <option
-                      key={lang._id}
-                      value={lang.name}
-                      style={{
-                        padding: "10px",
-                        fontSize: "14px",
-                      }}
-                    >
-                      {lang.name}
-                    </option>
-                  ))
-              ) : !loading ? (
-                <option disabled>Aucun langage disponible</option>
-              ) : null}
-            </select>
+            <div style={{ width: "500px" }}>
+              <Select
+                value={selectedLanguage}
+                onChange={handleLanguageChange}
+                options={languageOptions}
+                styles={customStyles}
+                components={{ ...animatedComponents, Option: CustomOption }}
+                placeholder={"Sélectionne tes langages"}
+                isClearable={true}
+                isMulti={true}
+                closeMenuOnSelect={false}
+              />
+            </div>
           </div>
-
-          {selectedLanguage && (
-            <div
-              style={{
-                marginTop: "20px",
-                padding: "15px",
-                backgroundColor: "#f0f8ff",
-                borderRadius: "8px",
-                textAlign: "center",
-                border: "2px solid #1761ab",
-              }}
-            >
-              <strong
-                style={{ color: "#1761ab", fontSize: "16px" }}
-              >{`✅ Sélectionné: ${selectedLanguage}`}</strong>
-            </div>
-          )}
-
-          {/* Debug info */}
-          {!loading && (
-            <div
-              style={{
-                marginTop: "10px",
-                fontSize: "12px",
-                color: "#666",
-                textAlign: "center",
-              }}
-            >
-              {languages.length} langages disponibles
-            </div>
-          )}
         </div>
       </div>
 
