@@ -51,6 +51,10 @@
   padding: .2rem;
 }
 
+.deleteBtn {
+  color: var(--secondary-color);
+}
+
 .content {
   margin-top: 0.5rem;
   font-size: 1rem;

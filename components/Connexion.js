@@ -95,6 +95,7 @@ export default function Connexion() {
           localStorage.setItem("email", data.email);
           dispatch(
             signIn({
+              _id: data._id,
               username: data.username,
               token: data.token,
               email: data.email,
@@ -137,6 +138,7 @@ export default function Connexion() {
           setUser(userInfo);
           dispatch(
             signIn({
+              _id: data._id,
               username: data.username,
               token: data.token,
               email: data.email,
@@ -177,6 +179,7 @@ export default function Connexion() {
           localStorage.setItem("email", data.email);
           dispatch(
             signIn({
+              _id: data._id,
               username: data.username,
               token: data.token,
               email: data.email,
@@ -222,6 +225,7 @@ export default function Connexion() {
 
           dispatch(
             signUp({
+              _id: data._id,
               username: signUpUsername,
               token: data.token,
               email: signUpMail,
@@ -269,6 +273,7 @@ export default function Connexion() {
 
           dispatch(
             signIn({
+              _id: data._id,
               username: signInUsername,
               token: data.token,
               email: data.email,

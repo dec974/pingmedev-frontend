@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import styles from "../styles/UserContent.module.css";
 import Button from "../ui-kit/atoms/Button";
 import PostsList from "../ui-kit/organisms/PostsList";
+import {FaTrash} from "react-icons";
 
 function UserContent() {
   const [activeTab, setActiveTab] = useState("posts");
@@ -16,22 +17,14 @@ function UserContent() {
     setLoading(true);
 
     if (activeTab === "posts") {
-      console.log("User dans Redux :", user);
-
       fetch(`http://localhost:3000/users/user/${user.token}`)
-        .then((res) => res.json())
+        .then((res) => {
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          return res.json();
+        })
         .then((data) => {
-          console.log(" Données brutes reçues du backend :", data);
-          data.forEach((post, i) => {
-            console.log(` Post ${i + 1}`, post);
-            console.log(" post.userId :", post.userId);
-          });
-          const userPosts = data.filter(
-            (post) => post.userId.token === user.token
-          );
-
-          setPosts(userPosts);
-          console.log("Posts récupérés :", userPosts);
+          console.log(" Données reçues (posts) :", data);
+          setPosts(data);
           setLoading(false);
         });
     }
@@ -71,16 +64,49 @@ function UserContent() {
           Topics suivis
         </Button>
       </div>
+      <div className={styles.userContentContainer}>
+        <div className={styles.sort}>Du + récent au + ancien</div>
 
-      <div className={styles.sort}>Du + récent au + ancien</div>
+        {loading ? (
+          <p>Chargement des posts...</p>
+        ) : activeTab === "posts" ? (
+          <PostsList
+            posts={posts}
+            showDelete={true}
+            onDelete={(postId) => {
+              console.log("Suppression d'un de MES posts", postId);
 
-      {loading ? (
-        <p>Chargement des posts...</p>
-      ) : activeTab === "posts" ? (
-        <PostsList posts={posts} />
-      ) : (
-        <PostsList posts={followedPosts} />
-      )}
+              fetch(`http://localhost:3000/posts/${postId}/deleted`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+              })
+                .then((res) => res.json())
+                .then(() => {
+                  setPosts((prev) => prev.filter((p) => p._id !== postId));
+                });
+            }}
+          />
+        ) : (
+          <PostsList
+            posts={followedPosts}
+            showDelete={true} // bouton delete aussi sur les topics suivis
+            onDelete={(postId) => {
+              console.log("Suppression d'un post suivi", postId);
+
+              fetch(`http://localhost:3000/posts/${postId}/deleted`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+              })
+                .then((res) => res.json())
+                .then(() => {
+                  setFollowedPosts((prev) =>
+                    prev.filter((p) => p._id !== postId)
+                  );
+                });
+            }}
+          />
+        )}
+      </div>
     </main>
   );
 }
