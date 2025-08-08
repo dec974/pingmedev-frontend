@@ -9,11 +9,15 @@ const iconMap = {
 };
 
 export default function PostsList({ posts }) {
+  console.log("PostsList reçoit :", posts);
+  if (!posts || posts.length === 0) {
+    console.log("Aucun post à afficher"); 
+    return <p>Aucun post à afficher.</p>;
+  }
   return (
     <div className={styles.list}>
       {posts.map((post) => {
         const Icon = iconMap[post.language] || null;
-
         //calcul de la durée depuis la création du post
         let date = moment(post.createdAt);
         let now = moment();

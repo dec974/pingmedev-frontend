@@ -10,21 +10,28 @@ function UserContent() {
   const [loading, setLoading] = useState(true);
   const [followedPosts, setFollowedPosts] = useState([]);
   const user = useSelector((state) => state.user.value);
+  console.log(" Utilisateur connecté :", user);
 
   useEffect(() => {
     setLoading(true);
 
     if (activeTab === "posts") {
+      console.log("User dans Redux :", user);
+
       fetch(`http://localhost:3000/users/user/${user.token}`)
         .then((res) => res.json())
         .then((data) => {
-          console.log("data reçue (posts):", data);
-         
+          console.log(" Données brutes reçues du backend :", data);
+          data.forEach((post, i) => {
+            console.log(` Post ${i + 1}`, post);
+            console.log(" post.userId :", post.userId);
+          });
+          const userPosts = data.filter(
+            (post) => post.userId.token === user.token
+          );
+
           setPosts(userPosts);
-          setLoading(false);
-        })
-        .catch((err) => {
-          console.error("Erreur lors du fetch des posts :", err);
+          console.log("Posts récupérés :", userPosts);
           setLoading(false);
         });
     }
