@@ -8,53 +8,77 @@
 .post {
   background-color: white;
   border-radius: 8px;
-  padding: 1rem;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  /* padding: 1rem; */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .header {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
-}
-
-.icon {
-  font-size: 2rem;
-  color: #f7df1e; 
-  background-color: var(--primary-color);
+  background-color: var(--background-color-lightgrey);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  justify-content: space-between;
+  
+  
 }
 
 .title {
-  color: var(--primary-color);
+  color: var(--text-color);
   margin: 0;
-  padding: .3rem;
-  font-size: 1.1rem;
-  font-weight: bold;
+  padding: 1rem;
+  font-weight: normal;
+  font-size: 1rem;
+  font-family: JetBrains Mono;
+  width: 100%;
   
 }
 
 .meta {
-  font-size: 0.85rem;
-  color: var(--text-color);
-  margin-top: 0.2rem;
+  display: flex;
+  font-size: 0.9rem;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+  font-weight: 600;
+}
+
+.type {
+  color: var(--primary-color);
+  font-style: normal;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.typeletter {
+  font-weight: bold;
+  font-size: 1.2rem;
 }
 
 .username {
   font-style: italic;
-  color: var(--text-color)
+  font-family: JetBrains Mono;
+  color: var(--text-color);
+  font-size: 0.9rem;
+  width: 100%;
+  color: var(--secondary-color);
+  font-weight: 600;
 }
 
 .date {
   margin-left: 0.5rem;
   color: var(--secondary-color);
-  background-color: white;
-  padding: .2rem;
 }
 
-.content {
-  margin-top: 0.5rem;
-  font-size: 1rem;
-  color: var(--text-color);
-  background-color: var;
-  padding: 1rem;
+.deleteBtn {
+  display: flex;
+  margin-right: 0;
+  align-items: center;
+  color: var(--secondary-color);
+  border: none;
+}
+
+.deleteBtn:hover {
+  cursor: pointer;
 }

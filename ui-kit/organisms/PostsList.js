@@ -1,56 +1,71 @@
 import styles from "./PostsList.module.css";
 import { SiJavascript, SiReact } from "react-icons/si";
+import { FaTrash } from "react-icons/fa";
+import { formatDate } from "../../modules/formatDate";
 
-import moment from "moment";
 
 const iconMap = {
   javascript: SiJavascript,
   react: SiReact,
 };
 
-export default function PostsList({ posts }) {
-  console.log("PostsList reçoit :", posts);
-  if (!posts || posts.length === 0) {
-    console.log("Aucun post à afficher"); 
+export default function PostsList({
+  posts,
+  showIcons = true,
+  showAuthor = true,
+  showDelete = false,
+  onDelete,
+}) {
+
+  // on s'assure de recevoir un tableau, sinon on contourne l'erreur.
+  if (!Array.isArray(posts) || posts.length === 0) {
     return <p>Aucun post à afficher.</p>;
   }
+
   return (
     <div className={styles.list}>
       {posts.map((post) => {
         const Icon = iconMap[post.language] || null;
-        //calcul de la durée depuis la création du post
-        let date = moment(post.createdAt);
-        let now = moment();
-        let duration = moment.duration(now.diff(date));
 
-        //formatage du temps
-        let timeAgo = "";
-        if (duration.asDays() >= 15) {
-          timeAgo = moment(post.createdAt).format("DD/MM/YYYY");
-        } else if (duration.asDays() >= 1 && duration.asDays() < 15) {
-          // Si + d'un jour, afficher en jours
-          timeAgo = `il y a ${Math.floor(duration.asDays())}j`;
-        } else if (duration.asHours() >= 1) {
-          // Si + d'une heure, afficher en heures
-          timeAgo = `il y a ${Math.floor(duration.asHours())}h`;
-        } else {
-          // Sinon afficher les minutes
-          timeAgo = `il y a ${Math.floor(duration.asMinutes())}min`;
-        }
+        // on prend la première valeur qui remonte (populate Mongoose ou autre format, sinon null)
+        const author = post?.userId?.username ?? post?.username ?? null;
 
         return (
-          <div key={post.id} className={styles.post}>
+          <div key={post._id} className={styles.post}>
             <div className={styles.header}>
-              {Icon && <Icon className={styles.icon} />}
-              <h3 className={styles.title}>{post.title}</h3>
+              <div className={styles.headerleft}>
+                {showIcons && Icon && <Icon className={styles.icon} />}
 
-              <div className={styles.meta}>
-                {/* <span className={styles.username}>@{post.userId.username}</span> */}
-                {/*affichage du temps calculté avec timeAgo*/}
-                <time className={styles.date}>{timeAgo}</time>
+                {showAuthor && author && (
+                  <p className={styles.username}>
+                    <span className={styles.type}>Question de </span>
+                    {author}
+                  </p>
+                )}
+              </div>
+              <div className={styles.headerright}>
+                <div className={styles.meta}>
+                  <time className={styles.date}>
+                    {formatDate(post.createdAt)}
+                  </time>
+                  {showDelete && (
+                    <button
+                      className={styles.deleteBtn}
+                      onClick={() => {
+                        if (!onDelete) return;
+                        const ok = window.confirm(
+                          "Êtes-vous sûr de vouloir supprimer ce post ?"
+                        );
+                        if (ok) onDelete(post._id);
+                      }}
+                    >
+                      <FaTrash size={16} />
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
-            <p className={styles.content}>{post.content}</p>
+            <h3 className={styles.title}>{post.title}</h3>
           </div>
         );
       })}
