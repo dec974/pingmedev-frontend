@@ -1,4 +1,4 @@
-import Profil from "../components/ProfileCreate.js";
+import Profil from "../components/MyProfile.js";
 
 function profilPage() {
   return <Profil />;

@@ -1,7 +1,7 @@
-import Landing from "../components/Landing";
+import Landing from "../components/Landing.js";
 
-function Index() {
+function index() {
   return <Landing />;
 }
 
-export default Index;
+export default index;
