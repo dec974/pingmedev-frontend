@@ -23,40 +23,45 @@ export default function Home() {
 //voici le composant Home qui affiche les posts
   return (
     <>
-    <Header></Header>
+    <Header />
     
     <div className={styles.home}>
+      {/*Contenu fixe qui reste en haut*/}
+      <div className={styles.fixedContent}>
       <h1 className={styles.title}>Bienvenue sur PingMeDev</h1>
-      <h2>John Doe</h2>
-      <div className={styles.returnBtn}>
-      <Button variant={"primary"} onClick={() => alert('Button clicked!')}>Retour</Button>
+      <h2 className={styles.nameTitle}>John Doe</h2>
+
+      <div className={styles.searchArea}>
+        <Input type="text" placeholder="Rechercher un sujet ..." />
+        <Button variant={"primary"} onClick={() => alert('Rechercher!')}>
+        Chercher
+        </Button>
       </div>
-      <Input type="text" placeholder="Rechercher un sujet ..." />
+
+      {/*Header avec titre et bouton alignés*/}
+      <div className={styles.postHeader}>
+        <h3 className={styles.postsTitle}> Derniers posts</h3>
+          <div className={styles.newPostBtn}>
+            <Button variant={"secondary"} onClick={()=> alert('Nouveau Sujet!')}>
+            Nouveau Sujet
+            </Button>
+          </div>
+        </div>
+      </div>
       
-      <h2> Derniers posts</h2>
+      {/*Container scrollable pour la liste de posts*/}
+      <div className={styles.postsContainer}>
       {loading ? (
         <p> Chargement en cours</p>
       ) : (
         <PostsList posts={posts}/>
         
-        /*posts.map((post) => (
-          <div key={post._id}>
-            <h3>{post.title}</h3>
-            
-            <p>{post.content}</p>
-            <p>Par: {post.userId.username}</p>
-            <a href={`/posts/${post._id}`}>Voir le post</a>
-            <p>Langages: {post.languages.map(lang => lang.name).join(', ')}</p>
-            <p>Status: {post.status}</p>
-            <p>Créé le: {new Date(post.createdAt).toLocaleDateString()}</p>
-            
-          </div>
-        ))*/
       )}
-      </div>
-      <div classname={styles.footer}>
-      <Footer ></Footer>
-      </div>
+      </div>      
+    </div>
+
+      <Footer />
+      
       </>
     );
   }
