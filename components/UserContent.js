@@ -72,6 +72,8 @@ function UserContent() {
         ) : activeTab === "posts" ? (
           <PostsList
             posts={posts}
+            showIcons={false}
+            showAuthor={false}
             showDelete={true}
             onDelete={(postId) => {
               console.log("Suppression d'un de MES posts", postId);

@@ -14,12 +14,13 @@ body {
 }
 
 :root {
-  --background-color-white: #f2f2f2;
+  --background-color-white: white;
+  --background-color-lightgrey: #f2f2f2;
   --background-color-grey: #dfdfdf;
   --primary-color: #1761ab;
-  --secondary-color: #ffb454;
-  --input-focus: #ffb454;
-  --text-color: #1f2937;
+  --secondary-color: #f59e2d;
+  --input-focus: #f59e2d;
+  --text-color: #3d4247;
   --radius: 0.4rem;
   --font-roboto: 'Roboto', sans-serif;
   --font-jetbrains: 'JetBrains Mono', monospace;
