@@ -31,13 +31,16 @@ function Posts(props) {
             }   
         });
         // recuperation des langages via le backend
+        console.log('fetch language');
         fetch('http://localhost:3000/languages/')
         .then(response => response.json())
         .then(data => {
             if(data.result) {
-                setLanguages(data.languages);
+                console.log(data);
+                setLanguages(data.data);
             }
         });
+        console.log('end fetch');
         if (type === "edit" || type === "show") {
             // Logique pour charger les données du post à éditer
             fetch(`http://localhost:3000/posts/${props.postId}`)
@@ -90,6 +93,9 @@ function Posts(props) {
             console.log('Success:', data);
             if (data.result) {
                 console.log('Post created successfully:', data.post);
+                if (status === 'draft') {
+                    router.push(`/posts/edit/${data.post._id}`);
+                }
                 router.push(`/posts/${data.post._id}`);
             } else {
                 console.error(data.error);
@@ -99,6 +105,7 @@ function Posts(props) {
             console.error('Error:', error);
         });
     }
+
 
     const dataListLanguages = languages.map((lang) => (
         {key: lang._id, value: lang.name, label: lang.name}

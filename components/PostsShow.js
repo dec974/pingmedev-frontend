@@ -3,17 +3,36 @@ import { useRouter } from 'next/router';
 import { useSelector } from "react-redux";
 import MainLayout from '../ui-kit/template/MainLayout';
 import Button from '../ui-kit/atoms/Button';
+import TextArea from '../ui-kit/atoms/TextArea';
 import styles from '../styles/PostsShow.module.css';
 import { formatDate } from '../modules/formatDate';
 import Spinner from "../ui-kit/atoms/Spinner";
+import Image from "next/image";
+import Icon from "../ui-kit/atoms/Icon";
+import Modal from "react-modal";
+import { FaPencil } from "react-icons/fa6";
+
 
 function PostsShow( ) {
     const router = useRouter();
     const user = useSelector((state => state.user.value));
     const { postId }  = router.query;
     const [post, setPost] = useState(null);
+    const [answerContent, setAnswerContent] = useState('');
+    const [modalIsOpen, setModalIsOpen] = useState(false);
 
     useEffect(() => {
+        if(!user.id) {
+            fetch('http://localhost:3000/users/' + user.token)
+            .then(response => response.json())
+            .then(data => {
+                if(data.result) {
+                    user.id = data.user.id;
+                } else {
+                    console.error('Failed to fetch user data');
+                }
+            })
+        }
         if (postId) {
             console.log('Fetching post with ID:', postId);
             fetch(`http://localhost:3000/posts/${postId}`)
@@ -21,7 +40,6 @@ function PostsShow( ) {
             .then(data => {
                 if (data.result) {
                     setPost(data.post);
-                    console.log('Post data:', data.post);
                 } else {
                     console.error('Failed to fetch post data');
                 }
@@ -31,6 +49,52 @@ function PostsShow( ) {
             });
         }
     }, [postId]);
+
+    function openModal() {
+        setModalIsOpen(true);
+    }
+    function closeModal() {
+        setModalIsOpen(false);  
+    }
+
+    function handleSubmitAnswer(e) {
+        e.preventDefault();
+        // check if user is connected
+        if (!user) {
+            alert('Vous devez être connecté pour répondre à un sujet.');
+            return;
+        }
+        if (!answerContent.trim()) {
+            alert('Veuillez saisir une réponse.'); 
+            return;
+        }
+        const answerData = {
+            response: answerContent,
+            userId: user.id,
+            postId: postId
+        };
+        console.log('Submitting answer:', answerData);
+
+        fetch(`http://localhost:3000/posts/${postId}/answers`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(answerData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.result) {
+                console.log('Réponse ajoutée avec succès:', data.answer);
+                setPost(data.post);
+                setAnswerContent('');
+                closeModal();
+            } else {
+                console.error('Erreur lors de l\'ajout de la réponse');
+            }
+        })
+    }
+                
     
     if (!post) {
         return (
@@ -39,6 +103,33 @@ function PostsShow( ) {
             </MainLayout>
         );
     }
+    // affichage de icons langages
+    const languagesList = post.languages.map((language, index) => {
+        return <Icon key={index} language={language} size={60}/>
+    });
+
+    console.log('Post data:', post);
+    const answersList = post.answers.map((answer, index) => {
+        return (
+            <div key={index} className={styles.answer}>
+                <div className={styles.answerHeader}>
+                    <Image
+                        src="/avatar.png"
+                        width={40}
+                        height={40}
+                        className={styles.logoImg}
+                        alt="Avatar"
+                    />
+                    <span className={styles.answerAuthor}>{answer.userId.username}</span>
+                    <span className={styles.answerDate}>{formatDate(answer.createdAt)}</span>
+                </div>
+                <div className={styles.answerContent}>
+                    <p>Reponse: {answer.response}</p>
+                </div>
+            </div>
+        )
+    });
+    Modal.setAppElement('#__next'); 
     return (
         <MainLayout>
             <div className={styles.content}>
@@ -50,20 +141,70 @@ function PostsShow( ) {
                 <div className={styles.postContainer}>
                     <div className={styles.postHeader}>
                         <div className={styles.postAuthor}>
+                            <Image
+                                src="/avatar.png"
+                                width={60}
+                                height={60}
+                                className={styles.logoImg}
+                                alt="PingMe logo"
+                            />
                             {post ? post.userId.username : 'Loading...'}
                         </div>
-                        <h1 className={styles.postTitle}>{post.title}</h1>
-                        <p className={styles.postDate}>
-                            {formatDate( post.createdAt )}
-                        </p>
+                        <div className={styles.postHeaderTitle}>
+                            <h1 className={styles.postTitle}>{post.title}</h1>
+                            <div className={styles.subTitle}>
+                                <p className={styles.postDate}>
+                                    {formatDate( post.createdAt )}
+                                </p>
+                                <div className={styles.languages}>
+                                    {languagesList}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div className={styles.postContent}>
-                        <p className={styles.postContent}>{post ? post.content : 'Loading...'}</p>
-                        <p className={styles.postType}>Type: {post ? post.type : 'Loading...'}</p>
-                        <p className={styles.postAuthor}>Author: {post ? post.userId.name : 'Loading...'}</p>
-                        <p className={styles.postStatus}>Status: {post ? post.status : 'Loading...'}</p>
-                        <p className={styles.postLanguages}>Languages: {post ? post.languages.join(', ') : 'Loading...'}</p>
-                        <p className={styles.postCreatedAt}>Created At: {post ? new Date(post.createdAt).toLocaleDateString() : 'Loading...'}</p>
+                        <div className={styles.sujectContent}>
+                            <p>{post.content}</p>
+                        </div>
+                        <div className={styles.responses}>
+                            <div className={styles.answersList}>
+                                {answersList}
+                            </div>
+                            <div className={styles.answerForm}>
+                                <button className={styles.answerButton} onClick={openModal}>
+                                    <div className={styles.icon}>
+                                        <FaPencil size={20} />
+                                    </div>
+                                    <p>Répondre au sujet</p>
+                                </button>
+                                <Modal
+                                    isOpen={modalIsOpen}
+                                    onRequestClose={closeModal}
+                                    contentLabel="Répondre au sujet"
+                                    className={styles.modal}
+                                    overlayClassName={styles.overlay}
+                                >
+                                    <div className={styles.modalHeader}>
+                                        <h2>Répondre au sujet</h2>
+                                        <Button variant="secondary" onClick={() => closeModal()}>Fermer</Button>
+                                    </div>
+                                    <form onSubmit={(e) => handleSubmitAnswer(e)} className={styles.form}>
+                                        <TextArea
+                                            placeholder="Votre réponse..."  
+                                            value={answerContent}
+                                            onChange={(e) => setAnswerContent(e.target.value)}
+                                            rows={10}
+                                        />
+                                        <div className={styles.btnSubmit}>
+                                        <Button type="submit" variant="primary">
+                                            Répondre
+                                        </Button>
+                                        </div>
+                                    </form>  
+                                </Modal>
+                                
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

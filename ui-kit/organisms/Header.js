@@ -16,6 +16,7 @@ export default function Header({ unreadCount = 0, onLoginClick }) {
             height={90}
             className={styles.logoImg}
             alt="PingMe logo"
+            priority={true}
           />
           PingMe.dev
         </Link>
