@@ -1,0 +1,18 @@
+.content {
+    display: flex;
+    flex-direction: column;
+}
+
+.btnBack {
+    margin: 20px 60px;
+    
+}
+
+.postContainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
