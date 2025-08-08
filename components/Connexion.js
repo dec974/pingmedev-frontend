@@ -24,7 +24,7 @@ export default function Connexion() {
   const [errorMessage, setErrorMessage] = useState("");
   const [signInErrorMessage, setSignInErrorMessage] = useState("");
   const [showPopover, setShowPopover] = useState(false);
-
+  // inscription avec github
   function GitHubSignUpButton() {
     const signUpWithGitHub = () => {
       if (!acceptTerms) {
@@ -35,12 +35,7 @@ export default function Connexion() {
       const redirectURI = "http://localhost:3001/githubPage?action=signup";
       window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientID}&redirect_uri=${redirectURI}`;
     };
-
-    //
-
     return (
-      //<Button
-
       <Button
         onClick={signUpWithGitHub}
         variant="primary"
@@ -54,6 +49,7 @@ export default function Connexion() {
     );
   }
   // svg sert à avoir la petite tete github le chat la
+  //connection avec github
   function GitHubSignInButton() {
     const signInWithGitHub = () => {
       const clientID = "Ov23lio8tZ02RbB9eJUC";
@@ -116,6 +112,8 @@ export default function Connexion() {
       });
   };
   // voir le exo Ariane Google Connect pour explications de lignes dessous
+  // connexion avec Google
+
   const handleSignInGoogle = (credentialResponse) => {
     const userInfo = jwtDecode(credentialResponse.credential);
     fetch("http://localhost:3000/users/signingoogle", {
@@ -125,6 +123,7 @@ export default function Connexion() {
         email: userInfo.email,
         username: userInfo.name,
         googleId: userInfo.sub,
+        isSignIn: true,
       }),
     })
       .then((response) => response.json())
@@ -144,15 +143,15 @@ export default function Connexion() {
           );
           router.push("/home");
         } else {
-          setSignInErrorMessage(data.error || "Utilisateur inexistant");
+          setSignInErrorMessage(data.error || "Utilisateur non inscrit");
         }
       })
       .catch((error) => {
         console.error("Erreur de connexion:", error);
-        setSignInErrorMessage("Erreur de connexion ");
+        setSignInErrorMessage("Erreur de connexion");
       });
   };
-
+  // inscritpion avec Google
   const handleSignUpGoogle = (credentialResponse) => {
     if (!acceptTerms) {
       setErrorMessage("Vous devez accepter les conditions d'utilisation");
@@ -160,6 +159,7 @@ export default function Connexion() {
     }
 
     const userInfo = jwtDecode(credentialResponse.credential);
+
     fetch("http://localhost:3000/users/signingoogle", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -175,8 +175,9 @@ export default function Connexion() {
           localStorage.setItem("token", data.token);
           localStorage.setItem("username", data.username);
           localStorage.setItem("email", data.email);
+
           dispatch(
-            signIn({
+            signUp({
               username: data.username,
               token: data.token,
               email: data.email,
@@ -197,6 +198,8 @@ export default function Connexion() {
         setErrorMessage("Erreur de connexion au serveur");
       });
   };
+
+  // inscription usernam email
   const handleSignUp = () => {
     if (!signUpUsername || !signUpMail || !signUpPassword || !acceptTerms) {
       setErrorMessage("Champs vides ou conditions non acceptées");
@@ -242,6 +245,7 @@ export default function Connexion() {
       });
   };
   // voir Notion dans local storage le lien pour explication
+  // connexion username password
   const handleSignIn = () => {
     if (!signInUsername || !signInPassword) {
       setSignInErrorMessage("Champs vides");
@@ -279,9 +283,7 @@ export default function Connexion() {
           setSignUpMail("");
           router.push("/home");
         } else {
-          setSignInErrorMessage(
-            data.error || "Nom d'utilisateur ou mot de passe incorrect"
-          );
+          setSignInErrorMessage(data.error || "Utilisateur non inscrit");
         }
       })
       .catch((error) => {
