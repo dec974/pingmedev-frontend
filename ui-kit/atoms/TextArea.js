@@ -1,11 +1,12 @@
 import styles from "./TextArea.module.css";
 
-export default function TextArea({ placeholder = "", rows = 4 }) {
+export default function TextArea({ placeholder = "", rows = 4, ...props }) {
   return (
     <textarea
       className={styles.textarea}
       placeholder={placeholder}
       rows={rows}
+      {...props}
     />
   );
 }
