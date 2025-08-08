@@ -9,7 +9,7 @@ export default function Header({ unreadCount = 0, onLoginClick }) {
   return (
     <header className={styles.header}>
       <div className={styles.navbar}>
-        <Link href="/" className={styles.logo}>
+        <Link href="/home" className={styles.logo}>
           <Image
             src="/logo.png"
             width={140}
@@ -21,14 +21,14 @@ export default function Header({ unreadCount = 0, onLoginClick }) {
         </Link>
 
         <div className={styles.navLinks}>
-          <Link href="/messages" className={styles.iconLink}>
+          <Link href="/messenger" className={styles.iconLink}>
             <FaEnvelope className={styles.icon} />
             {unreadCount > 0 && (
               <span className={styles.badge}>{unreadCount}</span>
             )}
           </Link>
 
-          <Link href="/profile" className={styles.avatarLink}>
+          <Link href="/dashboard" className={styles.avatarLink}>
             <Avatar />
           </Link>
         </div>
