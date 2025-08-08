@@ -3,7 +3,9 @@ import { useRouter } from 'next/router';
 import { useSelector } from "react-redux";
 import MainLayout from '../ui-kit/template/MainLayout';
 import Button from '../ui-kit/atoms/Button';
-import styles from '../styles/PostsShow.module.css'; 
+import styles from '../styles/PostsShow.module.css';
+import { formatDate } from '../modules/formatDate';
+import Spinner from "../ui-kit/atoms/Spinner";
 
 function PostsShow( ) {
     const router = useRouter();
@@ -30,7 +32,13 @@ function PostsShow( ) {
         }
     }, [postId]);
     
-    console.log('Post:', post);
+    if (!post) {
+        return (
+            <MainLayout>
+                <Spinner size={50} />
+            </MainLayout>
+        );
+    }
     return (
         <MainLayout>
             <div className={styles.content}>
@@ -40,13 +48,23 @@ function PostsShow( ) {
                     </Button>
                 </div>
                 <div className={styles.postContainer}>
-                    <h1 className={styles.postTitle}>{post ? post.title : 'Loading...'}</h1>
-                    <p className={styles.postContent}>{post ? post.content : 'Loading...'}</p>
-                    <p className={styles.postType}>Type: {post ? post.type : 'Loading...'}</p>
-                    <p className={styles.postAuthor}>Author: {post ? post.userId.name : 'Loading...'}</p>
-                    <p className={styles.postStatus}>Status: {post ? post.status : 'Loading...'}</p>
-                    <p className={styles.postLanguages}>Languages: {post ? post.languages.join(', ') : 'Loading...'}</p>
-                    <p className={styles.postCreatedAt}>Created At: {post ? new Date(post.createdAt).toLocaleDateString() : 'Loading...'}</p>
+                    <div className={styles.postHeader}>
+                        <div className={styles.postAuthor}>
+                            {post ? post.userId.username : 'Loading...'}
+                        </div>
+                        <h1 className={styles.postTitle}>{post.title}</h1>
+                        <p className={styles.postDate}>
+                            {formatDate( post.createdAt )}
+                        </p>
+                    </div>
+                    <div className={styles.postContent}>
+                        <p className={styles.postContent}>{post ? post.content : 'Loading...'}</p>
+                        <p className={styles.postType}>Type: {post ? post.type : 'Loading...'}</p>
+                        <p className={styles.postAuthor}>Author: {post ? post.userId.name : 'Loading...'}</p>
+                        <p className={styles.postStatus}>Status: {post ? post.status : 'Loading...'}</p>
+                        <p className={styles.postLanguages}>Languages: {post ? post.languages.join(', ') : 'Loading...'}</p>
+                        <p className={styles.postCreatedAt}>Created At: {post ? new Date(post.createdAt).toLocaleDateString() : 'Loading...'}</p>
+                    </div>
                 </div>
             </div>
         </MainLayout>
