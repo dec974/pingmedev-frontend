@@ -5,10 +5,17 @@ import styles from '../styles/Home.module.css';
 import PostsList from '../ui-kit/organisms/PostsList';
 import Button from '../ui-kit/atoms/Button';
 import Footer from '../ui-kit/organisms/Footer';
+import { useRouter } from "next/router";
+
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  const handleNewPostClick = () => {
+    router.push("/posts/new");
+  };
 
   useEffect(() => {
 
@@ -42,7 +49,7 @@ export default function Home() {
       <div className={styles.postHeader}>
         <h3 className={styles.postsTitle}> Derniers posts</h3>
           <div className={styles.newPostBtn}>
-            <Button variant={"secondary"} onClick={()=> alert('Nouveau Sujet!')}>
+            <Button variant={"secondary"} onClick={handleNewPostClick}>
             Nouveau Sujet
             </Button>
           </div>
