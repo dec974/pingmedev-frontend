@@ -5,6 +5,8 @@ import styles from "../styles/Profil.module.css";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import Checkbox from "../ui-kit/atoms/Checkbox";
+import Input from "../ui-kit/atoms/Input";
+import Header from "../ui-kit/organisms/Header";
 
 export default function Profil() {
   const [selectedExperience, setSelectedExperience] = useState("");
@@ -12,6 +14,16 @@ export default function Profil() {
   const [selectedLanguage, setSelectedLanguage] = useState([]);
   const [languages, setLanguages] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showUsernameInput, setShowUsernameInput] = useState(false);
+  const [newUsername, setNewUsername] = useState("");
+  const [confirmUsername, setConfirmUsername] = useState("");
+  const [showPasswordInputs, setShowPasswordInputs] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showEmailInputs, setShowEmailInputs] = useState(false);
+  const [newEmail, setNewEmail] = useState("");
+  const [confirmEmail, setConfirmEmail] = useState("");
   const router = useRouter();
 
   // Fonction pour récupérer le token utilisateur
@@ -91,7 +103,6 @@ export default function Profil() {
         router.push("/home");
       } else {
         console.error("Erreur:", data.error);
-        alert("Erreur  " + data.error);
       }
     } catch (error) {
       console.error("Erreur ", error);
@@ -106,36 +117,16 @@ export default function Profil() {
     "Mentor / Formateur",
   ];
 
-  const RadioItem = ({ name, label, value, selectedValue, onChange }) => (
-    <label
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "8px",
-        cursor: "pointer",
-      }}
-    >
-      <input
-        type="radio"
-        name={name}
-        value={value}
-        checked={selectedValue === value}
-        onChange={() => onChange(value)}
-        style={{ margin: 0 }}
-      />
-      <span>{label}</span>
-    </label>
-  );
-
   const languageOptions = languages
     .sort((a, b) => a.name.localeCompare(b.name))
     .map((lang) => ({
       value: lang.name,
       label: lang.name,
-      color: lang.color || "#1761ab",
+      color: lang.color || "var(--primary-color)",
       icon: lang.icon,
     }));
 
+  // méthode de personnalisation de react-select
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
@@ -151,12 +142,12 @@ export default function Profil() {
     }),
     singleValue: (provided) => ({
       ...provided,
-      color: "#1761ab",
+      color: "var(--primary-color)",
       fontWeight: "500",
     }),
     option: (provided, state) => ({
       ...provided,
-      backgroundColor: "#1761ab",
+      backgroundColor: "var(--primary-color)",
       color: "#333",
       padding: "12px 20px",
       fontSize: "14px",
@@ -206,115 +197,256 @@ export default function Profil() {
   const animatedComponents = makeAnimated();
 
   return (
-    <div className={styles.container}>
-      <div className={styles.imgContainer}>
-        <img className={styles.img} src="/logo.png" alt="Logo" />
-      </div>
+    <>
+      <Header />
 
-      <h1 className={styles.h1}>Modifie ton profil</h1>
-
-      <hr className={styles.hrContainer} />
-
-      <div className={styles.divContainer}>
-        <div style={{ width: "300px" }}>
-          <h3 className={styles.h3}>Expérience</h3>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "15px",
-            }}
-          >
-            {experienceOptions.map((option, index) => (
-              <Checkbox
-                key={`exp-${index}`}
-                label={option}
-                checked={selectedExperience === option}
-                onChange={() => handleExperienceChange(option)}
-              />
-            ))}
-          </div>
+      <div className={styles.container}>
+        <div className={styles.imgContainer}>
+          <img className={styles.img} src="/logo.png" alt="Logo" />
         </div>
 
-        <div style={{ width: "600px" }}>
-          <h3 style={{ marginBottom: "20px", color: "#1761ab" }}>
-            Actuellement sur:
-          </h3>
+        <h1 className={styles.h1}>Modifie ton profil</h1>
+        <hr className={styles.hrContainer} />
 
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <div style={{ width: "500px" }}>
-              <Select
-                value={selectedLanguage}
-                onChange={handleLanguageChange}
-                options={languageOptions}
-                styles={customStyles}
-                components={{ ...animatedComponents, Option: CustomOption }}
-                placeholder={"Sélectionne tes langages"}
-                isClearable={true}
-                isMulti={true}
-                closeMenuOnSelect={false}
+        <div className={styles.buttonModify}>
+          <Button
+            variant={showUsernameInput ? "primary" : "secondary"}
+            style={{
+              height: "40px",
+              width: "240px",
+            }}
+            onClick={() => setShowUsernameInput(!showUsernameInput)}
+            //style.classname n est pas prit en compte via moduleE.CSS
+          >
+            Modifier UserName
+          </Button>
+          <Button
+            variant={showPasswordInputs ? "primary" : "secondary"}
+            style={{
+              height: "40px",
+              width: "240px",
+            }}
+            onClick={() => setShowPasswordInputs(!showPasswordInputs)}
+          >
+            Modifier Mot de passe
+          </Button>
+          <Button
+            variant={showEmailInputs ? "primary" : "secondary"}
+            style={{
+              height: "40px",
+              width: "240px",
+            }}
+            onClick={() => setShowEmailInputs(!showEmailInputs)}
+          >
+            Modifier Email
+          </Button>
+        </div>
+
+        {showUsernameInput && (
+          <div className={styles.inputModify}>
+            <div className={styles.inputContainer}>
+              <Input
+                type="text"
+                placeholder="Nouveau nom d'utilisateur"
+                value={newUsername}
+                onChange={(e) => setNewUsername(e.target.value)}
+                style={{
+                  width: "300px",
+                  height: "40px",
+                }}
               />
+              <Input
+                type="text"
+                placeholder="Confirmer nouveau nom d'utilisateur"
+                value={confirmUsername}
+                onChange={(e) => setConfirmUsername(e.target.value)}
+                style={{
+                  width: "300px",
+                  height: "40px",
+                }}
+              />
+            </div>
+            <Button
+              variant="primary"
+              style={{
+                height: "35px",
+                width: "120px",
+              }}
+            >
+              Enregistrer
+            </Button>
+          </div>
+        )}
+
+        {showPasswordInputs && (
+          <div className={styles.inputModify}>
+            <div
+              style={{
+                display: "flex",
+                gap: "50px",
+              }}
+            >
+              <Input
+                type="password"
+                placeholder="Mot de passe actuel"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                style={{
+                  width: "240px",
+                  height: "40px",
+                }}
+              />
+              <Input
+                type="password"
+                placeholder="Nouveau mot de passe"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                style={{
+                  width: "240px",
+                  height: "40px",
+                }}
+              />
+              <Input
+                type="password"
+                placeholder="Confirmer le nouveau mot de passe"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                style={{
+                  width: "240px",
+                  height: "40px",
+                }}
+              />
+            </div>
+            <Button
+              variant="primary"
+              style={{
+                height: "35px",
+                width: "120px",
+              }}
+            >
+              Enregistrer
+            </Button>
+          </div>
+        )}
+
+        {showEmailInputs && (
+          <div className={styles.inputModify}>
+            <div className={styles.inputContainer}>
+              <Input
+                type="email"
+                placeholder="Nouvel email"
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+                style={{
+                  width: "300px",
+                  height: "40px",
+                }}
+              />
+              <Input
+                type="email"
+                placeholder="Confirmer le nouvel email"
+                value={confirmEmail}
+                onChange={(e) => setConfirmEmail(e.target.value)}
+                style={{
+                  width: "300px",
+                  height: "40px",
+                }}
+              />
+            </div>
+            <Button
+              variant="primary"
+              style={{
+                height: "35px",
+                width: "120px",
+              }}
+            >
+              Enregistrer
+            </Button>
+          </div>
+        )}
+
+        <div className={styles.divContainer}>
+          <div style={{ width: "300px" }}>
+            <h3 className={styles.h3}>Expérience</h3>
+            <div className={StyleSheetList.experienceContainer}>
+              {experienceOptions.map((option, index) => (
+                <Checkbox
+                  key={`exp-${index}`}
+                  label={option}
+                  checked={selectedExperience === option}
+                  onChange={() => handleExperienceChange(option)}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div style={{ width: "600px" }}>
+            <h3 className={styles.h3}>Actuellement sur:</h3>
+
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <div style={{ width: "500px" }}>
+                <Select
+                  value={selectedLanguage}
+                  onChange={handleLanguageChange}
+                  options={languageOptions}
+                  styles={customStyles}
+                  components={{ ...animatedComponents, Option: CustomOption }}
+                  placeholder={"Sélectionne tes langages"}
+                  isClearable={true}
+                  isMulti={true}
+                  closeMenuOnSelect={false}
+                />
+              </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div className={styles.buttonContainer}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "15px",
-            marginBottom: "40px",
-          }}
-        >
-          <p
+        <div className={styles.buttonContainer}>
+          <div
             style={{
-              fontSize: "18px",
-              color: "#1761ab",
-              margin: "0",
-              textAlign: "center",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "15px",
+              marginBottom: "40px",
             }}
           >
-            Tu souhaites trouver des membres de la communauté dans ta région ?
-            (optionel)
-          </p>
-          <input
-            type="text"
-            placeholder="Inscris ta ville :"
-            value={locality}
-            onChange={(e) => setLocality(e.target.value)}
+            <p
+              style={{
+                fontSize: "18px",
+                color: "#1761ab",
+                margin: "0",
+                textAlign: "center",
+              }}
+            >
+              Tu souhaites trouver des membres de la communauté dans ta région ?
+              (optionel)
+            </p>
+            <Input
+              type="text"
+              placeholder="Inscris ta ville :"
+              value={locality}
+              onChange={(e) => setLocality(e.target.value)}
+              style={{
+                width: "150px",
+              }}
+            />
+          </div>
+        </div>
+        <hr className={styles.hrContainer} />
+
+        <div className={styles.saveButtonContainer}>
+          <Button
+            onClick={handleCreateProfile}
+            variant="primary"
             style={{
-              padding: "8px 12px",
-              borderRadius: "4px",
-              border: "1px solid #ccc",
-              fontSize: "16px",
-              width: "150px",
+              height: "60px",
+              width: "300px",
             }}
-          />
+          >
+            Sauvegarder ton profil
+          </Button>
         </div>
       </div>
-
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          marginBottom: "40px",
-        }}
-      >
-        <Button
-          onClick={handleCreateProfile}
-          variant="primary"
-          style={{
-            height: "60px",
-            width: "200px",
-            fontSize: "18px",
-          }}
-        >
-          Créer ton profil
-        </Button>
-      </div>
-    </div>
+    </>
   );
 }
