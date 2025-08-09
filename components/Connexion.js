@@ -24,11 +24,40 @@ export default function Connexion() {
   const [errorMessage, setErrorMessage] = useState("");
   const [signInErrorMessage, setSignInErrorMessage] = useState("");
   const [showPopover, setShowPopover] = useState(false);
+  const [modal, setModal] = useState({
+    isOpen: false,
+    title: "",
+    message: "",
+    type: "info",
+  });
+
+  const showModal = (title, message, type = "info") => {
+    setModal({
+      isOpen: true,
+      title,
+      message,
+      type,
+    });
+  };
+
+  const closeModal = () => {
+    setModal({
+      isOpen: false,
+      title: "",
+      message: "",
+      type: "info",
+    });
+  };
+
   // inscription avec github
   function GitHubSignUpButton() {
     const signUpWithGitHub = () => {
       if (!acceptTerms) {
-        setErrorMessage("Vous devez accepter les conditions d'utilisation");
+        showModal(
+          "Conditions requises",
+          "Vous devez accepter les conditions d'utilisation",
+          "warning"
+        );
         return;
       }
       const clientID = "Ov23lio8tZ02RbB9eJUC";
@@ -104,12 +133,16 @@ export default function Connexion() {
             router.push("/home");
           }
         } else {
-          setErrorMessage(data.error || "Erreur de connexion GitHub");
+          showModal(
+            "Erreur GitHub",
+            data.error || "Erreur de connexion GitHub",
+            "error"
+          );
         }
       })
       .catch((error) => {
         console.error("Erreur de connexion GitHub:", error);
-        setErrorMessage("Erreur de connexion GitHub");
+        showModal("Erreur de connexion", "Erreur de connexion GitHub", "error");
       });
   };
   // voir le exo Ariane Google Connect pour explications de lignes dessous
@@ -145,18 +178,30 @@ export default function Connexion() {
           );
           router.push("/home");
         } else {
-          setSignInErrorMessage(data.error || "Utilisateur non inscrit");
+          showModal(
+            "Erreur de connexion",
+            data.error || "Utilisateur non inscrit",
+            "error"
+          );
         }
       })
       .catch((error) => {
         console.error("Erreur de connexion:", error);
-        setSignInErrorMessage("Erreur de connexion");
+        showModal(
+          "Erreur de connexion",
+          "Erreur de connexion au serveur",
+          "error"
+        );
       });
   };
   // inscritpion avec Google
   const handleSignUpGoogle = (credentialResponse) => {
     if (!acceptTerms) {
-      setErrorMessage("Vous devez accepter les conditions d'utilisation");
+      showModal(
+        "Conditions requises",
+        "Vous devez accepter les conditions d'utilisation",
+        "warning"
+      );
       return;
     }
 
@@ -193,19 +238,31 @@ export default function Connexion() {
             router.push("/home");
           }
         } else {
-          setErrorMessage(data.error || "Erreur lors de la connexion");
+          showModal(
+            "Erreur d'inscription",
+            data.error || "Erreur lors de la connexion",
+            "error"
+          );
         }
       })
       .catch((error) => {
         console.error("Erreur de connexion:", error);
-        setErrorMessage("Erreur de connexion au serveur");
+        showModal(
+          "Erreur de connexion",
+          "Erreur de connexion au serveur",
+          "error"
+        );
       });
   };
 
   // inscription usernam email
   const handleSignUp = () => {
     if (!signUpUsername || !signUpMail || !signUpPassword || !acceptTerms) {
-      setErrorMessage("Champs vides ou conditions non acceptées");
+      showModal(
+        "Champs requis",
+        "Champs vides ou conditions non acceptées",
+        "warning"
+      );
       return;
     }
 
@@ -240,19 +297,27 @@ export default function Connexion() {
           setSignUpMail("");
           router.push("/profilPage");
         } else {
-          setErrorMessage(data.error || "Username ou email déjà utilisé");
+          showModal(
+            "Erreur d'inscription",
+            data.error || "Username ou email déjà utilisé",
+            "error"
+          );
         }
       })
       .catch((error) => {
         console.error("Erreur lors de l'inscription:", error);
-        setErrorMessage("Erreur de connexion au serveur");
+        showModal(
+          "Erreur de connexion",
+          "Erreur de connexion au serveur",
+          "error"
+        );
       });
   };
   // voir Notion dans local storage le lien pour explication
   // connexion username password
   const handleSignIn = () => {
     if (!signInUsername || !signInPassword) {
-      setSignInErrorMessage("Champs vides");
+      showModal("Champs requis", "Champs vides", "warning");
       return;
     }
 
@@ -288,12 +353,20 @@ export default function Connexion() {
           setSignUpMail("");
           router.push("/home");
         } else {
-          setSignInErrorMessage(data.error || "Utilisateur non inscrit");
+          showModal(
+            "Erreur de connexion",
+            data.error || "Utilisateur non inscrit",
+            "error"
+          );
         }
       })
       .catch((error) => {
         console.error("Erreur lors de la connexion:", error);
-        setSignInErrorMessage("Erreur de connexion au serveur");
+        showModal(
+          "Erreur de connexion",
+          "Erreur de connexion au serveur",
+          "error"
+        );
       });
   };
 
@@ -407,9 +480,6 @@ export default function Connexion() {
               }
             }}
           />
-          {errorMessage && (
-            <div className={styles.errorMessage}>{errorMessage}</div>
-          )}
           <Button
             onClick={handleSignUp}
             variant="primary"
@@ -478,10 +548,6 @@ export default function Connexion() {
             <label className={styles.floatingLabel}>Password</label>
           </div>
 
-          {signInErrorMessage && (
-            <div className={styles.errorMessage}>{signInErrorMessage}</div>
-          )}
-
           <Button
             onClick={handleSignIn}
             variant="primary"
@@ -515,6 +581,52 @@ export default function Connexion() {
           </GoogleOAuthProvider>
         </div>
       </div>
+
+      {modal.isOpen && (
+        <div className={styles.modalOverlay} onClick={closeModal}>
+          <div
+            className={styles.modalContent}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              className={`${styles.modalIcon} ${
+                modal.type === "success"
+                  ? styles.modalIconSuccess
+                  : modal.type === "error"
+                  ? styles.modalIconError
+                  : modal.type === "warning"
+                  ? styles.modalIconWarning
+                  : styles.modalIconInfo
+              }`}
+            >
+              {modal.type === "success"
+                ? "✓"
+                : modal.type === "error"
+                ? "✕"
+                : modal.type === "warning"
+                ? "⚠"
+                : "ℹ"}
+            </div>
+
+            {modal.title && (
+              <h3 className={styles.modalTitle}>{modal.title}</h3>
+            )}
+
+            <p className={styles.modalMessage}>{modal.message}</p>
+
+            <Button
+              variant="primary"
+              onClick={closeModal}
+              style={{
+                height: "40px",
+                width: "100px",
+              }}
+            >
+              OK
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

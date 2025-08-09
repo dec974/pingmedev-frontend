@@ -5,7 +5,8 @@ import { SiJavascript, SiReact } from "react-icons/si";
 import { FaTrash } from "react-icons/fa";
 import { FaRegBookmark } from "react-icons/fa";
 import { formatDate } from "../../modules/formatDate";
-import { truncateInput } from "../../modules/truncateInput";
+import { truncateInput } from "../../modules/truncateInput";import Icon from '../atoms/Icon.js';
+
 
 const iconMap = {
   javascript: SiJavascript,
@@ -32,8 +33,8 @@ export default function PostsList({
   return (
     <div className={styles.list}>
       {posts.map((post) => {
-        const Icon = iconMap[post.language] || null;
-
+        // const Icon = iconMap[post.language] || null;
+      
         // on prend la première valeur qui remonte (populate Mongoose ou autre format, sinon null)
         const author = post?.userId?.username ?? post?.username ?? null;
 
