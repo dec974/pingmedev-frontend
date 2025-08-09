@@ -115,13 +115,6 @@ function PostsShow( ) {
             <div key={index} className={styles.answer}>
                 <div className={styles.answerHeader}>
                     <div className={styles.answerAuthor}>
-                        <Image
-                            src="/avatar.png"
-                            width={40}
-                            height={40}
-                            className={styles.logoImg}
-                            alt="PingMe logo"
-                        />
                         {answer.userId.username}
                     </div>
                     <div className={styles.answerDate}>

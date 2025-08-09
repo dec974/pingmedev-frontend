@@ -50,7 +50,7 @@ export default function PostsList({
           <Card key={post._id} className={`${styles.card} ${className}`}>
             <div className={styles.header}>
               <div className={styles.headerleft}>
-                {showIcons && <Icon className={styles.icon} language={post.languages[0]} size={24} />}
+                {showIcons && post.languages[0] && <Icon className={styles.icon} language={post.languages[0]} size={24} />}
                 {showAuthor && author && (
                   <p className={styles.username}>
                     <span className={styles.type}>Question de </span>
