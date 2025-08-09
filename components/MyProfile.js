@@ -14,19 +14,42 @@ export default function Profil() {
   const [selectedLanguage, setSelectedLanguage] = useState([]);
   const [languages, setLanguages] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showUsernameInput, setShowUsernameInput] = useState(false);
+  const [activeModifyType, setActiveModifyType] = useState(null); // 'username', 'password', 'email', ou null
   const [newUsername, setNewUsername] = useState("");
   const [confirmUsername, setConfirmUsername] = useState("");
-  const [showPasswordInputs, setShowPasswordInputs] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [showEmailInputs, setShowEmailInputs] = useState(false);
   const [newEmail, setNewEmail] = useState("");
   const [confirmEmail, setConfirmEmail] = useState("");
+
+  const [modal, setModal] = useState({
+    isOpen: false,
+    title: "",
+    message: "",
+    type: "info",
+  });
+
   const router = useRouter();
 
-  // Fonction pour récupérer le token utilisateur
+  const showModal = (title, message, type = "info") => {
+    setModal({
+      isOpen: true,
+      title,
+      message,
+      type,
+    });
+  };
+
+  const closeModal = () => {
+    setModal({
+      isOpen: false,
+      title: "",
+      message: "",
+      type: "info",
+    });
+  };
+
   const getUserToken = () => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -78,7 +101,11 @@ export default function Profil() {
       const token = getUserToken();
 
       if (!selectedExperience) {
-        alert("Veuillez sélectionner votre niveau d'expérience");
+        showModal(
+          "Expérience requise",
+          "Veuillez sélectionner votre niveau d'expérience",
+          "warning"
+        );
         return;
       }
 
@@ -100,12 +127,254 @@ export default function Profil() {
       const data = await response.json();
 
       if (data.result) {
-        router.push("/home");
+        showModal(
+          "Succès !",
+          "Votre profil a été mis à jour avec succès ! Redirection en cours...",
+          "success"
+        );
+
+        setTimeout(() => {
+          router.push("/dashboard");
+        }, 2000);
       } else {
+        showModal(
+          "Erreur",
+          "Erreur lors de la sauvegarde: " + (data.error || "Erreur inconnue"),
+          "error"
+        );
         console.error("Erreur:", data.error);
       }
     } catch (error) {
-      console.error("Erreur ", error);
+      console.error("Erreur de connexion:", error);
+      showModal(
+        "Erreur de connexion",
+        "Impossible de se connecter au serveur. Veuillez réessayer.",
+        "error"
+      );
+    }
+  };
+
+  const handleUpdateUsername = async () => {
+    try {
+      const token = getUserToken();
+
+      if (!newUsername.trim()) {
+        showModal(
+          "Champ requis",
+          "Veuillez entrer un nouveau nom d'utilisateur",
+          "warning"
+        );
+        return;
+      }
+
+      if (newUsername !== confirmUsername) {
+        showModal(
+          "Erreur de saisie",
+          "Les noms d'utilisateur ne correspondent pas",
+          "warning"
+        );
+        return;
+      }
+
+      const updateData = {
+        token: token,
+        newUsername: newUsername,
+      };
+
+      const response = await fetch(
+        "http://localhost:3000/users/update-username",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updateData),
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.result) {
+        showModal(
+          "Succès !",
+          "Votre nom d'utilisateur a été mis à jour avec succès !",
+          "success"
+        );
+        setNewUsername("");
+        setConfirmUsername("");
+        setActiveModifyType(null);
+      } else {
+        showModal(
+          "Erreur",
+          "Erreur lors de la mise à jour: " + (data.error || data.message),
+          "error"
+        );
+      }
+    } catch (error) {
+      console.error(
+        "Erreur lors de la mise à jour du nom d'utilisateur:",
+        error
+      );
+      showModal(
+        "Erreur de connexion",
+        "Impossible de se connecter au serveur. Veuillez réessayer.",
+        "error"
+      );
+    }
+  };
+
+  const handleUpdatePassword = async () => {
+    try {
+      const token = getUserToken();
+
+      if (
+        !currentPassword.trim() ||
+        !newPassword.trim() ||
+        !confirmPassword.trim()
+      ) {
+        showModal(
+          "Champs requis",
+          "Veuillez remplir tous les champs de mot de passe",
+          "warning"
+        );
+        return;
+      }
+
+      if (newPassword !== confirmPassword) {
+        showModal(
+          "Erreur de saisie",
+          "Les nouveaux mots de passe ne correspondent pas",
+          "warning"
+        );
+        return;
+      }
+
+      if (newPassword.length < 6) {
+        showModal(
+          "Mot de passe trop court",
+          "Le nouveau mot de passe doit contenir au moins 6 caractères",
+          "warning"
+        );
+        return;
+      }
+
+      const updateData = {
+        token: token,
+        currentPassword: currentPassword,
+        newPassword: newPassword,
+      };
+
+      const response = await fetch(
+        "http://localhost:3000/users/update-password",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updateData),
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.result) {
+        showModal(
+          "Succès !",
+          "Votre mot de passe a été mis à jour avec succès !",
+          "success"
+        );
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+        setActiveModifyType(null);
+      } else {
+        showModal(
+          "Erreur",
+          "Erreur lors de la mise à jour: " + (data.error || data.message),
+          "error"
+        );
+      }
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour du mot de passe:", error);
+      showModal(
+        "Erreur de connexion",
+        "Impossible de se connecter au serveur. Veuillez réessayer.",
+        "error"
+      );
+    }
+  };
+
+  const handleUpdateEmail = async () => {
+    try {
+      const token = getUserToken();
+
+      if (!newEmail.trim() || !confirmEmail.trim()) {
+        showModal(
+          "Champs requis",
+          "Veuillez remplir tous les champs d'email",
+          "warning"
+        );
+        return;
+      }
+
+      if (newEmail !== confirmEmail) {
+        showModal(
+          "Erreur de saisie",
+          "Les nouveaux emails ne correspondent pas",
+          "warning"
+        );
+        return;
+      }
+
+      // Validation simple d'email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(newEmail)) {
+        showModal(
+          "Email invalide",
+          "Veuillez entrer une adresse email valide",
+          "warning"
+        );
+        return;
+      }
+
+      const updateData = {
+        token: token,
+        newEmail: newEmail,
+      };
+
+      const response = await fetch("http://localhost:3000/users/update-email", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updateData),
+      });
+
+      const data = await response.json();
+
+      if (data.result) {
+        showModal(
+          "Succès !",
+          "Votre email a été mis à jour avec succès !",
+          "success"
+        );
+        setNewEmail("");
+        setConfirmEmail("");
+        setActiveModifyType(null);
+      } else {
+        showModal(
+          "Erreur",
+          "Erreur lors de la mise à jour: " + (data.error || data.message),
+          "error"
+        );
+      }
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour de l'email:", error);
+      showModal(
+        "Erreur de connexion",
+        "Impossible de se connecter au serveur. Veuillez réessayer.",
+        "error"
+      );
     }
   };
 
@@ -168,25 +437,11 @@ export default function Profil() {
   const CustomOption = ({ children, ...props }) => {
     const { data } = props;
     return (
-      <div
-        {...props.innerProps}
-        style={{
-          padding: "12px 20px",
-          cursor: "pointer",
-          backgroundColor: "#c4c8ccff",
-
-          color: "#333",
-          display: "flex",
-          alignItems: "center",
-          gap: "10px",
-        }}
-      >
+      <div {...props.innerProps} className={styles.customOption}>
         <div
+          className={styles.colorDot}
           style={{
-            width: "12px",
-            height: "12px",
             backgroundColor: data.color,
-            borderRadius: "50%",
           }}
         />
         <span>{children}</span>
@@ -210,39 +465,40 @@ export default function Profil() {
 
         <div className={styles.buttonModify}>
           <Button
-            variant={showUsernameInput ? "primary" : "secondary"}
-            style={{
-              height: "40px",
-              width: "240px",
-            }}
-            onClick={() => setShowUsernameInput(!showUsernameInput)}
+            variant={activeModifyType === "username" ? "primary" : "secondary"}
+            className={styles.modifyButton}
+            onClick={() =>
+              setActiveModifyType(
+                activeModifyType === "username" ? null : "username"
+              )
+            }
             //style.classname n est pas prit en compte via moduleE.CSS
           >
             Modifier UserName
           </Button>
           <Button
-            variant={showPasswordInputs ? "primary" : "secondary"}
-            style={{
-              height: "40px",
-              width: "240px",
-            }}
-            onClick={() => setShowPasswordInputs(!showPasswordInputs)}
+            variant={activeModifyType === "password" ? "primary" : "secondary"}
+            className={styles.modifyButton}
+            onClick={() =>
+              setActiveModifyType(
+                activeModifyType === "password" ? null : "password"
+              )
+            }
           >
             Modifier Mot de passe
           </Button>
           <Button
-            variant={showEmailInputs ? "primary" : "secondary"}
-            style={{
-              height: "40px",
-              width: "240px",
-            }}
-            onClick={() => setShowEmailInputs(!showEmailInputs)}
+            variant={activeModifyType === "email" ? "primary" : "secondary"}
+            className={styles.modifyButtonEmail}
+            onClick={() =>
+              setActiveModifyType(activeModifyType === "email" ? null : "email")
+            }
           >
             Modifier Email
           </Button>
         </div>
 
-        {showUsernameInput && (
+        {activeModifyType === "username" && (
           <div className={styles.inputModify}>
             <div className={styles.inputContainer}>
               <Input
@@ -250,86 +506,62 @@ export default function Profil() {
                 placeholder="Nouveau nom d'utilisateur"
                 value={newUsername}
                 onChange={(e) => setNewUsername(e.target.value)}
-                style={{
-                  width: "300px",
-                  height: "40px",
-                }}
+                className={styles.inputEmail}
               />
               <Input
                 type="text"
                 placeholder="Confirmer nouveau nom d'utilisateur"
                 value={confirmUsername}
                 onChange={(e) => setConfirmUsername(e.target.value)}
-                style={{
-                  width: "300px",
-                  height: "40px",
-                }}
+                className={styles.inputEmail}
               />
             </div>
             <Button
               variant="primary"
-              style={{
-                height: "35px",
-                width: "120px",
-              }}
+              className={styles.saveButton}
+              onClick={handleUpdateUsername}
             >
               Enregistrer
             </Button>
           </div>
         )}
 
-        {showPasswordInputs && (
+        {activeModifyType === "password" && (
           <div className={styles.inputModify}>
-            <div
-              style={{
-                display: "flex",
-                gap: "50px",
-              }}
-            >
+            <div className={styles.inputContainerPassword}>
               <Input
                 type="password"
                 placeholder="Mot de passe actuel"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
-                style={{
-                  width: "240px",
-                  height: "40px",
-                }}
+                className={styles.inputPassword}
               />
               <Input
                 type="password"
                 placeholder="Nouveau mot de passe"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                style={{
-                  width: "240px",
-                  height: "40px",
-                }}
+                className={styles.inputPassword}
               />
               <Input
                 type="password"
                 placeholder="Confirmer le nouveau mot de passe"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                style={{
-                  width: "240px",
-                  height: "40px",
-                }}
+                className={styles.inputPassword}
               />
             </div>
             <Button
               variant="primary"
-              style={{
-                height: "35px",
-                width: "120px",
-              }}
+              className={styles.saveButton}
+              onClick={handleUpdatePassword}
             >
               Enregistrer
             </Button>
           </div>
         )}
 
-        {showEmailInputs && (
+        {activeModifyType === "email" && (
           <div className={styles.inputModify}>
             <div className={styles.inputContainer}>
               <Input
@@ -337,28 +569,20 @@ export default function Profil() {
                 placeholder="Nouvel email"
                 value={newEmail}
                 onChange={(e) => setNewEmail(e.target.value)}
-                style={{
-                  width: "300px",
-                  height: "40px",
-                }}
+                className={styles.inputEmail}
               />
               <Input
                 type="email"
                 placeholder="Confirmer le nouvel email"
                 value={confirmEmail}
                 onChange={(e) => setConfirmEmail(e.target.value)}
-                style={{
-                  width: "300px",
-                  height: "40px",
-                }}
+                className={styles.inputEmail}
               />
             </div>
             <Button
               variant="primary"
-              style={{
-                height: "35px",
-                width: "120px",
-              }}
+              className={styles.saveButton}
+              onClick={handleUpdateEmail}
             >
               Enregistrer
             </Button>
@@ -366,9 +590,9 @@ export default function Profil() {
         )}
 
         <div className={styles.divContainer}>
-          <div style={{ width: "300px" }}>
+          <div className={styles.selectContainer300}>
             <h3 className={styles.h3}>Expérience</h3>
-            <div className={StyleSheetList.experienceContainer}>
+            <div className={styles.experienceContainer}>
               {experienceOptions.map((option, index) => (
                 <Checkbox
                   key={`exp-${index}`}
@@ -380,11 +604,11 @@ export default function Profil() {
             </div>
           </div>
 
-          <div style={{ width: "600px" }}>
+          <div className={styles.selectContainer600}>
             <h3 className={styles.h3}>Actuellement sur:</h3>
 
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <div style={{ width: "500px" }}>
+            <div className={styles.selectCenterContainer}>
+              <div className={styles.selectContainer500}>
                 <Select
                   value={selectedLanguage}
                   onChange={handleLanguageChange}
@@ -401,23 +625,8 @@ export default function Profil() {
           </div>
         </div>
         <div className={styles.buttonContainer}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "15px",
-              marginBottom: "40px",
-            }}
-          >
-            <p
-              style={{
-                fontSize: "18px",
-                color: "#1761ab",
-                margin: "0",
-                textAlign: "center",
-              }}
-            >
+          <div className={styles.localityContainer}>
+            <p className={styles.localityText}>
               Tu souhaites trouver des membres de la communauté dans ta région ?
               (optionel)
             </p>
@@ -426,9 +635,7 @@ export default function Profil() {
               placeholder="Inscris ta ville :"
               value={locality}
               onChange={(e) => setLocality(e.target.value)}
-              style={{
-                width: "150px",
-              }}
+              className={styles.localityInput}
             />
           </div>
         </div>
@@ -438,15 +645,55 @@ export default function Profil() {
           <Button
             onClick={handleCreateProfile}
             variant="primary"
-            style={{
-              height: "60px",
-              width: "300px",
-            }}
+            className={styles.saveProfileButton}
           >
             Sauvegarder ton profil
           </Button>
         </div>
       </div>
+
+      {modal.isOpen && (
+        <div className={styles.modalOverlay} onClick={closeModal}>
+          <div
+            className={styles.modalContent}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              className={`${styles.modalIcon} ${
+                modal.type === "success"
+                  ? styles.modalIconSuccess
+                  : modal.type === "error"
+                  ? styles.modalIconError
+                  : modal.type === "warning"
+                  ? styles.modalIconWarning
+                  : styles.modalIconInfo
+              }`}
+            >
+              {modal.type === "success"
+                ? "✓"
+                : modal.type === "error"
+                ? "✕"
+                : modal.type === "warning"
+                ? "⚠"
+                : "ℹ"}
+            </div>
+
+            {modal.title && (
+              <h3 className={styles.modalTitle}>{modal.title}</h3>
+            )}
+
+            <p className={styles.modalMessage}>{modal.message}</p>
+
+            <Button
+              variant="primary"
+              onClick={closeModal}
+              className={styles.modalButton}
+            >
+              OK
+            </Button>
+          </div>
+        </div>
+      )}
     </>
   );
 }

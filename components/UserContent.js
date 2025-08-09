@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import styles from "../styles/UserContent.module.css";
 import Button from "../ui-kit/atoms/Button";
 import PostsList from "../ui-kit/organisms/PostsList";
-import {FaTrash} from "react-icons";
 
 function UserContent() {
   const [activeTab, setActiveTab] = useState("posts");
@@ -91,13 +90,16 @@ function UserContent() {
         ) : (
           <PostsList
             posts={followedPosts}
-            showDelete={true} // bouton delete aussi sur les topics suivis
-            onDelete={(postId) => {
-              console.log("Suppression d'un post suivi", postId);
+            showIcons={false}
+            showAuthor={true}
+            showUnfollow={true}
+            onUnfollow={(postId) => {
+              console.log("Ce post ne sera plus suivi", postId);
 
-              fetch(`http://localhost:3000/posts/${postId}/deleted`, {
-                method: "PUT",
+              fetch(`http://localhost:3000/users/unfollow-post`, {
+                method: "POST",
                 headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ token: user.token, postId }),
               })
                 .then((res) => res.json())
                 .then(() => {

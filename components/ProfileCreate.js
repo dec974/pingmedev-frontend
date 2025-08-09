@@ -12,9 +12,33 @@ export default function Profil() {
   const [selectedLanguage, setSelectedLanguage] = useState([]); // ✅ Changer en tableau
   const [languages, setLanguages] = useState([]);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
 
-  // Fonction pour récupérer le token utilisateur
+  const [modal, setModal] = useState({
+    isOpen: false,
+    title: "",
+    message: "",
+    type: "info",
+  });
+
+  const router = useRouter();
+  const showModal = (title, message, type = "info") => {
+    setModal({
+      isOpen: true,
+      title,
+      message,
+      type,
+    });
+  };
+
+  const closeModal = () => {
+    setModal({
+      isOpen: false,
+      title: "",
+      message: "",
+      type: "info",
+    });
+  };
+
   const getUserToken = () => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -66,7 +90,11 @@ export default function Profil() {
       const token = getUserToken();
 
       if (!selectedExperience) {
-        alert("Veuillez sélectionner votre niveau d'expérience");
+        showModal(
+          "Expérience requise",
+          "Veuillez sélectionner votre niveau d'expérience",
+          "warning"
+        );
         return;
       }
 
@@ -88,13 +116,30 @@ export default function Profil() {
       const data = await response.json();
 
       if (data.result) {
-        router.push("/home");
+        showModal(
+          "Succès !",
+          "Votre profil a été créé avec succès ! Redirection en cours...",
+          "success"
+        );
+
+        setTimeout(() => {
+          router.push("/home");
+        }, 2000);
       } else {
         console.error("Erreur:", data.error);
-        alert("Erreur  " + data.error);
+        showModal(
+          "Erreur",
+          "Erreur lors de la création: " + (data.error || "Erreur inconnue"),
+          "error"
+        );
       }
     } catch (error) {
-      console.error("Erreur ", error);
+      console.error("Erreur de connexion:", error);
+      showModal(
+        "Erreur de connexion",
+        "Impossible de se connecter au serveur. Veuillez réessayer.",
+        "error"
+      );
     }
   };
 
@@ -105,27 +150,6 @@ export default function Profil() {
     "Autodidacte",
     "Mentor / Formateur",
   ];
-
-  const RadioItem = ({ name, label, value, selectedValue, onChange }) => (
-    <label
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "8px",
-        cursor: "pointer",
-      }}
-    >
-      <input
-        type="radio"
-        name={name}
-        value={value}
-        checked={selectedValue === value}
-        onChange={() => onChange(value)}
-        style={{ margin: 0 }}
-      />
-      <span>{label}</span>
-    </label>
-  );
 
   const languageOptions = languages
     .sort((a, b) => a.name.localeCompare(b.name))
@@ -236,13 +260,11 @@ export default function Profil() {
           </div>
         </div>
 
-        <div style={{ width: "600px" }}>
-          <h3 style={{ marginBottom: "20px", color: "#1761ab" }}>
-            Actuellement sur:
-          </h3>
+        <div className={styles.selectContainer600}>
+          <h3 className={styles.languageTitle}>Actuellement sur:</h3>
 
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <div style={{ width: "500px" }}>
+          <div className={styles.selectCenterContainer}>
+            <div className={styles.selectContainer500}>
               <Select
                 value={selectedLanguage}
                 onChange={handleLanguageChange}
@@ -260,23 +282,8 @@ export default function Profil() {
       </div>
 
       <div className={styles.buttonContainer}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "15px",
-            marginBottom: "40px",
-          }}
-        >
-          <p
-            style={{
-              fontSize: "18px",
-              color: "#1761ab",
-              margin: "0",
-              textAlign: "center",
-            }}
-          >
+        <div className={styles.localityContainer}>
+          <p className={styles.localityText}>
             Tu souhaites trouver des membres de la communauté dans ta région ?
             (optionel)
           </p>
@@ -285,36 +292,63 @@ export default function Profil() {
             placeholder="Inscris ta ville :"
             value={locality}
             onChange={(e) => setLocality(e.target.value)}
-            style={{
-              padding: "8px 12px",
-              borderRadius: "4px",
-              border: "1px solid #ccc",
-              fontSize: "16px",
-              width: "150px",
-            }}
+            className={styles.localityInput}
           />
         </div>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          marginBottom: "40px",
-        }}
-      >
+      <div className={styles.createButtonContainer}>
         <Button
           onClick={handleCreateProfile}
           variant="primary"
-          style={{
-            height: "60px",
-            width: "200px",
-            fontSize: "18px",
-          }}
+          className={styles.createButton}
         >
           Créer ton profil
         </Button>
       </div>
+
+      {modal.isOpen && (
+        <div className={styles.modalOverlay} onClick={closeModal}>
+          <div
+            className={styles.modalContent}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              className={`${styles.modalIcon} ${
+                modal.type === "success"
+                  ? styles.modalIconSuccess
+                  : modal.type === "error"
+                  ? styles.modalIconError
+                  : modal.type === "warning"
+                  ? styles.modalIconWarning
+                  : styles.modalIconInfo
+              }`}
+            >
+              {modal.type === "success"
+                ? "✓"
+                : modal.type === "error"
+                ? "✕"
+                : modal.type === "warning"
+                ? "⚠"
+                : "ℹ"}
+            </div>
+
+            {modal.title && (
+              <h3 className={styles.modalTitle}>{modal.title}</h3>
+            )}
+
+            <p className={styles.modalMessage}>{modal.message}</p>
+
+            <Button
+              variant="primary"
+              onClick={closeModal}
+              className={styles.modalButton}
+            >
+              OK
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
