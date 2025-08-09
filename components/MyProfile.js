@@ -326,7 +326,6 @@ export default function Profil() {
         return;
       }
 
-      // Validation simple d'email
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(newEmail)) {
         showModal(
@@ -395,7 +394,7 @@ export default function Profil() {
       icon: lang.icon,
     }));
 
-  // méthode de personnalisation de react-select
+  // méthode de personnalisation de react-select la en dessous
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
@@ -472,7 +471,6 @@ export default function Profil() {
                 activeModifyType === "username" ? null : "username"
               )
             }
-            //style.classname n est pas prit en compte via moduleE.CSS
           >
             Modifier UserName
           </Button>

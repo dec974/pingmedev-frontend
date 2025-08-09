@@ -41,6 +41,7 @@
 }
 
 .textLog {
+  /* clamp permet de rendre responsive la taille fnction de l ecran , 28 mini, 4vw ideal, 50 maxi */
   font-size: clamp(28px, 4vw, 50px);
   font-weight: bold;
   color: var(--primary-color);

@@ -77,7 +77,7 @@ export default function Connexion() {
       </Button>
     );
   }
-  // svg sert à avoir la petite tete github le chat la
+  // svg pour avoir la petite tete github le chat la
   //connection avec github
   function GitHubSignInButton() {
     const signInWithGitHub = () => {
