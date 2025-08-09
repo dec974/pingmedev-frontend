@@ -52,7 +52,7 @@
 }
 
 .errorMessage {
-  color: #dc3545;
+  color: var(--secondary-color);
   font-size: 14px;
   margin-bottom: 15px;
   text-align: center;
@@ -135,7 +135,7 @@
 
 .popoverContent p {
   margin: 0 0 12px 0;
-  color: #666;
+  color: var(--primary-color);
   font-size: 14px;
   line-height: 1.4;
 }
@@ -146,14 +146,14 @@
 }
 
 .popoverContent li {
-  color: #666;
+  color: var(--primary-color);
   font-size: 14px;
   margin-bottom: 4px;
   line-height: 1.4;
 }
 
 .closeButton {
-  background: #007bff;
+  background: var(--primary-color);
   color: white;
   border: none;
   padding: 6px 12px;
@@ -183,4 +183,59 @@
   width: 200px;
   font-size: 18px;
   margin-bottom: 20px;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background-color: white;
+  border-radius: 8px;
+  padding: 30px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modalIcon {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.modalIconSuccess {
+  color: var(--primary-color);
+}
+
+.modalIconError {
+  color: var(--secondary-color);
+}
+
+.modalIconWarning {
+  color: var(--secondary-color);
+}
+
+.modalIconInfo {
+  color: var(--primary-color);
+}
+
+.modalTitle {
+  margin: 0 0 15px 0;
+  color: var(--primary-color);
+}
+
+.modalMessage {
+  margin: 0 0 20px 0;
+  color: #666;
+  line-height: 1.5;
 }

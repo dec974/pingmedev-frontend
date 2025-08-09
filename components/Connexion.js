@@ -24,8 +24,6 @@ export default function Connexion() {
   const [errorMessage, setErrorMessage] = useState("");
   const [signInErrorMessage, setSignInErrorMessage] = useState("");
   const [showPopover, setShowPopover] = useState(false);
-
-  // États pour la modal
   const [modal, setModal] = useState({
     isOpen: false,
     title: "",
@@ -33,7 +31,6 @@ export default function Connexion() {
     type: "info",
   });
 
-  // Fonction pour afficher une modal
   const showModal = (title, message, type = "info") => {
     setModal({
       isOpen: true,
@@ -43,7 +40,6 @@ export default function Connexion() {
     });
   };
 
-  // Fonction pour fermer la modal
   const closeModal = () => {
     setModal({
       isOpen: false,
@@ -586,48 +582,22 @@ export default function Connexion() {
         </div>
       </div>
 
-      {/* Modal simple pour les messages de confirmation */}
       {modal.isOpen && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 1000,
-          }}
-          onClick={closeModal}
-        >
+        <div className={styles.modalOverlay} onClick={closeModal}>
           <div
-            style={{
-              backgroundColor: "white",
-              borderRadius: "8px",
-              padding: "30px",
-              maxWidth: "400px",
-              width: "90%",
-              textAlign: "center",
-              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            }}
+            className={styles.modalContent}
             onClick={(e) => e.stopPropagation()}
           >
             <div
-              style={{
-                fontSize: "2rem",
-                marginBottom: "10px",
-                color:
-                  modal.type === "success"
-                    ? "#28a745"
-                    : modal.type === "error"
-                    ? "#dc3545"
-                    : modal.type === "warning"
-                    ? "#ffc107"
-                    : "#17a2b8",
-              }}
+              className={`${styles.modalIcon} ${
+                modal.type === "success"
+                  ? styles.modalIconSuccess
+                  : modal.type === "error"
+                  ? styles.modalIconError
+                  : modal.type === "warning"
+                  ? styles.modalIconWarning
+                  : styles.modalIconInfo
+              }`}
             >
               {modal.type === "success"
                 ? "✓"
@@ -639,16 +609,10 @@ export default function Connexion() {
             </div>
 
             {modal.title && (
-              <h3 style={{ margin: "0 0 15px 0", color: "#333" }}>
-                {modal.title}
-              </h3>
+              <h3 className={styles.modalTitle}>{modal.title}</h3>
             )}
 
-            <p
-              style={{ margin: "0 0 20px 0", color: "#666", lineHeight: "1.5" }}
-            >
-              {modal.message}
-            </p>
+            <p className={styles.modalMessage}>{modal.message}</p>
 
             <Button
               variant="primary"

@@ -133,9 +133,8 @@ export default function Profil() {
           "success"
         );
 
-        // Rediriger vers la page home après 2 secondes
         setTimeout(() => {
-          router.push("/home");
+          router.push("/dashboard");
         }, 2000);
       } else {
         showModal(
@@ -438,25 +437,11 @@ export default function Profil() {
   const CustomOption = ({ children, ...props }) => {
     const { data } = props;
     return (
-      <div
-        {...props.innerProps}
-        style={{
-          padding: "12px 20px",
-          cursor: "pointer",
-          backgroundColor: "#c4c8ccff",
-
-          color: "#333",
-          display: "flex",
-          alignItems: "center",
-          gap: "10px",
-        }}
-      >
+      <div {...props.innerProps} className={styles.customOption}>
         <div
+          className={styles.colorDot}
           style={{
-            width: "12px",
-            height: "12px",
             backgroundColor: data.color,
-            borderRadius: "50%",
           }}
         />
         <span>{children}</span>
@@ -481,10 +466,7 @@ export default function Profil() {
         <div className={styles.buttonModify}>
           <Button
             variant={activeModifyType === "username" ? "primary" : "secondary"}
-            style={{
-              height: "40px",
-              width: "240px",
-            }}
+            className={styles.modifyButton}
             onClick={() =>
               setActiveModifyType(
                 activeModifyType === "username" ? null : "username"
@@ -496,10 +478,7 @@ export default function Profil() {
           </Button>
           <Button
             variant={activeModifyType === "password" ? "primary" : "secondary"}
-            style={{
-              height: "40px",
-              width: "240px",
-            }}
+            className={styles.modifyButton}
             onClick={() =>
               setActiveModifyType(
                 activeModifyType === "password" ? null : "password"
@@ -510,10 +489,7 @@ export default function Profil() {
           </Button>
           <Button
             variant={activeModifyType === "email" ? "primary" : "secondary"}
-            style={{
-              height: "40px",
-              width: "240px",
-            }}
+            className={styles.modifyButtonEmail}
             onClick={() =>
               setActiveModifyType(activeModifyType === "email" ? null : "email")
             }
@@ -530,28 +506,19 @@ export default function Profil() {
                 placeholder="Nouveau nom d'utilisateur"
                 value={newUsername}
                 onChange={(e) => setNewUsername(e.target.value)}
-                style={{
-                  width: "300px",
-                  height: "40px",
-                }}
+                className={styles.inputEmail}
               />
               <Input
                 type="text"
                 placeholder="Confirmer nouveau nom d'utilisateur"
                 value={confirmUsername}
                 onChange={(e) => setConfirmUsername(e.target.value)}
-                style={{
-                  width: "300px",
-                  height: "40px",
-                }}
+                className={styles.inputEmail}
               />
             </div>
             <Button
               variant="primary"
-              style={{
-                height: "35px",
-                width: "120px",
-              }}
+              className={styles.saveButton}
               onClick={handleUpdateUsername}
             >
               Enregistrer
@@ -561,49 +528,32 @@ export default function Profil() {
 
         {activeModifyType === "password" && (
           <div className={styles.inputModify}>
-            <div
-              style={{
-                display: "flex",
-                gap: "50px",
-              }}
-            >
+            <div className={styles.inputContainerPassword}>
               <Input
                 type="password"
                 placeholder="Mot de passe actuel"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
-                style={{
-                  width: "240px",
-                  height: "40px",
-                }}
+                className={styles.inputPassword}
               />
               <Input
                 type="password"
                 placeholder="Nouveau mot de passe"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                style={{
-                  width: "240px",
-                  height: "40px",
-                }}
+                className={styles.inputPassword}
               />
               <Input
                 type="password"
                 placeholder="Confirmer le nouveau mot de passe"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                style={{
-                  width: "240px",
-                  height: "40px",
-                }}
+                className={styles.inputPassword}
               />
             </div>
             <Button
               variant="primary"
-              style={{
-                height: "35px",
-                width: "120px",
-              }}
+              className={styles.saveButton}
               onClick={handleUpdatePassword}
             >
               Enregistrer
@@ -619,28 +569,19 @@ export default function Profil() {
                 placeholder="Nouvel email"
                 value={newEmail}
                 onChange={(e) => setNewEmail(e.target.value)}
-                style={{
-                  width: "300px",
-                  height: "40px",
-                }}
+                className={styles.inputEmail}
               />
               <Input
                 type="email"
                 placeholder="Confirmer le nouvel email"
                 value={confirmEmail}
                 onChange={(e) => setConfirmEmail(e.target.value)}
-                style={{
-                  width: "300px",
-                  height: "40px",
-                }}
+                className={styles.inputEmail}
               />
             </div>
             <Button
               variant="primary"
-              style={{
-                height: "35px",
-                width: "120px",
-              }}
+              className={styles.saveButton}
               onClick={handleUpdateEmail}
             >
               Enregistrer
@@ -649,9 +590,9 @@ export default function Profil() {
         )}
 
         <div className={styles.divContainer}>
-          <div style={{ width: "300px" }}>
+          <div className={styles.selectContainer300}>
             <h3 className={styles.h3}>Expérience</h3>
-            <div className={StyleSheetList.experienceContainer}>
+            <div className={styles.experienceContainer}>
               {experienceOptions.map((option, index) => (
                 <Checkbox
                   key={`exp-${index}`}
@@ -663,11 +604,11 @@ export default function Profil() {
             </div>
           </div>
 
-          <div style={{ width: "600px" }}>
+          <div className={styles.selectContainer600}>
             <h3 className={styles.h3}>Actuellement sur:</h3>
 
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <div style={{ width: "500px" }}>
+            <div className={styles.selectCenterContainer}>
+              <div className={styles.selectContainer500}>
                 <Select
                   value={selectedLanguage}
                   onChange={handleLanguageChange}
@@ -684,23 +625,8 @@ export default function Profil() {
           </div>
         </div>
         <div className={styles.buttonContainer}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "15px",
-              marginBottom: "40px",
-            }}
-          >
-            <p
-              style={{
-                fontSize: "18px",
-                color: "#1761ab",
-                margin: "0",
-                textAlign: "center",
-              }}
-            >
+          <div className={styles.localityContainer}>
+            <p className={styles.localityText}>
               Tu souhaites trouver des membres de la communauté dans ta région ?
               (optionel)
             </p>
@@ -709,9 +635,7 @@ export default function Profil() {
               placeholder="Inscris ta ville :"
               value={locality}
               onChange={(e) => setLocality(e.target.value)}
-              style={{
-                width: "150px",
-              }}
+              className={styles.localityInput}
             />
           </div>
         </div>
@@ -721,58 +645,29 @@ export default function Profil() {
           <Button
             onClick={handleCreateProfile}
             variant="primary"
-            style={{
-              height: "60px",
-              width: "300px",
-            }}
+            className={styles.saveProfileButton}
           >
             Sauvegarder ton profil
           </Button>
         </div>
       </div>
 
-      {/* Modal simple pour les messages de confirmation */}
       {modal.isOpen && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 1000,
-          }}
-          onClick={closeModal}
-        >
+        <div className={styles.modalOverlay} onClick={closeModal}>
           <div
-            style={{
-              backgroundColor: "white",
-              borderRadius: "8px",
-              padding: "30px",
-              maxWidth: "400px",
-              width: "90%",
-              textAlign: "center",
-              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            }}
+            className={styles.modalContent}
             onClick={(e) => e.stopPropagation()}
           >
             <div
-              style={{
-                fontSize: "2rem",
-                marginBottom: "10px",
-                color:
-                  modal.type === "success"
-                    ? "#28a745"
-                    : modal.type === "error"
-                    ? "#dc3545"
-                    : modal.type === "warning"
-                    ? "#ffc107"
-                    : "#17a2b8",
-              }}
+              className={`${styles.modalIcon} ${
+                modal.type === "success"
+                  ? styles.modalIconSuccess
+                  : modal.type === "error"
+                  ? styles.modalIconError
+                  : modal.type === "warning"
+                  ? styles.modalIconWarning
+                  : styles.modalIconInfo
+              }`}
             >
               {modal.type === "success"
                 ? "✓"
@@ -784,24 +679,15 @@ export default function Profil() {
             </div>
 
             {modal.title && (
-              <h3 style={{ margin: "0 0 15px 0", color: "#333" }}>
-                {modal.title}
-              </h3>
+              <h3 className={styles.modalTitle}>{modal.title}</h3>
             )}
 
-            <p
-              style={{ margin: "0 0 20px 0", color: "#666", lineHeight: "1.5" }}
-            >
-              {modal.message}
-            </p>
+            <p className={styles.modalMessage}>{modal.message}</p>
 
             <Button
               variant="primary"
               onClick={closeModal}
-              style={{
-                height: "40px",
-                width: "100px",
-              }}
+              className={styles.modalButton}
             >
               OK
             </Button>
