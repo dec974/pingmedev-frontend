@@ -29,7 +29,7 @@ export default function PostsList({
   return (
     <div className={styles.list}>
       {posts.map((post) => {
-        // const Icon = iconMap[post.language] || null;
+        console.log("lang", post.languages[0]);
       
         // on prend la première valeur qui remonte (populate Mongoose ou autre format, sinon null)
         const author = post?.userId?.username ?? post?.username ?? null;
