@@ -14,14 +14,12 @@ export default function Profil() {
   const [selectedLanguage, setSelectedLanguage] = useState([]);
   const [languages, setLanguages] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showUsernameInput, setShowUsernameInput] = useState(false);
+  const [activeModifyType, setActiveModifyType] = useState(null); // 'username', 'password', 'email', ou null
   const [newUsername, setNewUsername] = useState("");
   const [confirmUsername, setConfirmUsername] = useState("");
-  const [showPasswordInputs, setShowPasswordInputs] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [showEmailInputs, setShowEmailInputs] = useState(false);
   const [newEmail, setNewEmail] = useState("");
   const [confirmEmail, setConfirmEmail] = useState("");
   const router = useRouter();
@@ -106,6 +104,55 @@ export default function Profil() {
       }
     } catch (error) {
       console.error("Erreur ", error);
+    }
+  };
+
+  const handleUpdateUsername = async () => {
+    try {
+      const token = getUserToken();
+
+      if (!newUsername.trim()) {
+        alert("Veuillez entrer un nouveau nom d'utilisateur");
+        return;
+      }
+
+      if (newUsername !== confirmUsername) {
+        alert("Les noms d'utilisateur ne correspondent pas");
+        return;
+      }
+
+      const updateData = {
+        token: token,
+        newUsername: newUsername,
+      };
+
+      const response = await fetch(
+        "http://localhost:3000/users/update-username",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updateData),
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.result) {
+        alert("Nom d'utilisateur mis à jour avec succès !");
+        setNewUsername("");
+        setConfirmUsername("");
+        setActiveModifyType(null);
+      } else {
+        alert("Erreur lors de la mise à jour: " + (data.error || data.message));
+      }
+    } catch (error) {
+      console.error(
+        "Erreur lors de la mise à jour du nom d'utilisateur:",
+        error
+      );
+      alert("Erreur de connexion");
     }
   };
 
@@ -210,39 +257,49 @@ export default function Profil() {
 
         <div className={styles.buttonModify}>
           <Button
-            variant={showUsernameInput ? "primary" : "secondary"}
+            variant={activeModifyType === "username" ? "primary" : "secondary"}
             style={{
               height: "40px",
               width: "240px",
             }}
-            onClick={() => setShowUsernameInput(!showUsernameInput)}
+            onClick={() =>
+              setActiveModifyType(
+                activeModifyType === "username" ? null : "username"
+              )
+            }
             //style.classname n est pas prit en compte via moduleE.CSS
           >
             Modifier UserName
           </Button>
           <Button
-            variant={showPasswordInputs ? "primary" : "secondary"}
+            variant={activeModifyType === "password" ? "primary" : "secondary"}
             style={{
               height: "40px",
               width: "240px",
             }}
-            onClick={() => setShowPasswordInputs(!showPasswordInputs)}
+            onClick={() =>
+              setActiveModifyType(
+                activeModifyType === "password" ? null : "password"
+              )
+            }
           >
             Modifier Mot de passe
           </Button>
           <Button
-            variant={showEmailInputs ? "primary" : "secondary"}
+            variant={activeModifyType === "email" ? "primary" : "secondary"}
             style={{
               height: "40px",
               width: "240px",
             }}
-            onClick={() => setShowEmailInputs(!showEmailInputs)}
+            onClick={() =>
+              setActiveModifyType(activeModifyType === "email" ? null : "email")
+            }
           >
             Modifier Email
           </Button>
         </div>
 
-        {showUsernameInput && (
+        {activeModifyType === "username" && (
           <div className={styles.inputModify}>
             <div className={styles.inputContainer}>
               <Input
@@ -272,13 +329,14 @@ export default function Profil() {
                 height: "35px",
                 width: "120px",
               }}
+              onClick={handleUpdateUsername}
             >
               Enregistrer
             </Button>
           </div>
         )}
 
-        {showPasswordInputs && (
+        {activeModifyType === "password" && (
           <div className={styles.inputModify}>
             <div
               style={{
@@ -329,7 +387,7 @@ export default function Profil() {
           </div>
         )}
 
-        {showEmailInputs && (
+        {activeModifyType === "email" && (
           <div className={styles.inputModify}>
             <div className={styles.inputContainer}>
               <Input
