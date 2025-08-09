@@ -7,6 +7,11 @@ import { FaRegBookmark } from "react-icons/fa";
 import { formatDate } from "../../modules/formatDate";
 import { truncateInput } from "../../modules/truncateInput";
 
+const iconMap = {
+  javascript: SiJavascript,
+  react: SiReact,
+};
+
 export default function PostsList({
   posts,
   showIcons = true,
