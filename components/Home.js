@@ -61,7 +61,7 @@ export default function Home() {
       {loading ? (
         <p> Chargement en cours</p>
       ) : (
-        <PostsList posts={posts}/>
+        <PostsList posts={posts} />
         
       )}
       </div>      
