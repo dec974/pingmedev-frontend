@@ -4,19 +4,19 @@ import Button from "../ui-kit/atoms/Button";
 import { FaPencil } from "react-icons/fa6";
 import { useRouter } from "next/router";
 
-
-
 function Sidebar() {
   const router = useRouter();
-const handleRetourClick = () => {
+  const handleRetourClick = () => {
     router.push("/home");
   };
-const handleMyAccountClick = () => {
+  const handleMyAccountClick = () => {
     router.push("/myProfile");
   };
   return (
     <aside className={styles.sidebar}>
-      <Button variant={"primary"} onClick={handleRetourClick}>retour</Button>
+      <Button variant={"primary"} onClick={handleRetourClick}>
+        retour
+      </Button>
       <div className={styles.profile}>
         <img src="/avatar.png" className={styles.avatar} alt="avatar" />
         <h2 className={styles.userName}>Dmitry Novitsky</h2>
