@@ -74,6 +74,7 @@ function UserContent() {
             showIcons={false}
             showAuthor={false}
             showDelete={true}
+            linkToDetail={true}
             onDelete={(postId) => {
               console.log("Suppression d'un de MES posts", postId);
 

@@ -4,6 +4,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  font-family: var(--font-jetbrains);
   font-size: 0.9rem;
   border: 1px solid var(--background-color-white);
 }

@@ -1,60 +1,102 @@
 .sidebar {
-  width: 25%;
-  padding: 20px;
-  background-color: white;
-  border-right: 1px solid var(--background-color-grey);
+  width: 33%;
+  min-width: 275px;
+  padding: 1vw;
+  background-color: var(--background-color-lightgrey);
+  border-right: 2px solid var(--background-color-grey);
 }
 
 .profile {
-  margin-top: 20px;
+  display: flex;
+  padding: 1vw;
+  gap: 1vw;
+  flex-direction: column;
   background-color: var(--background-color-white);
-  border: 1px solid var(--background-color-grey);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   border-radius: var(--radius);
-  padding: 15px;
+  overflow: hidden;
+}
+
+.profilCardTop {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 1vw;
+}
+
+.profilCardBot {
+  display: flex;
+  flex-direction: column;
+  padding: 0 1vw;
 }
 
 .avatar {
-  width: 80px;
-  border-radius: var(--radius);
-  margin: 30px 0 20px 0;
+  width: 4.5vw;
+  min-width: 40px;
 }
 
 .userName {
-  color: var(--primary-color);
-  margin-bottom: 5px;
+  font-size: clamp(15px, 2vw, 30px);
+  margin-bottom: 0.5vw;
+}
+
+.links a {
+  color: var(--text-color);
+  font-size: clamp(10px, 2vw, 15px);
+}
+
+.links a:hover {
+  color: var(--secondary-color);
 }
 
 .pencil {
   color: var(--secondary-color);
 }
 
-.links {
-  margin-top: px;
+.followLine {
+  width: 100%;
+  display: flex;
+  background-color: var(--background-color-lightgrey);
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1vw;
+  border-radius: var(--radius);
 }
 
 .follows {
-  margin-top: 50px;
+  margin: 1vh 0;
 }
 
 .followsTitle {
-   margin-bottom: 10px;
+ 
+  margin: 2vh 0;
+  font-size: clamp(12px, 2vw, 22px);
 }
 
 .followedUser {
   display: flex;
+  flex-direction: column;
 }
 
 .userLine {
   display: flex;
-  width: 140px;
+  width: 40%;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  gap: 5px;
+  padding: 1vw 0;
+  gap: 0.5vh;
+}
+.followedUsername {
+  font-size: clamp(10px, 0.8vw, 18px);
+}
+.textarea {
+  display: flex;
+  width: 66%;
 }
 
 .smallAvatar {
-  width: 35px;
+  width: 3vw;
   border-radius: 50%;
 }
 

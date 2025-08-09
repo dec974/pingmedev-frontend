@@ -11,6 +11,7 @@ import Icon from '../atoms/Icon.js';
 
 export default function PostsList({
   posts,
+  className = "",
   showIcons = true,
   showAuthor = true,
   showDelete = false,
@@ -33,9 +34,9 @@ export default function PostsList({
         // on prend la première valeur qui remonte (populate Mongoose ou autre format, sinon null)
         const author = post?.userId?.username ?? post?.username ?? null;
 
-        const Card = ({ children }) =>
+        const Card = ({ children, className = "" }) =>
           linkToDetail ? (
-            <Link href={`/posts/${post._id}`} className={styles.postLink}>
+            <Link href={`/posts/${post._id}`} className={`${styles.postLink} ${className}`}>
               {children}
             </Link>
           ) : (
@@ -46,7 +47,7 @@ export default function PostsList({
           console.log('languages',post.languages[0])
         };
         return (
-          <Card key={post._id}>
+          <Card key={post._id} className={`${styles.card} ${className}`}>
             <div className={styles.header}>
               <div className={styles.headerleft}>
                 {showIcons && <Icon className={styles.icon} language={post.languages[0]} size={24} />}
