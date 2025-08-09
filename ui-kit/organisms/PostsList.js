@@ -2,6 +2,7 @@ import styles from "./PostsList.module.css";
 import { SiJavascript, SiReact } from "react-icons/si";
 import { FaTrash } from "react-icons/fa";
 import { formatDate } from "../../modules/formatDate";
+import Icon from '../atoms/Icon.js';
 
 
 const iconMap = {
@@ -25,17 +26,17 @@ export default function PostsList({
   return (
     <div className={styles.list}>
       {posts.map((post) => {
-        const Icon = iconMap[post.language] || null;
-
+        // const Icon = iconMap[post.language] || null;
+      
         // on prend la première valeur qui remonte (populate Mongoose ou autre format, sinon null)
         const author = post?.userId?.username ?? post?.username ?? null;
-
+        console.log(post.languages);
         return (
           <div key={post._id} className={styles.post}>
             <div className={styles.header}>
               <div className={styles.headerleft}>
-                {showIcons && Icon && <Icon className={styles.icon} />}
-
+                {showIcons && <Icon language={post.languages[0]} />}
+<Icon language={post.languages[0]} />
                 {showAuthor && author && (
                   <p className={styles.username}>
                     <span className={styles.type}>Question de </span>
