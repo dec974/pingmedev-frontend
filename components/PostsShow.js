@@ -11,6 +11,7 @@ import Image from "next/image";
 import Icon from "../ui-kit/atoms/Icon";
 import Modal from "react-modal";
 import { FaPencil } from "react-icons/fa6";
+import PostsList from "../ui-kit/organisms/PostsList";
 
 
 function PostsShow( ) {
@@ -113,21 +114,25 @@ function PostsShow( ) {
         return (
             <div key={index} className={styles.answer}>
                 <div className={styles.answerHeader}>
-                    <Image
-                        src="/avatar.png"
-                        width={40}
-                        height={40}
-                        className={styles.logoImg}
-                        alt="Avatar"
-                    />
-                    <span className={styles.answerAuthor}>{answer.userId.username}</span>
-                    <span className={styles.answerDate}>{formatDate(answer.createdAt)}</span>
+                    <div className={styles.answerAuthor}>
+                        <Image
+                            src="/avatar.png"
+                            width={40}
+                            height={40}
+                            className={styles.logoImg}
+                            alt="PingMe logo"
+                        />
+                        {answer.userId.username}
+                    </div>
+                    <div className={styles.answerDate}>
+                        {formatDate(answer.createdAt)}
+                    </div>
                 </div>
                 <div className={styles.answerContent}>
-                    <p>Reponse: {answer.response}</p>
-                </div>
+                    {answer.response}
+                </div>  
             </div>
-        )
+        );
     });
     Modal.setAppElement('#__next'); 
     return (

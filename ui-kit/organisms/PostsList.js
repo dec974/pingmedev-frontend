@@ -5,13 +5,9 @@ import { SiJavascript, SiReact } from "react-icons/si";
 import { FaTrash } from "react-icons/fa";
 import { FaRegBookmark } from "react-icons/fa";
 import { formatDate } from "../../modules/formatDate";
-import { truncateInput } from "../../modules/truncateInput";import Icon from '../atoms/Icon.js';
+import { truncateInput } from "../../modules/truncateInput";
+import Icon from '../atoms/Icon.js';
 
-
-const iconMap = {
-  javascript: SiJavascript,
-  react: SiReact,
-};
 
 export default function PostsList({
   posts,
@@ -46,11 +42,14 @@ export default function PostsList({
             <div className={styles.post}>{children}</div>
           );
 
+        if(showIcons){
+          console.log('languages',post.languages[0])
+        };
         return (
           <Card key={post._id}>
             <div className={styles.header}>
               <div className={styles.headerleft}>
-                {showIcons && Icon && <Icon className={styles.icon} />}
+                {showIcons && <Icon className={styles.icon} language={post.languages[0]} size={24} />}
                 {showAuthor && author && (
                   <p className={styles.username}>
                     <span className={styles.type}>Question de </span>
