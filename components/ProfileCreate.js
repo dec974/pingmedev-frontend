@@ -12,7 +12,36 @@ export default function Profil() {
   const [selectedLanguage, setSelectedLanguage] = useState([]); // ✅ Changer en tableau
   const [languages, setLanguages] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // États pour la modal
+  const [modal, setModal] = useState({
+    isOpen: false,
+    title: "",
+    message: "",
+    type: "info",
+  });
+
   const router = useRouter();
+
+  // Fonction pour afficher une modal
+  const showModal = (title, message, type = "info") => {
+    setModal({
+      isOpen: true,
+      title,
+      message,
+      type,
+    });
+  };
+
+  // Fonction pour fermer la modal
+  const closeModal = () => {
+    setModal({
+      isOpen: false,
+      title: "",
+      message: "",
+      type: "info",
+    });
+  };
 
   // Fonction pour récupérer le token utilisateur
   const getUserToken = () => {
@@ -66,7 +95,11 @@ export default function Profil() {
       const token = getUserToken();
 
       if (!selectedExperience) {
-        alert("Veuillez sélectionner votre niveau d'expérience");
+        showModal(
+          "Expérience requise",
+          "Veuillez sélectionner votre niveau d'expérience",
+          "warning"
+        );
         return;
       }
 
@@ -88,13 +121,31 @@ export default function Profil() {
       const data = await response.json();
 
       if (data.result) {
-        router.push("/home");
+        showModal(
+          "Succès !",
+          "Votre profil a été créé avec succès ! Redirection en cours...",
+          "success"
+        );
+
+        // Rediriger vers la page home après 2 secondes
+        setTimeout(() => {
+          router.push("/home");
+        }, 2000);
       } else {
         console.error("Erreur:", data.error);
-        alert("Erreur  " + data.error);
+        showModal(
+          "Erreur",
+          "Erreur lors de la création: " + (data.error || "Erreur inconnue"),
+          "error"
+        );
       }
     } catch (error) {
-      console.error("Erreur ", error);
+      console.error("Erreur de connexion:", error);
+      showModal(
+        "Erreur de connexion",
+        "Impossible de se connecter au serveur. Veuillez réessayer.",
+        "error"
+      );
     }
   };
 
@@ -315,6 +366,84 @@ export default function Profil() {
           Créer ton profil
         </Button>
       </div>
+
+      {/* Modal simple pour les messages de confirmation */}
+      {modal.isOpen && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
+          }}
+          onClick={closeModal}
+        >
+          <div
+            style={{
+              backgroundColor: "white",
+              borderRadius: "8px",
+              padding: "30px",
+              maxWidth: "400px",
+              width: "90%",
+              textAlign: "center",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              style={{
+                fontSize: "2rem",
+                marginBottom: "10px",
+                color:
+                  modal.type === "success"
+                    ? "#28a745"
+                    : modal.type === "error"
+                    ? "#dc3545"
+                    : modal.type === "warning"
+                    ? "#ffc107"
+                    : "#17a2b8",
+              }}
+            >
+              {modal.type === "success"
+                ? "✓"
+                : modal.type === "error"
+                ? "✕"
+                : modal.type === "warning"
+                ? "⚠"
+                : "ℹ"}
+            </div>
+
+            {modal.title && (
+              <h3 style={{ margin: "0 0 15px 0", color: "#333" }}>
+                {modal.title}
+              </h3>
+            )}
+
+            <p
+              style={{ margin: "0 0 20px 0", color: "#666", lineHeight: "1.5" }}
+            >
+              {modal.message}
+            </p>
+
+            <Button
+              variant="primary"
+              onClick={closeModal}
+              style={{
+                height: "40px",
+                width: "100px",
+              }}
+            >
+              OK
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

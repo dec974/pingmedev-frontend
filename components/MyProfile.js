@@ -22,9 +22,34 @@ export default function Profil() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [newEmail, setNewEmail] = useState("");
   const [confirmEmail, setConfirmEmail] = useState("");
+
+  const [modal, setModal] = useState({
+    isOpen: false,
+    title: "",
+    message: "",
+    type: "info",
+  });
+
   const router = useRouter();
 
-  // Fonction pour récupérer le token utilisateur
+  const showModal = (title, message, type = "info") => {
+    setModal({
+      isOpen: true,
+      title,
+      message,
+      type,
+    });
+  };
+
+  const closeModal = () => {
+    setModal({
+      isOpen: false,
+      title: "",
+      message: "",
+      type: "info",
+    });
+  };
+
   const getUserToken = () => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -76,7 +101,11 @@ export default function Profil() {
       const token = getUserToken();
 
       if (!selectedExperience) {
-        alert("Veuillez sélectionner votre niveau d'expérience");
+        showModal(
+          "Expérience requise",
+          "Veuillez sélectionner votre niveau d'expérience",
+          "warning"
+        );
         return;
       }
 
@@ -98,12 +127,31 @@ export default function Profil() {
       const data = await response.json();
 
       if (data.result) {
-        router.push("/home");
+        showModal(
+          "Succès !",
+          "Votre profil a été mis à jour avec succès ! Redirection en cours...",
+          "success"
+        );
+
+        // Rediriger vers la page home après 2 secondes
+        setTimeout(() => {
+          router.push("/home");
+        }, 2000);
       } else {
+        showModal(
+          "Erreur",
+          "Erreur lors de la sauvegarde: " + (data.error || "Erreur inconnue"),
+          "error"
+        );
         console.error("Erreur:", data.error);
       }
     } catch (error) {
-      console.error("Erreur ", error);
+      console.error("Erreur de connexion:", error);
+      showModal(
+        "Erreur de connexion",
+        "Impossible de se connecter au serveur. Veuillez réessayer.",
+        "error"
+      );
     }
   };
 
@@ -112,12 +160,20 @@ export default function Profil() {
       const token = getUserToken();
 
       if (!newUsername.trim()) {
-        alert("Veuillez entrer un nouveau nom d'utilisateur");
+        showModal(
+          "Champ requis",
+          "Veuillez entrer un nouveau nom d'utilisateur",
+          "warning"
+        );
         return;
       }
 
       if (newUsername !== confirmUsername) {
-        alert("Les noms d'utilisateur ne correspondent pas");
+        showModal(
+          "Erreur de saisie",
+          "Les noms d'utilisateur ne correspondent pas",
+          "warning"
+        );
         return;
       }
 
@@ -140,19 +196,186 @@ export default function Profil() {
       const data = await response.json();
 
       if (data.result) {
-        alert("Nom d'utilisateur mis à jour avec succès !");
+        showModal(
+          "Succès !",
+          "Votre nom d'utilisateur a été mis à jour avec succès !",
+          "success"
+        );
         setNewUsername("");
         setConfirmUsername("");
         setActiveModifyType(null);
       } else {
-        alert("Erreur lors de la mise à jour: " + (data.error || data.message));
+        showModal(
+          "Erreur",
+          "Erreur lors de la mise à jour: " + (data.error || data.message),
+          "error"
+        );
       }
     } catch (error) {
       console.error(
         "Erreur lors de la mise à jour du nom d'utilisateur:",
         error
       );
-      alert("Erreur de connexion");
+      showModal(
+        "Erreur de connexion",
+        "Impossible de se connecter au serveur. Veuillez réessayer.",
+        "error"
+      );
+    }
+  };
+
+  const handleUpdatePassword = async () => {
+    try {
+      const token = getUserToken();
+
+      if (
+        !currentPassword.trim() ||
+        !newPassword.trim() ||
+        !confirmPassword.trim()
+      ) {
+        showModal(
+          "Champs requis",
+          "Veuillez remplir tous les champs de mot de passe",
+          "warning"
+        );
+        return;
+      }
+
+      if (newPassword !== confirmPassword) {
+        showModal(
+          "Erreur de saisie",
+          "Les nouveaux mots de passe ne correspondent pas",
+          "warning"
+        );
+        return;
+      }
+
+      if (newPassword.length < 6) {
+        showModal(
+          "Mot de passe trop court",
+          "Le nouveau mot de passe doit contenir au moins 6 caractères",
+          "warning"
+        );
+        return;
+      }
+
+      const updateData = {
+        token: token,
+        currentPassword: currentPassword,
+        newPassword: newPassword,
+      };
+
+      const response = await fetch(
+        "http://localhost:3000/users/update-password",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updateData),
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.result) {
+        showModal(
+          "Succès !",
+          "Votre mot de passe a été mis à jour avec succès !",
+          "success"
+        );
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+        setActiveModifyType(null);
+      } else {
+        showModal(
+          "Erreur",
+          "Erreur lors de la mise à jour: " + (data.error || data.message),
+          "error"
+        );
+      }
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour du mot de passe:", error);
+      showModal(
+        "Erreur de connexion",
+        "Impossible de se connecter au serveur. Veuillez réessayer.",
+        "error"
+      );
+    }
+  };
+
+  const handleUpdateEmail = async () => {
+    try {
+      const token = getUserToken();
+
+      if (!newEmail.trim() || !confirmEmail.trim()) {
+        showModal(
+          "Champs requis",
+          "Veuillez remplir tous les champs d'email",
+          "warning"
+        );
+        return;
+      }
+
+      if (newEmail !== confirmEmail) {
+        showModal(
+          "Erreur de saisie",
+          "Les nouveaux emails ne correspondent pas",
+          "warning"
+        );
+        return;
+      }
+
+      // Validation simple d'email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(newEmail)) {
+        showModal(
+          "Email invalide",
+          "Veuillez entrer une adresse email valide",
+          "warning"
+        );
+        return;
+      }
+
+      const updateData = {
+        token: token,
+        newEmail: newEmail,
+      };
+
+      const response = await fetch("http://localhost:3000/users/update-email", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updateData),
+      });
+
+      const data = await response.json();
+
+      if (data.result) {
+        showModal(
+          "Succès !",
+          "Votre email a été mis à jour avec succès !",
+          "success"
+        );
+        setNewEmail("");
+        setConfirmEmail("");
+        setActiveModifyType(null);
+      } else {
+        showModal(
+          "Erreur",
+          "Erreur lors de la mise à jour: " + (data.error || data.message),
+          "error"
+        );
+      }
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour de l'email:", error);
+      showModal(
+        "Erreur de connexion",
+        "Impossible de se connecter au serveur. Veuillez réessayer.",
+        "error"
+      );
     }
   };
 
@@ -381,6 +604,7 @@ export default function Profil() {
                 height: "35px",
                 width: "120px",
               }}
+              onClick={handleUpdatePassword}
             >
               Enregistrer
             </Button>
@@ -417,6 +641,7 @@ export default function Profil() {
                 height: "35px",
                 width: "120px",
               }}
+              onClick={handleUpdateEmail}
             >
               Enregistrer
             </Button>
@@ -505,6 +730,84 @@ export default function Profil() {
           </Button>
         </div>
       </div>
+
+      {/* Modal simple pour les messages de confirmation */}
+      {modal.isOpen && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
+          }}
+          onClick={closeModal}
+        >
+          <div
+            style={{
+              backgroundColor: "white",
+              borderRadius: "8px",
+              padding: "30px",
+              maxWidth: "400px",
+              width: "90%",
+              textAlign: "center",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              style={{
+                fontSize: "2rem",
+                marginBottom: "10px",
+                color:
+                  modal.type === "success"
+                    ? "#28a745"
+                    : modal.type === "error"
+                    ? "#dc3545"
+                    : modal.type === "warning"
+                    ? "#ffc107"
+                    : "#17a2b8",
+              }}
+            >
+              {modal.type === "success"
+                ? "✓"
+                : modal.type === "error"
+                ? "✕"
+                : modal.type === "warning"
+                ? "⚠"
+                : "ℹ"}
+            </div>
+
+            {modal.title && (
+              <h3 style={{ margin: "0 0 15px 0", color: "#333" }}>
+                {modal.title}
+              </h3>
+            )}
+
+            <p
+              style={{ margin: "0 0 20px 0", color: "#666", lineHeight: "1.5" }}
+            >
+              {modal.message}
+            </p>
+
+            <Button
+              variant="primary"
+              onClick={closeModal}
+              style={{
+                height: "40px",
+                width: "100px",
+              }}
+            >
+              OK
+            </Button>
+          </div>
+        </div>
+      )}
     </>
   );
 }

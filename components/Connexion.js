@@ -24,11 +24,44 @@ export default function Connexion() {
   const [errorMessage, setErrorMessage] = useState("");
   const [signInErrorMessage, setSignInErrorMessage] = useState("");
   const [showPopover, setShowPopover] = useState(false);
+
+  // États pour la modal
+  const [modal, setModal] = useState({
+    isOpen: false,
+    title: "",
+    message: "",
+    type: "info",
+  });
+
+  // Fonction pour afficher une modal
+  const showModal = (title, message, type = "info") => {
+    setModal({
+      isOpen: true,
+      title,
+      message,
+      type,
+    });
+  };
+
+  // Fonction pour fermer la modal
+  const closeModal = () => {
+    setModal({
+      isOpen: false,
+      title: "",
+      message: "",
+      type: "info",
+    });
+  };
+
   // inscription avec github
   function GitHubSignUpButton() {
     const signUpWithGitHub = () => {
       if (!acceptTerms) {
-        setErrorMessage("Vous devez accepter les conditions d'utilisation");
+        showModal(
+          "Conditions requises",
+          "Vous devez accepter les conditions d'utilisation",
+          "warning"
+        );
         return;
       }
       const clientID = "Ov23lio8tZ02RbB9eJUC";
@@ -104,12 +137,16 @@ export default function Connexion() {
             router.push("/home");
           }
         } else {
-          setErrorMessage(data.error || "Erreur de connexion GitHub");
+          showModal(
+            "Erreur GitHub",
+            data.error || "Erreur de connexion GitHub",
+            "error"
+          );
         }
       })
       .catch((error) => {
         console.error("Erreur de connexion GitHub:", error);
-        setErrorMessage("Erreur de connexion GitHub");
+        showModal("Erreur de connexion", "Erreur de connexion GitHub", "error");
       });
   };
   // voir le exo Ariane Google Connect pour explications de lignes dessous
@@ -145,18 +182,30 @@ export default function Connexion() {
           );
           router.push("/home");
         } else {
-          setSignInErrorMessage(data.error || "Utilisateur non inscrit");
+          showModal(
+            "Erreur de connexion",
+            data.error || "Utilisateur non inscrit",
+            "error"
+          );
         }
       })
       .catch((error) => {
         console.error("Erreur de connexion:", error);
-        setSignInErrorMessage("Erreur de connexion");
+        showModal(
+          "Erreur de connexion",
+          "Erreur de connexion au serveur",
+          "error"
+        );
       });
   };
   // inscritpion avec Google
   const handleSignUpGoogle = (credentialResponse) => {
     if (!acceptTerms) {
-      setErrorMessage("Vous devez accepter les conditions d'utilisation");
+      showModal(
+        "Conditions requises",
+        "Vous devez accepter les conditions d'utilisation",
+        "warning"
+      );
       return;
     }
 
@@ -193,19 +242,31 @@ export default function Connexion() {
             router.push("/home");
           }
         } else {
-          setErrorMessage(data.error || "Erreur lors de la connexion");
+          showModal(
+            "Erreur d'inscription",
+            data.error || "Erreur lors de la connexion",
+            "error"
+          );
         }
       })
       .catch((error) => {
         console.error("Erreur de connexion:", error);
-        setErrorMessage("Erreur de connexion au serveur");
+        showModal(
+          "Erreur de connexion",
+          "Erreur de connexion au serveur",
+          "error"
+        );
       });
   };
 
   // inscription usernam email
   const handleSignUp = () => {
     if (!signUpUsername || !signUpMail || !signUpPassword || !acceptTerms) {
-      setErrorMessage("Champs vides ou conditions non acceptées");
+      showModal(
+        "Champs requis",
+        "Champs vides ou conditions non acceptées",
+        "warning"
+      );
       return;
     }
 
@@ -240,19 +301,27 @@ export default function Connexion() {
           setSignUpMail("");
           router.push("/profilPage");
         } else {
-          setErrorMessage(data.error || "Username ou email déjà utilisé");
+          showModal(
+            "Erreur d'inscription",
+            data.error || "Username ou email déjà utilisé",
+            "error"
+          );
         }
       })
       .catch((error) => {
         console.error("Erreur lors de l'inscription:", error);
-        setErrorMessage("Erreur de connexion au serveur");
+        showModal(
+          "Erreur de connexion",
+          "Erreur de connexion au serveur",
+          "error"
+        );
       });
   };
   // voir Notion dans local storage le lien pour explication
   // connexion username password
   const handleSignIn = () => {
     if (!signInUsername || !signInPassword) {
-      setSignInErrorMessage("Champs vides");
+      showModal("Champs requis", "Champs vides", "warning");
       return;
     }
 
@@ -288,12 +357,20 @@ export default function Connexion() {
           setSignUpMail("");
           router.push("/home");
         } else {
-          setSignInErrorMessage(data.error || "Utilisateur non inscrit");
+          showModal(
+            "Erreur de connexion",
+            data.error || "Utilisateur non inscrit",
+            "error"
+          );
         }
       })
       .catch((error) => {
         console.error("Erreur lors de la connexion:", error);
-        setSignInErrorMessage("Erreur de connexion au serveur");
+        showModal(
+          "Erreur de connexion",
+          "Erreur de connexion au serveur",
+          "error"
+        );
       });
   };
 
@@ -407,9 +484,6 @@ export default function Connexion() {
               }
             }}
           />
-          {errorMessage && (
-            <div className={styles.errorMessage}>{errorMessage}</div>
-          )}
           <Button
             onClick={handleSignUp}
             variant="primary"
@@ -478,10 +552,6 @@ export default function Connexion() {
             <label className={styles.floatingLabel}>Password</label>
           </div>
 
-          {signInErrorMessage && (
-            <div className={styles.errorMessage}>{signInErrorMessage}</div>
-          )}
-
           <Button
             onClick={handleSignIn}
             variant="primary"
@@ -515,6 +585,84 @@ export default function Connexion() {
           </GoogleOAuthProvider>
         </div>
       </div>
+
+      {/* Modal simple pour les messages de confirmation */}
+      {modal.isOpen && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
+          }}
+          onClick={closeModal}
+        >
+          <div
+            style={{
+              backgroundColor: "white",
+              borderRadius: "8px",
+              padding: "30px",
+              maxWidth: "400px",
+              width: "90%",
+              textAlign: "center",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              style={{
+                fontSize: "2rem",
+                marginBottom: "10px",
+                color:
+                  modal.type === "success"
+                    ? "#28a745"
+                    : modal.type === "error"
+                    ? "#dc3545"
+                    : modal.type === "warning"
+                    ? "#ffc107"
+                    : "#17a2b8",
+              }}
+            >
+              {modal.type === "success"
+                ? "✓"
+                : modal.type === "error"
+                ? "✕"
+                : modal.type === "warning"
+                ? "⚠"
+                : "ℹ"}
+            </div>
+
+            {modal.title && (
+              <h3 style={{ margin: "0 0 15px 0", color: "#333" }}>
+                {modal.title}
+              </h3>
+            )}
+
+            <p
+              style={{ margin: "0 0 20px 0", color: "#666", lineHeight: "1.5" }}
+            >
+              {modal.message}
+            </p>
+
+            <Button
+              variant="primary"
+              onClick={closeModal}
+              style={{
+                height: "40px",
+                width: "100px",
+              }}
+            >
+              OK
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
