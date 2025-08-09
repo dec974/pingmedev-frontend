@@ -20,8 +20,6 @@
   border-radius: var(--radius);
   margin-bottom: 10px;
   justify-content: space-between;
-  
-  
 }
 
 .title {
@@ -32,7 +30,13 @@
   font-size: 1rem;
   font-family: JetBrains Mono;
   width: 100%;
-  
+  overflow: hidden;
+}
+
+.postLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
 }
 
 .meta {
