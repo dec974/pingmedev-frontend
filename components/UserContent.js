@@ -10,8 +10,24 @@ function UserContent() {
   const [loading, setLoading] = useState(true);
   const [followedPosts, setFollowedPosts] = useState([]);
   const user = useSelector((state) => state.user.value);
-  console.log(" Utilisateur connecté :", user);
+  
+  // Stockage en local du tri des posts par défaut (les plus récents au-dessus) 
+  const [sortOrder, setSortOrder] = useState("desc"); 
 
+  // Fonction pour basculer l'ordre de tri
+    const toggleSortOrder = () => {
+    setSortOrder((prev) => (prev === "desc" ? "asc" : "desc"));
+  };
+
+  const sortPosts = (list) => {
+    return [...list].sort((a, b) => {
+      const dateA = new Date(a.createdAt);
+      const dateB = new Date(b.createdAt);
+      return sortOrder === "desc" ? dateB - dateA : dateA - dateB;
+    });
+  };
+
+  // Récupération des posts de l'utilisateur 
   useEffect(() => {
     setLoading(true);
 
@@ -28,6 +44,7 @@ function UserContent() {
         });
     }
 
+  // Récupération des posts suivis par l'utilisateur  
     if (activeTab === "topics") {
       fetch(`http://localhost:3000/users/followed-posts/${user.token}`)
         .then((res) => res.json())
@@ -40,6 +57,8 @@ function UserContent() {
         });
     }
   }, [activeTab, user.token]);
+
+  
 
   return (
     <main className={styles.userContent}>
@@ -60,23 +79,31 @@ function UserContent() {
           }`}
           onClick={() => setActiveTab("topics")}
         >
-          Topics suivis
+          Mes suivis
         </Button>
       </div>
+
       <div className={styles.userContentContainer}>
-        <div className={styles.sort}>Du + récent au + ancien</div>
+        <div className={styles.sort}>
+          <button onClick={toggleSortOrder} className={styles.sortBtn}>
+            {sortOrder === "desc"
+              ? "du plus récent au plus ancien"
+              : "du plus ancien au plus récent"}
+          </button>
+        </div>
 
         {loading ? (
           <p>Chargement des posts...</p>
         ) : activeTab === "posts" ? (
           <PostsList
-            posts={posts}
-            showIcons={false}
+            posts={sortPosts(posts)}
+            showIcons={true}
             showAuthor={false}
+            showStatus={true}
             showDelete={true}
             linkToDetail={true}
             onDelete={(postId) => {
-              console.log("Suppression d'un de MES posts", postId);
+              // Suppression d'un de MES posts
 
               fetch(`http://localhost:3000/posts/${postId}/deleted`, {
                 method: "PUT",
@@ -90,12 +117,11 @@ function UserContent() {
           />
         ) : (
           <PostsList
-            posts={followedPosts}
-            showIcons={false}
-            showAuthor={true}
+            posts={sortPosts(followedPosts)}
+            showIcons={true}
             showUnfollow={true}
             onUnfollow={(postId) => {
-              console.log("Ce post ne sera plus suivi", postId);
+              // CE post ne sera plus suivi
 
               fetch(`http://localhost:3000/users/unfollow-post`, {
                 method: "POST",

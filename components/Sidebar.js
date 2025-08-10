@@ -5,6 +5,7 @@ import TextArea from "../ui-kit/atoms/TextArea";
 import Button from "../ui-kit/atoms/Button";
 import { FaPencil } from "react-icons/fa6";
 import { useRouter } from "next/router";
+import Icon from "../ui-kit/atoms/Icon.js";
 
 function Sidebar() {
   const router = useRouter();
@@ -31,6 +32,13 @@ function Sidebar() {
         }
       });
   }, [token]);
+
+  useEffect(() => {
+    console.log(
+      "followedUsers sample:",
+      JSON.stringify(followedUsers[0]?.profile?.languages, null, 2)
+    );
+  }, [followedUsers]);
 
   return (
     <aside className={styles.sidebar}>
@@ -59,28 +67,39 @@ function Sidebar() {
           {followedUsers.length === 0 ? (
             <p className={styles.noFollow}>Aucune personne suivie</p>
           ) : (
-            followedUsers.map((user) => (
-              <>
-                <div className={styles.followedUser} key={user._id}>
-                  <div className={styles.followLine}>
-                    <div className={styles.userLine}>
-                      <img
-                        src={user.profile?.avatar || "/avatar.png"}
-                        className={styles.smallAvatar}
-                        alt="avatar"
-                      />
-                      <p className={styles.followedUsername}>{user.username}</p>
-                      <span className={styles.techIcons}>
-                        {/* notes */}
-                        JS 🧠 🗓️
-                      </span>
-                    </div>
-                    <div className={styles.textarea}>
-                      <TextArea placeholder="Notes" rows="4" cols="" className={styles.notes} />
-                    </div>
+            followedUsers.map((u) => (
+              <div className={styles.followedUser} key={u._id}>
+                <div className={styles.followLine}>
+                  <div className={styles.userLine}>
+                    <img
+                      src={u.profile?.avatar || "/avatar.png"}
+                      className={styles.smallAvatar}
+                      alt="avatar"
+                    />
+                    <p className={styles.followedUsername}>{u.username}</p>
+
+                    <span className={styles.techIcons}>
+                      {Array.isArray(u.profile?.languages) &&
+                        u.profile.languages.map((lang, i) => (
+                          <Icon
+                            key={lang?._id || i}
+                            language={lang} // { icon, color, name }
+                            size={16}
+                            className={styles.techIcon}
+                          />
+                        ))}
+                    </span>
+                  </div>
+
+                  <div className={styles.textarea}>
+                    <TextArea
+                      placeholder="Notes"
+                      rows={4}
+                      className={styles.notes}
+                    />
                   </div>
                 </div>
-              </>
+              </div>
             ))
           )}
         </div>

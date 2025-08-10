@@ -43,6 +43,12 @@
   display: block;
 }
 
+.postLink:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
+}
+
 .meta {
   display: flex;
   font-size: 0.9rem;
@@ -51,6 +57,25 @@
   gap: 10px;
   font-weight: 600;
 }
+
+.status {
+  font-size: 0.8rem;
+  font-weight: bold;
+  padding: 3px 8px;
+  border-radius: 6px;
+  margin-left: 10px;
+}
+
+.published {
+  background-color: var(--primary-color);
+  color: var(--background-color-white)
+}
+
+.draft {
+  background-color: var(--secondary-color);
+  color: var(--background-color-white)
+}
+
 
 .type {
   color: var(--primary-color);

@@ -18,21 +18,21 @@
 .buttons {
   display: flex;
   gap: 1vw;
-  margin-bottom: 2vw;
-  padding: .5vw 2vw;
+  margin-bottom: 1vh;
+  padding: 0 2vw;
   border-radius: var(--radius);
 }
 
 .tab {
-  padding: .5vw 1vw;
+  padding: 0.5vw 1vw;
   border: 1px solid var(--primary-color);
   font-weight: bold;
   background: white;
   cursor: pointer;
   font-family: var(--jetbrains);
-  font-size: clamp(14px, .8vw, 18px);
+  font-size: clamp(14px, 0.8vw, 18px);
   color: var(--primary-color);
-  border-radius: var(--radius)
+  border-radius: var(--radius);
 }
 
 .active {
@@ -42,12 +42,20 @@
   font-family: var(--jetbrains);
 }
 
-
-
-.sort {
-  font-size: 14px;
+.sortBtn {
+  text-decoration: none;
+  border: none;
+  background: none;
+  font-size: clamp(14px, 0.8vw, 18px);
+  font-weight: 700;
   color: var(--primary-color);
-  margin-bottom: 2vh;
+  margin: 3vh 2vw 5vh 2vw;
+}
+
+.sortBtn:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
 }
 
 .postCard {
