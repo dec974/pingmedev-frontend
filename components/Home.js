@@ -7,10 +7,12 @@ import Button from "../ui-kit/atoms/Button";
 import Footer from "../ui-kit/organisms/Footer";
 import { useRouter } from "next/router";
 
+
 export default function Home() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  
 
   const handleNewPostClick = () => {
     router.push("/posts/new");
@@ -26,36 +28,51 @@ export default function Home() {
   }, []);
 
   //voici le composant Home qui affiche les posts
-  return (
-    <>
-      <Header />
-      <div className={styles.home}>
-        <div className={styles.fixedContent}>
+return (
+  <>
+    <Header />
+    <div className={styles.home}>
+      {/* Colonne gauche */}
+      <div className={styles.colLeft}>
+        
+      </div>
+
+      {/* Colonne centrale */}
+      <div className={styles.colCenter}>
+        <div className={styles.centerHeader}>
           <h1 className={styles.title}>Bienvenue sur PingMeDev</h1>
           <h2 className={styles.nameTitle}>John Doe</h2>
+        </div>
 
-          <div className={styles.searchArea}>
-            <Input type="text" placeholder="Rechercher un sujet ..." />
-            <Button variant={"primary"} onClick={() => alert("Rechercher!")}>
-              Chercher
+        <div className={styles.searchArea}>
+          <Input type="search" className={styles.searchInput} placeholder="Recherche par sujet, langage ou astuce…" />
+          <Button variant="primary" onClick={() => alert("Rechercher!")}>
+            Chercher
+          </Button>
+        </div>
+
+        <div className={styles.postHeader}>
+          <h3 className={styles.postsTitle}>Derniers posts</h3>
+          <div className={styles.newPostBtn}>
+            <Button variant="secondary" onClick={handleNewPostClick}>
+              Nouveau Sujet
             </Button>
           </div>
-
-          <div className={styles.postHeader}>
-            <h3 className={styles.postsTitle}> Derniers posts</h3>
-            <div className={styles.newPostBtn}>
-              <Button variant={"secondary"} onClick={handleNewPostClick}>
-                Nouveau Sujet
-              </Button>
-            </div>
-          </div>
         </div>
+
         <div className={styles.postsContainer}>
-          {loading ? <p> Chargement en cours</p> : <PostsList posts={posts} />}
+          {loading ? <p>Chargement en cours</p> : <PostsList posts={posts} />}
         </div>
       </div>
 
-      <Footer />
-    </>
-  );
+      {/* Colonne droite */}
+      <div className={styles.colRight}>
+        
+      </div>
+    </div>
+
+    <Footer />
+  </>
+);
+
 }
