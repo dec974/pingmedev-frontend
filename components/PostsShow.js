@@ -11,7 +11,7 @@ import Image from "next/image";
 import Icon from "../ui-kit/atoms/Icon";
 import Modal from "react-modal";
 import { FaPencil } from "react-icons/fa6";
-import PostsList from "../ui-kit/organisms/PostsList";
+
 
 
 function PostsShow( ) {
@@ -112,7 +112,7 @@ function PostsShow( ) {
     console.log('Post data:', post);
     const answersList = post.answers.map((answer, index) => {
         return (
-            <div key={index} className={styles.answer}>
+            <div key={index} className={styles.answerCard}>
                 <div className={styles.answerHeader}>
                     <div className={styles.answerAuthor}>
                         {answer.userId.username}
@@ -173,7 +173,7 @@ function PostsShow( ) {
                                     <div className={styles.icon}>
                                         <FaPencil size={20} />
                                     </div>
-                                    <p>Répondre au sujet</p>
+                                    <p>Répondre</p>
                                 </button>
                                 <Modal
                                     isOpen={modalIsOpen}

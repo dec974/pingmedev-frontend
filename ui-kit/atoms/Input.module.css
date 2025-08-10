@@ -6,6 +6,12 @@
   max-width: 768px;
 }
 
+.input:disabled {
+  background-color: var(--background-color-lightgrey);
+  color: #333;
+  cursor: not-allowed;
+}
+
 .input:focus {
   border: 1px solid var(--input-focus);
   outline: none;

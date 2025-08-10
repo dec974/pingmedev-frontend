@@ -7,6 +7,7 @@ import Input from '../ui-kit/atoms/Input';
 import TextArea from '../ui-kit/atoms/TextArea';
 import Select from 'react-select'; 
 import { useSelector } from 'react-redux';
+import Spinner from '../ui-kit/atoms/Spinner';
 
 function Posts(props) {
     let user = useSelector((state) => state.user.value);
@@ -18,6 +19,7 @@ function Posts(props) {
     const [selectLanguages, setSelectLanguages] = useState([]);
     const [languages, setLanguages] = useState([]);
 
+    const id = props.id || null;
     
     useEffect(() => {
         if (!user) {
@@ -36,14 +38,16 @@ function Posts(props) {
         .then(response => response.json())
         .then(data => {
             if(data.result) {
-                console.log(data);
+                //console.log(data);
                 setLanguages(data.data);
             }
         });
         console.log('end fetch');
-        if (type === "edit" || type === "show") {
+        if (type === "edit" && id) {
+            const { id } = props;
+            console.log('id', id);
             // Logique pour charger les données du post à éditer
-            fetch(`http://localhost:3000/posts/${props.postId}`)
+            fetch(`http://localhost:3000/posts/${id}`)
             .then(response => response.json())  
             .then(data => {
                 if (data.result) {
@@ -93,10 +97,13 @@ function Posts(props) {
             console.log('Success:', data);
             if (data.result) {
                 console.log('Post created successfully:', data.post);
-                if (status === 'draft') {
+                if (status === 'draft' && type !== "edit") {
                     router.push(`/posts/edit/${data.post._id}`);
+                } else if (status === 'publish') {
+                    router.push(`/posts/${data.post._id}`);
+                } else {
+                    router.push('/dashboard');
                 }
-                router.push(`/posts/${data.post._id}`);
             } else {
                 console.error(data.error);
             }
@@ -120,11 +127,11 @@ function Posts(props) {
                     </Button>
                 </div>
                 <div className={styles.formContainer}>
-                    <h1 className={styles.title}>Nouveau Sujet</h1>
-                    <p>
+                    <h1 className={styles.title}>{type ==="edit" ?`Sujet: ${title}`: "Nouveau Sujet"}</h1>
+                    {type !=="edit" &&(`<p>
                         Vous souhaitez contribuer au forum ? Vous avez la possibilité de poser une question technique ou de donner une astuce.
                         Selectionnez votre choix ci-dessous.
-                    </p>
+                    </p>`)}
                     <div className={styles.form}>
                         <form onSubmit={(e) => handleSubmit(e)}>
                             <div className={styles.radioGroupContainer}>
@@ -169,6 +176,8 @@ function Posts(props) {
                                     placeholder="Titre question ou Astuce"
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
+                                    className={type === "edit" ? 'disabled' : ''}
+                                    disabled={type === "edit"}
                                 />
                             </div>
                             <div className={styles.formGroup}>
@@ -183,7 +192,7 @@ function Posts(props) {
                                 />
                             </div>
                             <div className={styles.buttonGroup}>
-                                <Button type="submit" variant="secondary" value="draft" name="action">Brouillon</Button>
+                                <Button type="submit" variant="secondary" value="draft" name="action">{type ==="edit"?'Enregistrer':'Brouillon'}</Button>
                                 <Button type="submit" variant="primary" value="publish" name="action">Publier</Button>
                             </div>
                         </form>
