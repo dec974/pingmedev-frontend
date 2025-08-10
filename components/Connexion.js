@@ -388,7 +388,7 @@ export default function Connexion() {
       </div>
 
       <div className={styles.section}>
-        <div className={styles.logContainer}>
+        <div className={styles.signContainer}>
           <h2 className={styles.textLog}>S'inscrire</h2>
           <div className={styles.inputWrapper}>
             <Input
@@ -471,7 +471,11 @@ export default function Connexion() {
             )}
           </div>
           <Checkbox
-            label="J'accepte les conditions d'utilisation"
+            label={
+              <span className={styles.cbText}>
+                J'accepte les conditions d'utilisation
+              </span>
+            }
             checked={acceptTerms}
             onChange={() => {
               setAcceptTerms(!acceptTerms);
@@ -480,26 +484,25 @@ export default function Connexion() {
               }
             }}
           />
+          <div className={styles.blueLine}></div>
           <Button
             onClick={handleSignUp}
             variant="primary"
             style={{
-              height: "60px",
-              width: "200px",
-              fontSize: "18px",
-              marginRight: "15px",
-              marginBottom: "20px",
+              fontSize: "16px",
+              padding: ".5vw 1vw",
+              margin: ".5vw",
             }}
           >
             S'inscrire
           </Button>
-          <div className={styles.blueLine}></div>
+
           <GoogleOAuthProvider clientId={clientId}>
             <div style={{ textAlign: "center", marginTop: "20px" }}>
               {user ? (
                 console.log("Utilisateur connecté :", user)
               ) : (
-                <div className={styles.logContainer}>
+                <div>
                   <GoogleLogin
                     onSuccess={handleSignUpGoogle}
                     onError={(error) => console.error(error)}
@@ -567,7 +570,7 @@ export default function Connexion() {
               {user ? (
                 console.log("User already signed in")
               ) : (
-                <div className={styles.logContainer}>
+                <div>
                   <GoogleLogin
                     onSuccess={handleSignInGoogle}
                     onError={(error) => console.error(error)}

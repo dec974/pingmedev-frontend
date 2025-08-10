@@ -18,30 +18,27 @@ export default function Home() {
         <div className={styles.containerElement}>
           <h1 className={styles.h1}>
             La plateforme des développeurs ouverte à tous les parcours.
+            <img src="/logo.png" alt="Logo" className={styles.logo} />
           </h1>
 
           <div className={styles.buttonContainer}>
             <Button
               onClick={handleVisitClick}
-              variant="primary"
+              variant="secondary"
               style={{
-                height: "60px",
-                width: "200px",
                 fontSize: "18px",
-                minWidth: "150px",
+                padding: "1vw 2vw",
               }}
             >
-              Visiter
+              Visiter*
             </Button>
 
             <Button
               onClick={handleConnexionClick}
               variant="primary"
               style={{
-                height: "60px",
-                width: "200px",
                 fontSize: "18px",
-                minWidth: "150px",
+                padding: "1vw 2vw",
               }}
             >
               Connexion
@@ -55,7 +52,6 @@ export default function Home() {
         </div>
 
         <div>
-          <img src="/logo.png" alt="Logo" className={styles.logo} />
           <img
             src="/landingImage.png"
             alt="Landing Image"
