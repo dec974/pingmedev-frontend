@@ -74,7 +74,7 @@ export default function Connexion() {
           alignItems: "center",
           marginTop: "1vh",
           gap: "10px",
-          backgroundColor: "fff", // noir GitHub
+          backgroundColor: "fff", 
           padding: "10px 20px",
           border: "none",
           borderRadius: "5px",
@@ -597,7 +597,7 @@ export default function Connexion() {
                   onSuccess={handleSignInGoogle}
                   onError={(error) => console.error(error)}
                   text="signin_with"
-                  theme="filled_blue"
+                  theme="outline"
                 />
               </div>
             )}

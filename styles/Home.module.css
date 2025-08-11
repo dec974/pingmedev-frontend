@@ -69,6 +69,7 @@
   padding: 2vw;
   background-color: var(--background-color-white);
   border-right: 2px solid var(--border-color);
+  min-width: 800px;
 }
 
 .postsTitle {
