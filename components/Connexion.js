@@ -597,7 +597,7 @@ export default function Connexion() {
                   onSuccess={handleSignInGoogle}
                   onError={(error) => console.error(error)}
                   text="signin_with"
-                  theme="filled_blue"
+                  theme="outline"
                 />
               </div>
             )}
