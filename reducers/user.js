@@ -5,6 +5,7 @@ const initialState = {
     username: null,
     email: null,
     token: null,
+    id: null,
   },
 };
 
@@ -21,8 +22,15 @@ export const userSlice = createSlice({
       state.value.token = action.payload.token;
       state.value.email = action.payload.email;
     },
+    signOut: (state) => {
+      state.value = initialState.value;
+    },
+    setUserId: (state, action) => {
+      // Nouvelle action pour définir l'ID utilisateur
+      state.value.id = action.payload;
+    },
   },
 });
 
-export const { signIn, signUp, signOut } = userSlice.actions;
+export const { signIn, signUp, signOut, setUserId } = userSlice.actions;
 export default userSlice.reducer;
