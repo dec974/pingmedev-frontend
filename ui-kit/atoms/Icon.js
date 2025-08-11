@@ -9,8 +9,8 @@ function Icon(props) {
     
     const getIcon = (language) => {
 
-        const color = language.color;
-        const iconName = language.icon;
+        const color = language?.color;
+        const iconName = language?.icon;
         if (SiIcons[iconName]) {
             const Icon = SiIcons[iconName];
             return <Icon color={color} {...props} />;
