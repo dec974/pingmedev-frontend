@@ -38,6 +38,11 @@
     justify-content: space-between;
 }
 
+.followButton {
+    border: none;
+    background-color: var(--background-color-white);
+}
+
 .postContent {
     width: 80%;
     display: flex;
