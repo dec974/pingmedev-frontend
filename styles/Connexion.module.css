@@ -8,41 +8,64 @@
 }
 
 .logo {
-  width: 200px;
-  height: auto;
-  object-fit: contain;
+  height: clamp(80px, 7vw, 150px);
+  width: auto;
 }
 .container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  width: min(1100px, 92vw);
+  margin-inline: auto;
+  padding-block: clamp(16px, 3vh, 56px);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(280px, 1fr));
+  grid-template-rows: auto 1fr;
+  column-gap: clamp(24px, 4vw, 72px);
+  row-gap: clamp(16px, 3vh, 40px);
+  align-items: start;
+  justify-items: center;
 }
 .containerImg {
-  text-align: center;
-  margin-bottom: 30px;
-  margin-top: 20px;
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .section {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8vw;
+  align-items: start;
+  justify-items: center;
+}
+
+.signContainer {
   display: flex;
-  justify-content: center;
-  gap: 60px;
-  max-width: 800px;
-  width: 100%;
+  height: 100%;
+  padding: 2vw;
+  flex-direction: column;
+  gap: 0.5vh;
+  align-items: center;
+  border-radius: var(--radius);
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  background-color: var(--background-color-lightgrey);
 }
 
 .logContainer {
-  flex: 1;
   display: flex;
+  height: 100%;
+  padding: 2vw;
   flex-direction: column;
-  gap: 10px;
+  gap: 0.5vh;
   align-items: center;
   width: 440px;
+  border-radius: var(--radius);
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  background-color: var(--background-color-lightgrey);
 }
 
 .textLog {
-  /* clamp permet de rendre responsive la taille fnction de l ecran , 28 mini, 4vw ideal, 50 maxi */
-  font-size: clamp(28px, 4vw, 50px);
+  font-size: clamp(14px, 2vw, 30px);
   font-weight: bold;
   color: var(--primary-color);
   font-family: "JetBrains Mono", monospace;
@@ -52,14 +75,19 @@
   text-align: center;
 }
 
+.cbText {
+  font-size: 12px;
+  line-height: 1.2;
+}
+
 .errorMessage {
   color: var(--secondary-color);
   font-size: 14px;
   margin-bottom: 15px;
   text-align: center;
-  background-color: #f8d7da;
-  border: 1px solid #f5c6cb;
-  border-radius: 4px;
+  background-color: var(--background-color-grey);
+  border: 1px solid var(--secondary-color);
+  border-radius: var(--radius);
   padding: 8px 12px;
   width: 300px;
 }
@@ -68,7 +96,7 @@
   width: 200px;
   height: 3px;
   background-color: var(--primary-color);
-  margin-bottom: 20px;
+  margin: 2vw;
 }
 
 .inputWrapper {
@@ -99,7 +127,7 @@
 
 .termsSection {
   position: relative;
-  margin: 16px 0 8px 0;
+  margin: 1vh 0 1vh 0;
 }
 
 .termsButton {
@@ -141,6 +169,15 @@
   line-height: 1.4;
 }
 
+.checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  font-family: var(--font-jetbrains, inherit);
+}
+
 .popoverContent ul {
   margin: 0 0 16px 0;
   padding-left: 20px;
@@ -162,28 +199,6 @@
   cursor: pointer;
   font-size: 12px;
   float: right;
-}
-.githubButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  background-color: #24292e;
-  color: white;
-  border: 1px solid #d0d7de;
-  border-radius: 6px;
-  padding: 12px 16px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  width: 100%;
-  min-height: 40px;
-}
-.button {
-  height: 60px;
-  width: 200px;
-  font-size: 18px;
-  margin-bottom: 20px;
 }
 
 .modalOverlay {
@@ -237,6 +252,6 @@
 
 .modalMessage {
   margin: 0 0 20px 0;
-  color: #666;
+  color: var(text-color);
   line-height: 1.5;
 }
