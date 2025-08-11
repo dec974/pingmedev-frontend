@@ -74,7 +74,7 @@ export default function Connexion() {
           alignItems: "center",
           marginTop: "1vh",
           gap: "10px",
-          backgroundColor: "fff", 
+          backgroundColor: "fff",
           padding: "10px 20px",
           border: "none",
           borderRadius: "5px",
@@ -137,6 +137,7 @@ export default function Connexion() {
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log("GitHub callback data de connexion component:", data);
         if (data.result) {
           localStorage.setItem("token", data.token);
           localStorage.setItem("username", data.username);
@@ -403,6 +404,7 @@ export default function Connexion() {
 
   useEffect(() => {
     if (router.query.github === "callback") {
+      console.log("GitHub callback detected sur useeffect component connexion");
       const githubUser = localStorage.getItem("githubUser");
       if (githubUser) {
         const userData = JSON.parse(githubUser);
