@@ -91,9 +91,9 @@ function Posts(props) {
             console.log('Success:', data);
             if (data.result) {
                 console.log('Post created successfully:', data.post);
-                if (status === 'draft') {
+                if (status === 'draft' && type !== 'edit') {
                     router.push(`/posts/edit/${data.post._id}`);
-                } else if (status === 'publish') {
+                } else if (status === 'published') {
                     router.push(`/posts/${data.post._id}`);
                 } else {
                     router.push('/dashboard');
