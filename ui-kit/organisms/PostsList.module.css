@@ -6,6 +6,7 @@
 }
 
 .card {
+  min-width: 800px;
   border: 1px solid var(--background-color-grey);
   border-radius: var(--radius);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
@@ -25,6 +26,12 @@
   border-radius: var(--radius);
   margin-bottom: 10px;
   justify-content: space-between;
+}
+
+.headerleft {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
 }
 
 .title {
