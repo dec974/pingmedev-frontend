@@ -529,7 +529,6 @@ export default function Connexion() {
                   onSuccess={handleSignUpGoogle}
                   onError={(error) => console.error(error)}
                   text="signup_with"
-                  theme="outline"
                   size="large"
                   width="2vw"
                   theme="filled_blue"
