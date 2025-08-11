@@ -3,13 +3,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setUserId } from "../reducers/user";
 import Button from '../ui-kit/atoms/Button';
 import Header from '../ui-kit/organisms/Header';
+import Footer from "../ui-kit/organisms/Footer";
+import MainLayout from "../ui-kit/template/MainLayout";
 import styles from '../styles/Messenger.module.css';
 
 const Messenger = ()=> {
 
     const dispatch = useDispatch();
     let user = useSelector((state) => {
-        console.log("État complet Redux:", state); // Déplacé ici
+        console.log("État complet Redux:", state);
         return state.user.value;
     });
     
@@ -22,7 +24,7 @@ const Messenger = ()=> {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (!user || !user.token || user.id) {
+        if (!user || !user.token || !user.id) {
             console.log('Pas d\'utilisateur connecté');
             setLoading(false);
             return;
@@ -146,12 +148,13 @@ const Messenger = ()=> {
     if (!user) {
         return (
             <>
-                <Header />
+                <MainLayout >
                 <div className={styles.messengerContainer}>
                     <div className={styles.noConversation}>
                         <p>Vous devez être connecté pour accéder à la messagerie</p>
                     </div>
                 </div>
+                </MainLayout>
             </>
         );
     }
@@ -162,20 +165,19 @@ const Messenger = ()=> {
     if (loading) {
         return (
             <>
-                <Header />
+                <MainLayout>
                 <div className={styles.messengerLoading}>
-                    Chargement... (User: {user.username})
+                    Chargement en cours... (User: {user.username})
                 </div>
+                </MainLayout>
             </>
         );
     }
 
-    return (
-        <>
-            <Header />
-            
+        return (
+        <MainLayout>
             <div className={styles.messengerContainer}>
-                {/* Liste des chats sur le côté */}
+                {/* Liste des chats */}
                 <div className={styles.conversationsSidebar}>
                     <div className={styles.conversationsHeader}>
                         <h3>Messages</h3>
@@ -185,89 +187,58 @@ const Messenger = ()=> {
                         {conversations.length === 0 ? (
                             <div>Aucune conversation</div>
                         ) : (
-                            conversations.map((conversation) => (
+                            conversations.map(conversation => (
                                 <div 
                                     key={conversation.contact._id}
                                     className={`${styles.conversationItem} ${selectedConversation?.contact._id === conversation.contact._id ? styles.active : ''}`}
                                     onClick={() => selectConversation(conversation)}
                                 >
-                                    <div className={styles.avatar}>
-                                        {getInitials(conversation.contact.username)}
-                                    </div>
+                                    <div className={styles.avatar}>{getInitials(conversation.contact.username)}</div>
                                     <div className={styles.conversationInfo}>
-                                        <div className={styles.contactName}>
-                                            {conversation.contact.username}
-                                        </div>
+                                        <div className={styles.contactName}>{conversation.contact.username}</div>
                                         <div className={styles.lastMessage}>
                                             {conversation.lastMessage.content.length > 30 
                                                 ? conversation.lastMessage.content.substring(0,30) + '...' 
                                                 : conversation.lastMessage.content}
                                         </div>
                                     </div>
-                                    <div className={styles.conversationTime}>
-                                        {formatTime(conversation.lastMessage.createdAt)}
-                                    </div>
-                                </div> 
+                                    <div className={styles.conversationTime}>{formatTime(conversation.lastMessage.createdAt)}</div>
+                                </div>
                             ))
                         )}
                     </div>
                 </div>
 
-                {/* Zone de message */}
+                {/* Zone messages */}
                 <div className={styles.messagesArea}>
                     {selectedConversation ? (
                         <>
                             <div className={styles.messagesHeader}>
-                                <div className={styles.avatar}>
-                                    {getInitials(selectedConversation.contact.username)}
-                                </div>
-                                <div className={styles.contactName}>
-                                    {selectedConversation.contact.username}
-                                </div>
+                                <div className={styles.avatar}>{getInitials(selectedConversation.contact.username)}</div>
+                                <div className={styles.contactName}>{selectedConversation.contact.username}</div>
                             </div>
-
                             <div className={styles.messagesList}>
-                                {messages.map((message) => (
+                                {messages.map(message => (
                                     <div 
                                         key={message._id} 
-                                        className={`${styles.message} ${message.senderId._id === user.id ? styles.sent : styles.received}`}
+                                        className={`${styles.message} ${
+                                            message.senderId._id === user.id 
+                                            ? styles.sent 
+                                            : styles.received
+                                        }`}
                                     >
                                         <div className={styles.messageAvatar}>
                                             {getInitials(message.senderId.username)}
                                         </div>
                                         <div className={styles.messageContent}>
                                             <div className={styles.messageHeader}>
-                                                <span className={styles.messageSender}>
-                                                    {message.senderId.username}
-                                                </span>
-                                                <span className={styles.messageTime}>
-                                                    {formatTime(message.createdAt)}
-                                                </span>
+                                                <span className={styles.messageSender}>{message.senderId.username}</span>
+                                                <span className={styles.messageTime}>{formatTime(message.createdAt)}</span>
                                             </div>
-                                            <div className={styles.messageText}>
-                                                {message.content}
-                                            </div>
+                                            <div className={styles.messageText}>{message.content}</div>
                                         </div>
                                     </div>
                                 ))}
-                            </div>
-
-                            <div className={styles.messageInputArea}>
-                                <input 
-                                    type="text"
-                                    placeholder="Votre message ici..."
-                                    value={newMessage}
-                                    onChange={(e) => setNewMessage(e.target.value)}
-                                    onKeyPress={(e) => {
-                                        if(e.key === 'Enter') {
-                                            sendMessage();
-                                        }
-                                    }}
-                                    className={styles.messageInput}
-                                />
-                                <Button variant={"secondary"} onClick={sendMessage} className={styles.sendButton}>
-                                    Envoyer
-                                </Button>
                             </div>
                         </>
                     ) : (
@@ -275,9 +246,23 @@ const Messenger = ()=> {
                             <p>Cliquez sur un chat pour commencer</p>
                         </div>
                     )}
+
+                    {/* Zone envoi toujours visible */}
+                    <div className={styles.messageInputArea}>
+                        <input 
+                            type="text"
+                            placeholder="Votre message ici..."
+                            value={newMessage}
+                            onChange={(e) => setNewMessage(e.target.value)}
+                            className={styles.messageInput}
+                        />
+                        <Button variant="secondary" onClick={sendMessage} className={styles.sendButton}>
+                            Envoyer
+                        </Button>
+                    </div>
                 </div>
             </div>
-        </>
+        </MainLayout>
     );
 };
 
