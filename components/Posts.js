@@ -1,5 +1,5 @@
 import styles from '../styles/Posts.module.css';
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import MainLayout from '../ui-kit/template/MainLayout';
 import Button from '../ui-kit/atoms/Button';
