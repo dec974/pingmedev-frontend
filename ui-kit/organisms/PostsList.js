@@ -64,12 +64,6 @@ export default function PostsList({
                     {author}
                   </p>
                 )}
-                {post.language && (
-                  <span className={styles.languageTag}>
-                    LANGUAGE
-                    {post.language}
-                  </span>
-                )}
               </div>
               <div className={styles.headerright}>
                 <div className={styles.meta}>
