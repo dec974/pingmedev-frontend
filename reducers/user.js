@@ -16,11 +16,13 @@ export const userSlice = createSlice({
     signIn: (state, action) => {
       state.value.username = action.payload.username;
       state.value.token = action.payload.token;
+      state.value.id = action.payload.id;
     },
     signUp: (state, action) => {
       state.value.username = action.payload.username;
       state.value.token = action.payload.token;
       state.value.email = action.payload.email;
+      state.value.id = action.payload.id;
     },
     signOut: (state) => {
       state.value = initialState.value;
