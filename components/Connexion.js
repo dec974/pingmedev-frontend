@@ -61,7 +61,7 @@ export default function Connexion() {
         return;
       }
       const clientID = "Ov23lio8tZ02RbB9eJUC";
-      const redirectURI = "http://localhost:3001/githubPage?action=signup";
+      const redirectURI = "http://localhost:3001/githubPage";
       window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientID}&redirect_uri=${redirectURI}`;
     };
     return (
@@ -94,7 +94,7 @@ export default function Connexion() {
   function GitHubSignInButton() {
     const signInWithGitHub = () => {
       const clientID = "Ov23lio8tZ02RbB9eJUC";
-      const redirectURI = "http://localhost:3001/githubPage?action=signin";
+      const redirectURI = "http://localhost:3001/githubPage";
       window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientID}&redirect_uri=${redirectURI}`;
     };
     // voir dans le Notion dans github auth le lien pour explication de ces lignes
@@ -149,9 +149,11 @@ export default function Connexion() {
               email: data.email,
             })
           );
-          // voir dans Notion dans localstorage pour explication de ces lignes
           if (data.isNewUser) {
-            router.push("/profilPage");
+            showModal("Succès", "utilisateur enregistré", "success");
+            setTimeout(() => {
+              router.push("/profilPage");
+            }, 1500);
           } else {
             router.push("/home");
           }
@@ -256,7 +258,10 @@ export default function Connexion() {
           );
 
           if (data.isNewUser) {
-            router.push("/profilPage");
+            showModal("Succès", "utilisateur enregistré", "success");
+            setTimeout(() => {
+              router.push("/profilPage");
+            }, 1500);
           } else {
             router.push("/home");
           }
@@ -318,7 +323,10 @@ export default function Connexion() {
           setSignUpUsername("");
           setSignUpPassword("");
           setSignUpMail("");
-          router.push("/profilPage");
+          showModal("Succès", "utilisateur enregistré", "success");
+          setTimeout(() => {
+            router.push("/profilPage");
+          }, 1500);
         } else {
           showModal(
             "Erreur d'inscription",
