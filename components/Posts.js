@@ -1,5 +1,5 @@
 import styles from '../styles/Posts.module.css';
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import MainLayout from '../ui-kit/template/MainLayout';
 import Button from '../ui-kit/atoms/Button';
@@ -22,16 +22,10 @@ function Posts(props) {
     const id = props.id || null;
     
     useEffect(() => {
-        if (!user) {
-            router.push('//connexionPage');  
+        if (!user.token) {
+            router.push('/connexionPage');  
         }
-        fetch('http://localhost:3000/users/'+ user.token)
-        .then(response => response.json())
-        .then(data => {
-            if(data.result) {
-                user.id = data.user.id;
-            }   
-        });
+        
         // recuperation des langages via le backend
         console.log('fetch language');
         fetch('http://localhost:3000/languages/')
@@ -97,7 +91,7 @@ function Posts(props) {
             console.log('Success:', data);
             if (data.result) {
                 console.log('Post created successfully:', data.post);
-                if (status === 'draft' && type !== "edit") {
+                if (status === 'draft') {
                     router.push(`/posts/edit/${data.post._id}`);
                 } else if (status === 'publish') {
                     router.push(`/posts/${data.post._id}`);
@@ -128,10 +122,10 @@ function Posts(props) {
                 </div>
                 <div className={styles.formContainer}>
                     <h1 className={styles.title}>{type ==="edit" ?`Sujet: ${title}`: "Nouveau Sujet"}</h1>
-                    {type !=="edit" &&(`<p>
+                    {type !=="edit" &&(<p>
                         Vous souhaitez contribuer au forum ? Vous avez la possibilité de poser une question technique ou de donner une astuce.
                         Selectionnez votre choix ci-dessous.
-                    </p>`)}
+                    </p>)}
                     <div className={styles.form}>
                         <form onSubmit={(e) => handleSubmit(e)}>
                             <div className={styles.radioGroupContainer}>

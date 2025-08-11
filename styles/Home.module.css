@@ -18,9 +18,15 @@
   display: flex;
   align-items: center;
   flex-direction: column;
+  min-width: 800px;
   padding: 2vw;
   background-color: var(--background-color-white);
   border-right: 2px solid var(--border-color);
+}
+
+.postsTitle {
+  font-size: 1.7rem;
+  font-weight: 500;
 }
 
 /* Colonne droite */
@@ -69,8 +75,8 @@
   border-radius: var(--radius);
   padding: 0.7vh 14px;
   outline: none;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease,
-    background 0.2s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  background: 0.2s ease;
 }
 
 /* Entête de section des posts */

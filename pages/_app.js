@@ -13,7 +13,7 @@ import storage from "redux-persist/lib/storage";
 
 const reducers = combineReducers({ user });
 
-const persistConfig = { key: "morningnews", storage };
+const persistConfig = { key: "pingmedev", storage };
 
 const store = configureStore({
   reducer: persistReducer(persistConfig, reducers),
