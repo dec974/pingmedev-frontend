@@ -11,7 +11,7 @@ function Sidebar() {
   const router = useRouter();
   const username = useSelector((state) => state.user.value.username);
   const token = useSelector((state) => state.user.value.token);
-
+ 
   const [followedUsers, setFollowedUsers] = useState([]);
 
   const handleRetourClick = () => {
