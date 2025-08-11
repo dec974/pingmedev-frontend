@@ -230,7 +230,7 @@ export default function Connexion() {
 
     const userInfo = jwtDecode(credentialResponse.credential);
 
-    fetch("http://localhost:3000/users/signingoogle", {
+    fetch("http://localhost:3000/users/signupgoogle", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -528,10 +528,11 @@ export default function Connexion() {
                 <GoogleLogin
                   onSuccess={handleSignUpGoogle}
                   onError={(error) => console.error(error)}
-                  text="signup"
+                  text="signup_with"
                   theme="outline"
                   size="large"
                   width="2vw"
+                  theme="filled_blue"
                 />
               </div>
             )}
