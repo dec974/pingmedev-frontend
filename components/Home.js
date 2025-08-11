@@ -3,6 +3,8 @@ import Header from "../ui-kit/organisms/Header";
 import Input from "../ui-kit/atoms/Input";
 import styles from "../styles/Home.module.css";
 import PostsList from "../ui-kit/organisms/PostsList";
+import { useState as useStateLang, useEffect as useEffectLang } from "react";
+import axios from "axios";
 import Button from "../ui-kit/atoms/Button";
 import Footer from "../ui-kit/organisms/Footer";
 import { useRouter } from "next/router";
@@ -10,6 +12,7 @@ import { useRouter } from "next/router";
 export default function Home() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [languages, setLanguages] = useStateLang([]);
   const router = useRouter();
 
   const handleNewPostClick = () => {
@@ -23,6 +26,12 @@ export default function Home() {
         setPosts(data.slice(0, 10)); //Affiche les 10 premiers posts
         setLoading(false);
       });
+  }, []);
+
+  useEffectLang(() => {
+    axios.get("http://localhost:3000/languages/").then((res) => {
+      if (res.data && res.data.result) setLanguages(res.data.data);
+    });
   }, []);
 
   //voici le composant Home qui affiche les posts
@@ -51,7 +60,11 @@ export default function Home() {
           </div>
         </div>
         <div className={styles.postsContainer}>
-          {loading ? <p> Chargement en cours</p> : <PostsList posts={posts} />}
+          {loading ? (
+            <p> Chargement en cours</p>
+          ) : (
+            <PostsList posts={posts} languages={languages} />
+          )}
         </div>
       </div>
 
