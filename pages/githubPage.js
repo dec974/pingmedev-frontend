@@ -34,7 +34,9 @@ export default function GitHubCallback() {
             // Rediriger vers la page de connexion pour traitement
             router.push("/connexionPage?github=callback");
           } else {
-            console.error("Erreur GitHub:", data.error, data.details);
+            // Affichage détaillé pour debug
+            console.error("Erreur GitHub:", data);
+            alert("Erreur GitHub: " + JSON.stringify(data));
             router.push("/connexionPage?error=github_token");
           }
         })
