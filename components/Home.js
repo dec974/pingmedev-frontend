@@ -3,16 +3,15 @@ import Header from "../ui-kit/organisms/Header";
 import Input from "../ui-kit/atoms/Input";
 import styles from "../styles/Home.module.css";
 import PostsList from "../ui-kit/organisms/PostsList";
-import { useState as useStateLang, useEffect as useEffectLang } from "react";
-import axios from "axios";
 import Button from "../ui-kit/atoms/Button";
 import Footer from "../ui-kit/organisms/Footer";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [languages, setLanguages] = useStateLang([]);
+  const [languages, setLanguages] = useState([]);
   const router = useRouter();
 
   const handleNewPostClick = () => {
@@ -26,21 +25,48 @@ export default function Home() {
         setPosts(data.slice(0, 10)); //Affiche les 10 premiers posts
         setLoading(false);
       });
+
+    // get all languages for the sidebar
+    fetch("http://localhost:3000/languages")
+      .then((res) => res.json())
+      .then((data) => {
+        // Handle languages data if needed
+        console.log(data.data);
+        // setlanguges sort by name
+        const sortedLanguages = data.data.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+        setLanguages(sortedLanguages);
+      })
+      .catch((error) => {
+        console.error("Error fetching languages:", error);
+      });
   }, []);
 
-  useEffectLang(() => {
-    axios.get("http://localhost:3000/languages/").then((res) => {
-      if (res.data && res.data.result) setLanguages(res.data.data);
-    });
-  }, []);
-
+  const languagesList = languages.map((lang) => (
+    <li key={lang._id} className={styles.languageItem}>
+      <Link href={`/languages/${lang._id}`} className={styles.link}>
+        {lang.name}
+      </Link>
+    </li>
+  ));
   //voici le composant Home qui affiche les posts
   return (
     <>
       <Header />
       <div className={styles.home}>
         {/* Colonne gauche */}
-        <div className={styles.colLeft}></div>
+        <div className={styles.colLeft}>
+          <div className={styles.sidebar}>
+            <div className={styles.sidebarHeader}>
+              <h2 className={styles.sidebarTitle}>Langages</h2>
+            </div>
+            <div className={styles.sidebarContent}>
+              {/* language sort by name */}
+              <ul className={styles.languageList}>{languagesList}</ul>
+            </div>
+          </div>
+        </div>
 
         {/* Colonne centrale */}
         <div className={styles.colCenter}>
