@@ -18,10 +18,16 @@
   display: flex;
   align-items: center;
   flex-direction: column;
+  min-width: 800px;
   padding: 2vw;
   background-color: var(--background-color-white);
   border-right: 2px solid var(--border-color);
   min-width: 800px;
+}
+
+.postsTitle {
+  font-size: 1.7rem;
+  font-weight: 500;
 }
 
 /* Colonne droite */

@@ -28,7 +28,7 @@ function PostsShow( ) {
             .then(response => response.json())
             .then(data => {
                 if(data.result) {
-                    user.id = data.user.id;
+                    user._id = data.user.id;
                 } else {
                     console.error('Failed to fetch user data');
                 }
