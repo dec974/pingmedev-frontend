@@ -13,6 +13,53 @@
   background-color: var(--background-color-white);
 }
 
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1vh;
+  padding: 2vw;
+  background-color: var(--background-color-white);
+  border: 2px solid var(--background-color-grey);
+  border-radius: var(--radius);
+  margin-top: 10rem;
+}
+.sidebarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  border-bottom: 2px solid var(--background-color-grey);
+}
+.sidebarTitle {
+  font-size: 1.7rem;
+  font-weight: 500;
+  margin-bottom: 1vh;
+}
+.sidebarContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: 1vh;
+} 
+.languageList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.link{
+  text-decoration: none;
+  color: var(--primary-color);
+  transition: ease-in-out 0.2s;
+}
+
+.link:hover {
+  color: var(--secondary-color);
+}
+
 /* Colonne centrale */
 .colCenter {
   display: flex;
