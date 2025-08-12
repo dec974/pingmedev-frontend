@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { setUserId } from "../reducers/user";
 import Button from '../ui-kit/atoms/Button';
-import Header from '../ui-kit/organisms/Header';
-import Footer from "../ui-kit/organisms/Footer";
 import MainLayout from "../ui-kit/template/MainLayout";
 import styles from '../styles/Messenger.module.css';
 
