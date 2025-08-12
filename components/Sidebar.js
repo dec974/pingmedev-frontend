@@ -38,18 +38,12 @@ function Sidebar() {
     fetch(`http://localhost:3000/follows/users/${user.id}`)
       .then((res) => res.json())
       .then((data) => {
+        console.log("Fetched followed users:", data);
         if (data.result) {
           setFollowedUsers(data.follows);
         }
       });
   }, [token]);
-
-  useEffect(() => {
-    console.log(
-      "followedUsers sample:",
-      JSON.stringify(followedUsers[0]?.profile?.languages, null, 2)
-    );
-  }, [followedUsers]);
 
   // Met à jour la note localement dans followedUsers
   const handleNoteChange = (e, followId) => {
@@ -92,7 +86,7 @@ function Sidebar() {
       <div className={styles.profile}>
         <div className={styles.profilCardTop}>
           <img src="/avatar.png" className={styles.avatar} alt="avatar" />
-          <Button variant={"secondary"} onClick={handleMyAccountClick}>
+          <Button variant={"secondary"} onClick={handleRetourClick}>
             Déconnexion
           </Button>
         </div>
@@ -130,15 +124,6 @@ function Sidebar() {
                       {Array.isArray(u.profile?.languages) &&
                         u.profile.languages.map((lang, i) => (
                           <>
-                            <span
-                              key={
-                                (typeof lang === "string" ? lang : lang?._id) ||
-                                i
-                              }
-                              className={styles.langPill}
-                            >
-                              {typeof lang === "string" ? lang : lang?.name}
-                            </span>
                             {/* Uncomment pour utiliser les icones */}
                             {/* <Icon
                               key={lang?._id || i}

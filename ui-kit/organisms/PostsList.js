@@ -20,6 +20,7 @@ export default function PostsList({
   maxTitle = 255,
   showStatus = false,
   getHref,
+  showTypeBadge = true,
 }) {
   // on s'assure de recevoir un tableau.
   if (!Array.isArray(posts) || posts.length === 0) {
@@ -30,6 +31,21 @@ export default function PostsList({
       {posts.map((post) => {
         // on prend la première valeur qui remonte (populate Mongoose ou autre format, sinon null)
         const author = post?.userId?.username ?? post?.username ?? null;
+
+        const typeKey = (post?.type || "").toLowerCase(); // "question" | "astuce" | ""
+        const TYPE_META = {
+          question: {
+            prefix: "de ",
+            label: "Question",
+            cls: styles.badgeQuestion,
+          },
+          tip: {
+            prefix: "de ",
+            label: "Astuce",
+            cls: styles.badgeAstuce,
+          },
+        };
+        const meta = TYPE_META[typeKey] ?? { prefix: "", label: null, cls: "" };
         const href =
           typeof getHref === "function" ? getHref(post) : `/posts/${post._id}`;
         const Card = ({ children, className = "" }) =>
@@ -57,7 +73,12 @@ export default function PostsList({
                 )}
                 {showAuthor && author && (
                   <p className={styles.username}>
-                    <span className={styles.type}>Question de </span>
+                    {showTypeBadge && meta.label && (
+                      <span className={`${styles.typeBadge} ${meta.cls}`}>
+                        {meta.label}
+                      </span>
+                    )}
+                    <span className={styles.type}>{meta.prefix}</span>
                     {author}
                   </p>
                 )}
@@ -104,8 +125,8 @@ export default function PostsList({
                       className={styles.deleteBtn}
                       title="Ne plus suivre"
                       onClick={(e) => {
-                        e.preventDefault(); 
-                        e.stopPropagation(); 
+                        e.preventDefault();
+                        e.stopPropagation();
                         if (!onUnfollow) return;
                         if (window.confirm("Ne plus suivre ce post ?"))
                           onUnfollow(post._id);

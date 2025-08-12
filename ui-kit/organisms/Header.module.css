@@ -5,10 +5,10 @@
   position: sticky;
   top: 0;
   z-index: 1000;
+   border-bottom: 1px solid var(--primary-color);
 }
 
 .navbar {
-
   margin: auto;
   margin-right: 1rem;
   padding: 1rem;
@@ -16,6 +16,7 @@
   justify-content: space-between;
   align-items: center;
   height: 7vh;
+ 
 }
 
 .logo {

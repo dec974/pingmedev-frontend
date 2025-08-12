@@ -95,7 +95,7 @@ return (
       {/* Colonne centrale */}
       <div className={styles.colCenter}>
         <div className={styles.centerHeader}>
-          <h1 className={styles.title}>Bienvenue sur PingMeDev</h1>
+          <h1 className={styles.title}>Bienvenue sur PingMe.dev</h1>
           <h2 className={styles.nameTitle}>{user.username}</h2>
         </div>
 
