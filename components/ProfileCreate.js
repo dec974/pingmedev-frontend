@@ -9,7 +9,7 @@ import Checkbox from "../ui-kit/atoms/Checkbox";
 export default function Profil() {
   const [selectedExperience, setSelectedExperience] = useState("");
   const [locality, setLocality] = useState("");
-  const [selectedLanguage, setSelectedLanguage] = useState([]); // ✅ Changer en tableau
+  const [selectedLanguage, setSelectedLanguage] = useState([]);
   const [languages, setLanguages] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -42,7 +42,6 @@ export default function Profil() {
   const getUserToken = () => {
     const token = localStorage.getItem("token");
     if (token) {
-      console.log("Token récupéré:", token);
       return token;
     }
     console.log("Aucun token trouvé");
@@ -53,16 +52,12 @@ export default function Profil() {
     const fetchLanguages = async () => {
       try {
         setLoading(true);
-        console.log("Récupération des langages depuis /languages...");
 
         const response = await fetch("http://localhost:3000/languages");
         const data = await response.json();
 
-        console.log("Réponse reçue:", data);
-
         if (data.result && data.data) {
           setLanguages(data.data);
-          console.log(`${data.count} langages chargés:`, data.data);
         } else {
           console.error("Erreur:", data.message);
           setLanguages([]);
@@ -156,7 +151,7 @@ export default function Profil() {
     .map((lang) => ({
       value: lang.name,
       label: lang.name,
-      color: lang.color || "#1761ab",
+      color: lang.color || "var(--primary-color)",
       icon: lang.icon,
     }));
 
@@ -175,12 +170,12 @@ export default function Profil() {
     }),
     singleValue: (provided) => ({
       ...provided,
-      color: "#1761ab",
+      color: "var(--primary-color)",
       fontWeight: "500",
     }),
     option: (provided, state) => ({
       ...provided,
-      backgroundColor: "#1761ab",
+      backgroundColor: "var(--primary-color)",
       color: "#333",
       padding: "12px 20px",
       fontSize: "14px",

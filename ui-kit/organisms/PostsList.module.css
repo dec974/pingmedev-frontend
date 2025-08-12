@@ -76,14 +76,13 @@
 
 .published {
   background-color: var(--primary-color);
-  color: var(--background-color-white)
+  color: var(--background-color-white);
 }
 
 .draft {
   background-color: var(--secondary-color);
-  color: var(--background-color-white)
+  color: var(--background-color-white);
 }
-
 
 .type {
   color: var(--primary-color);

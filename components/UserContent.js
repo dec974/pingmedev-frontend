@@ -15,7 +15,11 @@ function UserContent() {
   // Stockage en local du tri des posts par défaut (les plus récents au-dessus)
   const [sortOrder, setSortOrder] = useState("desc");
 
+  // Stockage en local du tri des posts par défaut (les plus récents au-dessus)
+  const [sortOrder, setSortOrder] = useState("desc");
+
   // Fonction pour basculer l'ordre de tri
+  const toggleSortOrder = () => {
   const toggleSortOrder = () => {
     setSortOrder((prev) => (prev === "desc" ? "asc" : "desc"));
   };
@@ -28,6 +32,7 @@ function UserContent() {
     });
   };
 
+  // Récupération des posts de l'utilisateur
   // Récupération des posts de l'utilisateur
   useEffect(() => {
     setLoading(true);
@@ -45,6 +50,7 @@ function UserContent() {
         });
     }
 
+    // Récupération des posts suivis par l'utilisateur
     // Récupération des posts suivis par l'utilisateur
     if (activeTab === "topics") {
       fetch(`http://localhost:3000/users/followed-posts/${user.token}`)
