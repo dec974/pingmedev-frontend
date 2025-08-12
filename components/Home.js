@@ -6,6 +6,7 @@ import Button from "../ui-kit/atoms/Button";
 import Footer from "../ui-kit/organisms/Footer";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import SearchBar from "./SearchBar";
 
 
 export default function Home() {
