@@ -9,18 +9,39 @@ import { formatDate } from "../modules/formatDate";
 import Spinner from "../ui-kit/atoms/Spinner";
 import Image from "next/image";
 import Icon from "../ui-kit/atoms/Icon";
-import Modal from "react-modal";
 import { FaPencil } from "react-icons/fa6";
 import { MdGroupAdd, MdPersonRemoveAlt1 } from "react-icons/md";
 
 function PostsShow() {
+  const [modal, setModal] = useState({
+    isOpen: false,
+    title: "",
+    message: "",
+    type: "info",
+  });
+
+  const showModal = (title, message, type = "info") => {
+    setModal({
+      isOpen: true,
+      title,
+      message,
+      type,
+    });
+  };
+
+  const closeModal = () => {
+    setModal({
+      isOpen: false,
+      title: "",
+      message: "",
+      type: "info",
+    });
+  };
   const router = useRouter();
   const user = useSelector((state) => state.user.value);
   const { postId } = router.query;
   const [post, setPost] = useState(null);
   const [answerContent, setAnswerContent] = useState("");
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-
   const [followedAuthor, setFollowedAuthor] = useState(false);
   const [loadingFollow, setLoadingFollow] = useState(false);
 
@@ -92,13 +113,6 @@ function PostsShow() {
           p ? { ...p, userId: { ...p.userId, isFollowedByMe: next } } : p
         );
       });
-  }
-
-  function openModal() {
-    setModalIsOpen(true);
-  }
-  function closeModal() {
-    setModalIsOpen(false);
   }
 
   function handleSubmitAnswer(e) {
@@ -183,7 +197,9 @@ function PostsShow() {
                 height={60}
                 className={styles.logoImg}
                 alt="PingMe logo"
+                style={{ cursor: "pointer" }}
               />
+
               {post ? post.userId.username : "Loading..."}
             </div>
 

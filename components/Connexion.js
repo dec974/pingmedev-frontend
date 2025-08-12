@@ -1,8 +1,7 @@
-import { signIn, signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
-// import { signUp, signIn } from "../reducers/user";
+import { signUp, signIn } from "../reducers/user";
 import { jwtDecode } from "jwt-decode";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import Button from "../ui-kit/atoms/Button";
@@ -50,21 +49,6 @@ export default function Connexion() {
     });
   };
 
-  function LoginButton() {
-    const { data: session } = useSession();
-
-    if (session) {
-      return (
-        <>
-          <p>Connecté en tant que {session.user.name}</p>
-          <button onClick={() => signOut()}>Se déconnecter</button>
-        </>
-      );
-    }
-    return (
-      <button onClick={() => signIn("github")}>Se connecter avec GitHub</button>
-    );
-  }
   // inscription avec github
   function GitHubSignUpButton() {
     const signUpWithGitHub = () => {
@@ -77,7 +61,7 @@ export default function Connexion() {
         return;
       }
       const clientID = "Ov23lio8tZ02RbB9eJUC";
-      const redirectURI = "http://localhost:3001/githubPage";
+      const redirectURI = "http://localhost:3001/githubPage?action=signup";
       window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientID}&redirect_uri=${redirectURI}`;
     };
     return (
@@ -105,12 +89,12 @@ export default function Connexion() {
       </Button>
     );
   }
-  // svg pour avoir la petite tete github le chat la
+  // svg sert à avoir la petite tete github le chat la
   //connection avec github
   function GitHubSignInButton() {
     const signInWithGitHub = () => {
       const clientID = "Ov23lio8tZ02RbB9eJUC";
-      const redirectURI = "http://localhost:3001/githubPage";
+      const redirectURI = "http://localhost:3001/githubPage?action=signin";
       window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientID}&redirect_uri=${redirectURI}`;
     };
     // voir dans le Notion dans github auth le lien pour explication de ces lignes
@@ -153,7 +137,6 @@ export default function Connexion() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("GitHub callback data de connexion component:", data);
         if (data.result) {
           localStorage.setItem("token", data.token);
           localStorage.setItem("username", data.username);
@@ -166,11 +149,9 @@ export default function Connexion() {
               email: data.email,
             })
           );
+          // voir dans Notion dans localstorage pour explication de ces lignes
           if (data.isNewUser) {
-            showModal("Succès", "utilisateur enregistré", "success");
-            setTimeout(() => {
-              router.push("/profilPage");
-            }, 1500);
+            router.push("/profilPage");
           } else {
             router.push("/home");
           }
@@ -249,7 +230,7 @@ export default function Connexion() {
 
     const userInfo = jwtDecode(credentialResponse.credential);
 
-    fetch("http://localhost:3000/users/signupgoogle", {
+    fetch("http://localhost:3000/users/signingoogle", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -275,10 +256,7 @@ export default function Connexion() {
           );
 
           if (data.isNewUser) {
-            showModal("Succès", "utilisateur enregistré", "success");
-            setTimeout(() => {
-              router.push("/profilPage");
-            }, 1500);
+            router.push("/profilPage");
           } else {
             router.push("/home");
           }
@@ -340,10 +318,7 @@ export default function Connexion() {
           setSignUpUsername("");
           setSignUpPassword("");
           setSignUpMail("");
-          showModal("Succès", "utilisateur enregistré", "success");
-          setTimeout(() => {
-            router.push("/profilPage");
-          }, 1500);
+          router.push("/profilPage");
         } else {
           showModal(
             "Erreur d'inscription",
@@ -420,7 +395,6 @@ export default function Connexion() {
 
   useEffect(() => {
     if (router.query.github === "callback") {
-      console.log("GitHub callback detected sur useeffect component connexion");
       const githubUser = localStorage.getItem("githubUser");
       if (githubUser) {
         const userData = JSON.parse(githubUser);
@@ -534,7 +508,6 @@ export default function Connexion() {
             }}
           />
           <div className={styles.blueLine}></div>
-          <LoginButton />
           <Button
             onClick={handleSignUp}
             variant="primary"
@@ -555,17 +528,15 @@ export default function Connexion() {
                 <GoogleLogin
                   onSuccess={handleSignUpGoogle}
                   onError={(error) => console.error(error)}
-                  text="signup_with"
+                  text="signup"
+                  theme="outline"
                   size="large"
                   width="2vw"
-                  theme="filled_blue"
                 />
               </div>
             )}
           </GoogleOAuthProvider>
           <GitHubSignUpButton />
-          {/* Nouveau bouton LoginButton */}
-          <LoginButton />
         </div>
 
         <div className={styles.logContainer}>

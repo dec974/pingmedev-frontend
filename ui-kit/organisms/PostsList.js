@@ -25,7 +25,6 @@ export default function PostsList({
   if (!Array.isArray(posts) || posts.length === 0) {
     return <p>Aucun post à afficher.</p>;
   }
-
   return (
     <div className={styles.list}>
       {posts.map((post) => {
