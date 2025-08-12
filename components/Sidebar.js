@@ -19,8 +19,6 @@ function Sidebar() {
     router.push("/myProfile");
   };
 
-  
-
   useEffect(() => {
     if (!token) return;
     fetch(`http://localhost:3000/users/followed-users/${token}`)
@@ -74,6 +72,15 @@ function Sidebar() {
                       {Array.isArray(u.profile?.languages) &&
                         u.profile.languages.map((lang, i) => (
                           <>
+                            <span
+                              key={
+                                (typeof lang === "string" ? lang : lang?._id) ||
+                                i
+                              }
+                              className={styles.langPill}
+                            >
+                              {typeof lang === "string" ? lang : lang?.name}
+                            </span>
                             {/* Uncomment pour utiliser les icones */}
                             {/* <Icon
                               key={lang?._id || i}

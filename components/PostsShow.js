@@ -11,6 +11,7 @@ import Image from "next/image";
 import Icon from "../ui-kit/atoms/Icon";
 import { FaPencil } from "react-icons/fa6";
 import { MdGroupAdd, MdPersonRemoveAlt1 } from "react-icons/md";
+import Modal from "react-modal";
 
 function PostsShow() {
   const [modal, setModal] = useState({
