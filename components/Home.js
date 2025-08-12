@@ -7,6 +7,7 @@ import Button from "../ui-kit/atoms/Button";
 import Footer from "../ui-kit/organisms/Footer";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { useSelector } from "react-redux";
 
 
 export default function Home() {
@@ -14,7 +15,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [languages, setLanguages] = useState([]);
   const router = useRouter();
-  
+  const user = useSelector((state) => state.user.value);
 
   const handleNewPostClick = () => {
     router.push("/posts/new");
@@ -73,7 +74,7 @@ return (
       <div className={styles.colCenter}>
         <div className={styles.centerHeader}>
           <h1 className={styles.title}>Bienvenue sur PingMeDev</h1>
-          <h2 className={styles.nameTitle}>John Doe</h2>
+          <h2 className={styles.nameTitle}>{user.username}</h2>
         </div>
 
         <div className={styles.searchArea}>

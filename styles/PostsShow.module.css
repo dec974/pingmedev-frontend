@@ -20,6 +20,11 @@
 .postHeader{
     display: flex;
     gap: 3rem;
+    min-width: 400px;
+}
+
+.postHeaderTitle {
+    min-width: 400px;
 }
 
 .postAuthor {
@@ -68,7 +73,7 @@
     color: var(--text-color);
     margin-bottom: 1rem;
     overflow-y: auto;
-    background-color: var(--background-color-grey);
+    background-color: var(--background-color-lightgrey);
 }
 
 .responses {
@@ -153,12 +158,12 @@
     font-family: var(--font-jetbrains);
 }
 
-.answerList {
+.answersList {
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 2rem;
+    margin-top: 0.8rem;
 }   
 
 .answerCard {

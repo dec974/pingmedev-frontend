@@ -11,6 +11,7 @@ import Image from "next/image";
 import Icon from "../ui-kit/atoms/Icon";
 import Modal from "react-modal";
 import { FaPencil } from "react-icons/fa6";
+import {Tooltip} from "react-tooltip";
 
 
 
@@ -95,7 +96,14 @@ function PostsShow( ) {
             }
         })
     }
-                
+        
+    function handleFollow(userId) {
+        if (!user.id) {
+            alert('Vous devez être connecté pour suivre un utilisateur.');
+            return;
+        } 
+        alert(`Vous suivez maintenant l'utilisateur avec l'ID: ${userId}`);  
+    };
     
     if (!post) {
         return (
@@ -106,10 +114,10 @@ function PostsShow( ) {
     }
     // affichage de icons langages
     const languagesList = post.languages.map((language, index) => {
-        return <Icon key={index} language={language} size={60}/>
+        return <Icon key={index} language={language} size={40}/>
     });
 
-    console.log('Post data:', post);
+    // console.log('Post data:', post);
     const answersList = post.answers.map((answer, index) => {
         return (
             <div key={index} className={styles.answerCard}>
@@ -128,6 +136,11 @@ function PostsShow( ) {
         );
     });
     Modal.setAppElement('#__next'); 
+    const tootipContent = (
+        <div>
+            <button className={styles.tooltipButton} onClick={() => handleFollow(post.userId._id)}>Suivre</button>
+        </div>
+    );
     return (
         <MainLayout>
             <div className={styles.content}>
@@ -138,16 +151,17 @@ function PostsShow( ) {
                 </div>
                 <div className={styles.postContainer}>
                     <div className={styles.postHeader}>
-                        <div className={styles.postAuthor}>
+                        <div className={styles.postAuthor} id="postAuthor" data-tooltip-id="postAuthor">
                             <Image
                                 src="/avatar.png"
                                 width={60}
                                 height={60}
                                 className={styles.logoImg}
-                                alt="PingMe logo"
+                                alt="PingMe avatar"
                             />
                             {post ? post.userId.username : 'Loading...'}
                         </div>
+                        <Tooltip id="postAuthor" content={tootipContent} place="left"/>
                         <div className={styles.postHeaderTitle}>
                             <h1 className={styles.postTitle}>{post.title}</h1>
                             <div className={styles.subTitle}>
