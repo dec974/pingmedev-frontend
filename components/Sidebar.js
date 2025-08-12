@@ -19,6 +19,8 @@ function Sidebar() {
     router.push("/myProfile");
   };
 
+  
+
   useEffect(() => {
     if (!token) return;
     fetch(`http://localhost:3000/users/followed-users/${token}`)
