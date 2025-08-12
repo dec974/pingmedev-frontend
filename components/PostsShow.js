@@ -12,6 +12,7 @@ import Icon from "../ui-kit/atoms/Icon";
 import Modal from "react-modal";
 import { FaPencil } from "react-icons/fa6";
 import { MdGroupAdd, MdPersonRemoveAlt1 } from "react-icons/md";
+import ProfileModal from "./ProfileModal";
 
 function PostsShow() {
   const router = useRouter();
@@ -179,6 +180,7 @@ function PostsShow() {
             <div className={styles.postAuthor}>
               <Image
                 src="/avatar.png"
+                onClick={ProfileModal.showModal}
                 width={60}
                 height={60}
                 className={styles.logoImg}
