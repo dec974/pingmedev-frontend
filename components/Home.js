@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import Header from "../ui-kit/organisms/Header";
-import Input from "../ui-kit/atoms/Input";
 import styles from "../styles/Home.module.css";
 import PostsList from "../ui-kit/organisms/PostsList";
 import Button from "../ui-kit/atoms/Button";
@@ -8,10 +7,11 @@ import Footer from "../ui-kit/organisms/Footer";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useSelector } from "react-redux";
-
+import SearchBar from "./SearchBar";
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
+  const [filteredPosts, setFilteredPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [languages, setLanguages] = useState([]);
   const router = useRouter();
@@ -25,50 +25,72 @@ export default function Home() {
     fetch("http://localhost:3000/posts")
       .then((res) => res.json())
       .then((data) => {
-        setPosts(data.slice(0, 10)); //Affiche les 10 premiers posts
+        const tenPosts = data.slice(0, 10);
+        setPosts(tenPosts);
+        setFilteredPosts(tenPosts);
         setLoading(false);
       });
 
-      // get all languages for the sidebar
+    // get all languages for the sidebar
     fetch("http://localhost:3000/languages")
       .then((res) => res.json())
       .then((data) => {
         // Handle languages data if needed
         console.log(data.data);
         // setlanguges sort by name
-        const sortedLanguages = data.data.sort((a, b) => a.name.localeCompare(b.name));
+        const sortedLanguages = data.data.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
         setLanguages(sortedLanguages);
       })
       .catch((error) => {
         console.error("Error fetching languages:", error);
       });
-
   }, []);
+
+  const handleSearch = (query) => {
+    if (!query) {
+      setFilteredPosts(posts);
+      return;
+    }
+    const lower = query.toLowerCase();
+    setFilteredPosts(
+      posts.filter(
+        (post) =>
+          post.title?.toLowerCase().includes(lower) ||
+          post.languages?.some((lang) =>
+            typeof lang === "string"
+              ? lang.toLowerCase().includes(lower)
+              : lang.name?.toLowerCase().includes(lower)
+          )
+      )
+    );
+  };
 
   const languagesList = languages.map((lang) => (
     <li key={lang._id} className={styles.languageItem}>
-      <Link href={`/languages/${lang._id}`} className={styles.link}>{lang.name}</Link> 
+      <Link href={`/languages/${lang._id}`} className={styles.link}>
+        {lang.name}
+      </Link>
     </li>
   ));
   //voici le composant Home qui affiche les posts
-return (
-  <>
-    <Header />
-    <div className={styles.home}>
-      {/* Colonne gauche */}
-      <div className={styles.colLeft}>
-        <div className={styles.sidebar}>
-          <div className={styles.sidebarHeader}>
-            <h2 className={styles.sidebarTitle}>Langages</h2>
-          </div>
-          <div className={styles.sidebarContent}>
-            {/* language sort by name */}
-            <ul className={styles.languageList}>
-              {languagesList}
-            </ul>
+  return (
+    <>
+      <Header />
+      <div className={styles.home}>
+        {/* Colonne gauche */}
+        <div className={styles.colLeft}>
+          <div className={styles.sidebar}>
+            <div className={styles.sidebarHeader}>
+              <h2 className={styles.sidebarTitle}>Langages</h2>
+            </div>
+            <div className={styles.sidebarContent}>
+              {/* language sort by name */}
+              <ul className={styles.languageList}>{languagesList}</ul>
+            </div>
           </div>
         </div>
-      </div>
 
       {/* Colonne centrale */}
       <div className={styles.colCenter}>
@@ -77,35 +99,33 @@ return (
           <h2 className={styles.nameTitle}>{user.username}</h2>
         </div>
 
-        <div className={styles.searchArea}>
-          <Input type="search" className={styles.searchInput} placeholder="Recherche par sujet, langage ou astuce…" />
-          <Button variant="primary" onClick={() => alert("Rechercher!")}>
-            Chercher
-          </Button>
-        </div>
+          <div className={styles.searchArea}>
+            <SearchBar className={styles.input} onSearch={handleSearch} />
+          </div>
 
-        <div className={styles.postHeader}>
-          <h3 className={styles.postsTitle}>Derniers posts</h3>
-          <div className={styles.newPostBtn}>
-            <Button variant="secondary" onClick={handleNewPostClick}>
-              Nouveau Sujet
-            </Button>
+          <div className={styles.postHeader}>
+            <h3 className={styles.postsTitle}>Derniers posts</h3>
+            <div className={styles.newPostBtn}>
+              <Button variant="secondary" onClick={handleNewPostClick}>
+                Nouveau Sujet
+              </Button>
+            </div>
+          </div>
+
+          <div className={styles.postsContainer}>
+            {loading ? (
+              <p>Chargement en cours</p>
+            ) : (
+              <PostsList posts={filteredPosts} />
+            )}
           </div>
         </div>
 
-        <div className={styles.postsContainer}>
-          {loading ? <p>Chargement en cours</p> : <PostsList posts={posts} />}
-        </div>
+        {/* Colonne droite */}
+        <div className={styles.colRight}></div>
       </div>
 
-      {/* Colonne droite */}
-      <div className={styles.colRight}>
-        
-      </div>
-    </div>
-
-    <Footer />
-  </>
-);
-
+      <Footer />
+    </>
+  );
 }

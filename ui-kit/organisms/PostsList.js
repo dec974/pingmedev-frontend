@@ -1,7 +1,6 @@
 import styles from "./PostsList.module.css";
 import Link from "next/link";
 
-import { SiJavascript, SiReact } from "react-icons/si";
 import { FaTrash } from "react-icons/fa";
 import { FaRegBookmark } from "react-icons/fa";
 import { formatDate } from "../../modules/formatDate";
@@ -20,6 +19,7 @@ export default function PostsList({
   linkToDetail = true,
   maxTitle = 255,
   showStatus = false,
+  getHref,
 }) {
   // on s'assure de recevoir un tableau.
   if (!Array.isArray(posts) || posts.length === 0) {
@@ -31,13 +31,11 @@ export default function PostsList({
       {posts.map((post) => {
         // on prend la première valeur qui remonte (populate Mongoose ou autre format, sinon null)
         const author = post?.userId?.username ?? post?.username ?? null;
-
+        const href =
+          typeof getHref === "function" ? getHref(post) : `/posts/${post._id}`;
         const Card = ({ children, className = "" }) =>
           linkToDetail ? (
-            <Link
-              href={`/posts/${post._id}`}
-              className={`${styles.postLink} ${className}`}
-            >
+            <Link href={href} className={`${styles.postLink} ${className}`}>
               {children}
             </Link>
           ) : (
@@ -85,7 +83,10 @@ export default function PostsList({
                   {showDelete && (
                     <button
                       className={styles.deleteBtn}
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.preventDefault(); // empêche le comportement par défaut de <Link>
+                        e.stopPropagation(); // bloque la remontée du clic vers le parent
+
                         if (!onDelete) return;
                         if (
                           window.confirm(
@@ -103,7 +104,9 @@ export default function PostsList({
                     <button
                       className={styles.deleteBtn}
                       title="Ne plus suivre"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.preventDefault(); 
+                        e.stopPropagation(); 
                         if (!onUnfollow) return;
                         if (window.confirm("Ne plus suivre ce post ?"))
                           onUnfollow(post._id);

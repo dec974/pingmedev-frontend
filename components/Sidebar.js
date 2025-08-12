@@ -6,7 +6,8 @@ import TextArea from "../ui-kit/atoms/TextArea";
 import Button from "../ui-kit/atoms/Button";
 import { FaPencil } from "react-icons/fa6";
 import { useRouter } from "next/router";
-import Icon from "../ui-kit/atoms/Icon.js";
+// Uncomment l'import Icon pour utiliser les icones au lieu des tags
+// import Icon from "../ui-kit/atoms/Icon.js";
 import { PiKeyReturnLight } from "react-icons/pi";
 
 function Sidebar() {
@@ -91,7 +92,7 @@ function Sidebar() {
       <div className={styles.profile}>
         <div className={styles.profilCardTop}>
           <img src="/avatar.png" className={styles.avatar} alt="avatar" />
-          <Button variant={"secondary"} onClick={handleRetourClick}>
+          <Button variant={"secondary"} onClick={handleMyAccountClick}>
             Déconnexion
           </Button>
         </div>
@@ -125,15 +126,28 @@ function Sidebar() {
                     />
                     <p className={styles.followedUsername}>{u.following.username}</p>
 
-                    <span className={styles.techIcons}>
+                    <span className={styles.techBadgesRow}>
                       {Array.isArray(u.profile?.languages) &&
                         u.profile.languages.map((lang, i) => (
-                          <Icon
-                            key={lang?._id || i}
-                            language={lang} // { icon, color, name }
-                            size={16}
-                            className={styles.techIcon}
-                          />
+                          <>
+                            {/* Uncomment pour utiliser les icones */}
+                            {/* <Icon
+                              key={lang?._id || i}
+                              language={lang}
+                              size={16}
+                              className={styles.techIcon}
+                            /> */}
+                            {/* Affichage des badges de langages */}
+                            <span
+                              key={
+                                (typeof lang === "string" ? lang : lang?._id) ||
+                                i
+                              }
+                              className={styles.langPill}
+                            >
+                              {typeof lang === "string" ? lang : lang?.name}
+                            </span>
+                          </>
                         ))}
                     </span>
                   </div>
