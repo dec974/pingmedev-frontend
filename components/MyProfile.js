@@ -52,7 +52,7 @@ export default function Profil() {
   const getUserToken = () => {
     const token = localStorage.getItem("token");
     if (token) {
-      console.log("Token récupéré:", token);
+      // console.log("Token récupéré:", token);
       return token;
     }
     console.log("Aucun token trouvé");
@@ -64,6 +64,7 @@ export default function Profil() {
       try {
         const response = await fetch("http://localhost:3000/languages");
         const data = await response.json();
+        // console.log("retour de data langage", data);
         if (data.result && data.data) {
           setLanguages(data.data);
         } else {
@@ -75,13 +76,15 @@ export default function Profil() {
         setLanguages([]);
       }
     };
-    fetchLanguages();
-  }, []);
 
-  useEffect(() => {
+    // }, []);
+
+    // useEffect(() => {
     const fetchProfile = async () => {
+      console.log("Récupération du profil utilisateur...");
       try {
         const token = getUserToken();
+        console.log("Token récupéré:", token);
         if (!token) return;
 
         const response = await fetch(`http://localhost:3000/users/${token}`, {
@@ -91,29 +94,27 @@ export default function Profil() {
             Authorization: `Bearer ${token}`,
           },
         });
+        console.log("Profil récupéré  response :", response);
         const data = await response.json();
-        console.log("log de data user experience:", data.user.experience);
-        console.log("log de data user locality:", data.user.locality);
+        console.log("Profil récupéré data :", data);
+
         if (data.result && data.user) {
-          const expValue = experienceOptions.find(
-            (opt) => opt.toLowerCase() === data.user.experience?.toLowerCase()
-          );
-          if (expValue) {
-            setSelectedExperience(expValue);
-          }
-          setLocality(data.user.locality || "");
-          if (Array.isArray(data.user.languages)) {
-            const langsMapped = data.user.languages.map((name) => {
-              const foundLang = languages.find((l) => l.name === name);
-              return {
-                value: name,
-                label: name,
-                color: foundLang?.color || "var(--primary-color)",
-                icon: foundLang?.icon,
-              };
-            });
-            setSelectedLanguage(langsMapped);
-          }
+          setSelectedExperience(data.user.experience || "");
+
+          // setLocality(data.user.locality || "");
+
+          // if (Array.isArray(data.user.languages)) {
+          //   const langsMapped = data.user.languages.map((name) => {
+          //     const foundLang = languages.find((l) => l.name === name);
+          //     return {
+          //       value: name,
+          //       label: name,
+          //       color: foundLang?.color || "var(--primary-color)",
+          //       icon: foundLang?.icon,
+          //     };
+          //   });
+          //   setSelectedLanguage(langsMapped);
+          // }
         }
       } catch (err) {
         console.error("Erreur lors de la récupération du profil:", err);
@@ -121,6 +122,7 @@ export default function Profil() {
     };
 
     fetchProfile();
+    fetchLanguages();
   }, []);
 
   const handleExperienceChange = (experience) => {
