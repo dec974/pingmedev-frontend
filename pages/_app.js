@@ -1,3 +1,4 @@
+import { SessionProvider } from "next-auth/react";
 import "../styles/globals.css";
 import Head from "next/head";
 import Header from "../components/Header";
@@ -23,17 +24,20 @@ const store = configureStore({
 
 const persistor = persistStore(store);
 
+
 function App({ Component, pageProps }) {
   return (
-    <Provider store={store}>
-      <PersistGate persistor={persistor}>
-        <Head>
-          <title>PingMe.Dev</title>
-        </Head>
-        <Header />
-        <Component {...pageProps} />
-      </PersistGate>
-    </Provider>
+    <SessionProvider session={pageProps.session}>
+      <Provider store={store}>
+        <PersistGate persistor={persistor}>
+          <Head>
+            <title>PingMe.Dev</title>
+          </Head>
+          <Header />
+          <Component {...pageProps} />
+        </PersistGate>
+      </Provider>
+    </SessionProvider>
   );
 }
 

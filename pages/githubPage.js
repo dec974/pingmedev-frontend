@@ -25,7 +25,7 @@ export default function GitHubCallback() {
             // Stocker les infos dans localStorage temporairement
             localStorage.setItem("githubUser", JSON.stringify(data.userData));
             // Rediriger vers la page de connexion pour traitement
-            router.push("/profilPage");
+            router.push("/connexionPage");
           } else {
             // Affichage détaillé pour debug
             console.error("Erreur GitHub:", data);

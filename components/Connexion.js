@@ -1,7 +1,8 @@
+import { signIn, signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
-import { signUp, signIn } from "../reducers/user";
+// import { signUp, signIn } from "../reducers/user";
 import { jwtDecode } from "jwt-decode";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import Button from "../ui-kit/atoms/Button";
@@ -49,6 +50,21 @@ export default function Connexion() {
     });
   };
 
+  function LoginButton() {
+    const { data: session } = useSession();
+
+    if (session) {
+      return (
+        <>
+          <p>Connecté en tant que {session.user.name}</p>
+          <button onClick={() => signOut()}>Se déconnecter</button>
+        </>
+      );
+    }
+    return (
+      <button onClick={() => signIn("github")}>Se connecter avec GitHub</button>
+    );
+  }
   // inscription avec github
   function GitHubSignUpButton() {
     const signUpWithGitHub = () => {
@@ -518,6 +534,7 @@ export default function Connexion() {
             }}
           />
           <div className={styles.blueLine}></div>
+          <LoginButton />
           <Button
             onClick={handleSignUp}
             variant="primary"
@@ -547,6 +564,8 @@ export default function Connexion() {
             )}
           </GoogleOAuthProvider>
           <GitHubSignUpButton />
+          {/* Nouveau bouton LoginButton */}
+          <LoginButton />
         </div>
 
         <div className={styles.logContainer}>
