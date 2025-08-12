@@ -1,265 +1,278 @@
 /*Main Container*/
 
 .messengerContainer {
-    display: flex;
-    height: calc(100vh - 80px);
-    font-family: var(--font-roboto);
-    background-color: var(--background-color-white);
+  display: flex;
+  height: calc(100vh - 80px);
+  font-family: var(--font-roboto);
+  background-color: var(--background-color-white);
 }
 
 .messengerLoading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: calc(100vh - 80px);
-    font-family: var(--font-roboto);
-    color: var(--text-color);
-    font-size: 1.1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 80px);
+  font-family: var(--font-roboto);
+  color: var(--text-color);
+  font-size: 1.1rem;
 }
 
 /*Conversations Sidebar*/
 
 .conversationsSidebar {
-    display: flex;
-    flex-direction: column;
-    width: 350px;
-    background-color: var(--background-color-lightgrey);
-    border-right: 1px solid var(--background-color-grey);
+  display: flex;
+  flex-direction: column;
+  width: 350px;
+  background-color: var(--background-color-lightgrey);
+  border-right: 1px solid var(--background-color-grey);
 }
 
 .conversationsHeader {
-    padding: 20px;
-    border-bottom: 1px solid var(--background-color-grey);
-    background-color: var(--background-color-white);
+  padding: 20px;
+  border-bottom: 1px solid var(--background-color-grey);
+  background-color: var(--background-color-white);
 }
 
 .conversationsHeader h3 {
-    margin: 0 0 8px 0;
-    color: var(--text-color);
-    font-size: 1.3rem;
-    font-weight: 600;
+  margin: 0 0 8px 0;
+  color: var(--text-color);
+  font-size: 1.3rem;
+  font-weight: 600;
 }
 
 .conversationsHeader p {
-    margin: 0;
-    color: var(--primary-color);
-    font-size: 0.9rem;
+  margin: 0;
+  color: var(--primary-color);
+  font-size: 0.9rem;
 }
 
 .conversationsList {
-    flex: 1;
-    overflow-y: auto;
+  flex: 1;
+  overflow-y: auto;
 }
 
 .conversationItem {
-    display: flex;
-    align-items: center;
-    padding: 15px 20px;
-    cursor: pointer;
-    border-bottom: 1px solid var(--background-color-grey);
-    transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--background-color-grey);
+  transition: background-color 0.2s ease;
 }
 
 .conversationItem:hover {
-    background-color: var(--background-color-white);
+  background-color: var(--background-color-white);
 }
 
-.conversationItem.active{
-    background-color: var(--primary-color);
-    color: var(--background-color-white);
+.conversationItem.active {
+  background-color: var(--primary-color);
+  color: var(--background-color-white);
 }
 
 .conversationItem.active .contactName,
 .conversationItem.active .lastMessage,
 .conversationItem.active .conversationTime {
-    color: var(--background-color-white);
+  color: var(--background-color-white);
 }
 
 .avatar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--background-color-white);
-    font-weight: bold;
-    font-size: 0.9rem;
-    margin-right: 12px;
-    flex-shrink: 0;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: var(--secondary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--background-color-white);
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin-right: 12px;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--secondary-color);
 }
 
 .conversationInfo {
-    flex: 1;
-    min-width: 0;
+  flex: 1;
+  min-width: 0;
 }
 
 .contactName {
-    font-weight: 600;
-    color: var(--text-color);
-    font-size: 1rem;
-    margin-bottom: 4px;
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 1rem;
+  margin-bottom: 4px;
 }
 
 .lastMessage {
-    color: var(--text-color);
-    font-size: 0.85rem;
-    opacity: 0.8;
-    overflow: hidden;
-    
+  color: var(--text-color);
+  font-size: 0.85rem;
+  opacity: 0.8;
+  overflow: hidden;
 }
 
 .conversationTime {
-    font-size: 0.75rem;
-    color: var(--text-color);
-    opacity: 0.6;
-    margin-left: 8px;
-    flex-shrink: 0;
+  font-size: 0.75rem;
+  color: var(--text-color);
+  opacity: 0.6;
+  margin-left: 8px;
+  flex-shrink: 0;
 }
 
 /*Messages Area*/
 
 .messagesArea {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    background-color: var(--background-color-white);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--background-color-white);
 }
 
 .messagesHeader {
-    display: flex;
-    align-items: center;
-    padding: 20px;
-    border-bottom: 1px solid var(--background-color-grey);
-    background-color: var(--background-color-lightgrey);
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid var(--background-color-grey);
+  background-color: var(--background-color-lightgrey);
 }
 
 .messagesHeader .avatar {
-    margin-right: 15px;
+  margin-right: 15px;
 }
 
 .messagesHeader .contactName {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--text-color);
-    margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0;
 }
 
 .messagesList {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .message {
-    display: flex;
-    align-items: flex-start;
-    max-width: 70%;
-
+  display: flex;
+  align-items: flex-start;
+  max-width: 70%;
+  margin-bottom: 15px;
 }
 
 .message.sent {
-    align-self: flex-end;
-    flex-direction: row-reverse;
+  align-self: flex-end;
+  flex-direction: row-reverse;
 }
 
 .message.received {
-    align-self: flex-start;
+  align-self: flex-start;
 }
 
 .messageAvatar {
-    display:flex;
-    align-items: center;
-    justify-content: center;
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-    background-color: var(--secondary-color);
-    color: var(--background-color-white);
-    font-weight: bold;
-    font-size: 0.75;
-    flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: var(--secondary-color);
+  color: var(--background-color-white);
+  font-weight: bold;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+  margin: 0 8px;
 }
 
 .messageContent {
-    flex: 1;
-    min-width: 0;
+  flex: 1;
+  min-width: 0;
 }
 
 .messageHeader {
-    display: flex;
-    align-items: center;
-    margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+  gap: 8px;
 }
 
 .messageSender {
-    font-weight: 600;
-    color: var(--text-color);
-    font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 0.85rem;
 }
 
 .messageTime {
-    font-size: 0.75rem;
-    color: var(--text-color);
-    opacity: 0.6;
+  font-size: 0.75rem;
+  color: var(--text-color);
+  opacity: 0.6;
 }
 
 .messageText {
-    background-color: var(--background-color-lightgrey);
-    padding: 10px 15px;
-    border-radius: var(--radius);
-    color: var(--text-color);
-    font-size: 0.95rem;
-    line-height: 1.4;
-    word-wrap: break-word;
+  background-color: var(--background-color-lightgrey);
+  padding: 10px 15px;
+  border-radius: var(--radius);
+  color: var(--text-color);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  word-wrap: break-word;
 }
 
-.message.sent .messageText{
-    background-color: var(--primary-color);
-    color: var(--text-color);
+.message.sent .messageText {
+  background-color: var(--primary-color);
+  color: var(--background-color-white);
 }
 
 .message.received .messageText {
-    background-color: var(--background-color-lightgrey);
-    color: var(--background-color-white);
+  background-color: var(--background-color-lightgrey);
+  color: var(--text-color);
 }
 
 /*Input Area*/
 
 .messageInputArea {
-    display: flex;
-    align-items: center;
-    padding: 20px;
-    border-top: 1px solid var(--background-color-grey);
-    background-color: var(--background-color-lightgrey);
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border-top: 1px solid var(--background-color-grey);
+  background-color: var(--background-color-lightgrey);
+  gap: 15px;
+  min-height: 70px;
 }
 
 .messageInput {
-    flex: 1;
-    padding: 12px 15px;
-    border: 1px solid var(--background-color-grey);
-    border-radius: 0.4rem;
-    font-size: 1rem;
-    color: var(--text-color);
-    background-color: var(--background-color-white);
-    font-family: var(--font-roboto);
+  flex: 1;
+  padding: 12px 15px;
+  border: 1px solid var(--background-color-grey);
+  border-radius: 0.4rem;
+  font-size: 1rem;
+  color: var(--text-color);
+  background-color: var(--background-color-white);
+  font-family: var(--font-roboto);
+  min-width: 0;
+}
+
+.sendButtonContainer {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  width: auto;
 }
 
 .sendButton {
-    flex-shrink: 0;
-    }
+  width: auto;
+  padding: 12px 20px;
+  white-space: nowrap;
+  min-width: fit-content;
+}
 
 /*empty chat*/
 .noConversation {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-color);
-    opacity: 0.6;
-    font-size: 1.1rem;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color);
+  opacity: 0.6;
+  font-size: 1.1rem;
 }

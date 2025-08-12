@@ -11,6 +11,7 @@ import Image from "next/image";
 import Icon from "../ui-kit/atoms/Icon";
 import Modal from "react-modal";
 import { FaPencil } from "react-icons/fa6";
+import { MdGroupAdd, MdPersonRemoveAlt1 } from "react-icons/md";
 
 function PostsShow() {
   const router = useRouter();
@@ -19,6 +20,9 @@ function PostsShow() {
   const [post, setPost] = useState(null);
   const [answerContent, setAnswerContent] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const [followedAuthor, setFollowedAuthor] = useState(false);
+  const [loadingFollow, setLoadingFollow] = useState(false);
 
   useEffect(() => {
     if (!user.id) {
@@ -39,6 +43,9 @@ function PostsShow() {
         .then((data) => {
           if (data.result) {
             setPost(data.post);
+
+            const initial = data.post?.userId?.isFollowedByMe ?? false;
+            setFollowedAuthor(Boolean(initial));
           } else {
             console.error("Failed to fetch post data");
           }
@@ -48,6 +55,44 @@ function PostsShow() {
         });
     }
   }, [postId]);
+
+  function toggleFollowAuthor() {
+    if (!user?.token || !post?.userId?._id) {
+      alert("Vous devez être connecté pour suivre un utilisateur.");
+      return;
+    }
+
+    const targetUserId = post.userId._id;
+    const endpoint = followedAuthor ? "unfollow-user" : "follow-user";
+
+    setLoadingFollow(true);
+
+    fetch(`http://localhost:3000/users/${endpoint}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token: user.token, targetUserId }),
+    })
+      .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
+      .then(({ ok, data }) => {
+        if (!ok || !data.result) {
+          console.warn(data.error || "Erreur follow/unfollow");
+          alert("Impossible de mettre à jour le suivi. Réessayez plus tard.");
+          return;
+        }
+
+        const next =
+          typeof data.following === "boolean"
+            ? data.following
+            : !followedAuthor;
+
+        setFollowedAuthor(next);
+
+        // stockage de l'information de suivi dans le post
+        setPost((p) =>
+          p ? { ...p, userId: { ...p.userId, isFollowedByMe: next } } : p
+        );
+      });
+  }
 
   function openModal() {
     setModalIsOpen(true);
@@ -141,9 +186,30 @@ function PostsShow() {
               />
               {post ? post.userId.username : "Loading..."}
             </div>
+
             <div className={styles.postHeaderTitle}>
               <h1 className={styles.postTitle}>{post.title}</h1>
               <div className={styles.subTitle}>
+                <button
+                  className={styles.followButton}
+                  onClick={toggleFollowAuthor}
+                  disabled={loadingFollow}
+                  title={
+                    followedAuthor
+                      ? "Ne plus suivre l’auteur"
+                      : "Suivre l’auteur"
+                  }
+                  aria-pressed={followedAuthor}
+                >
+                  {followedAuthor ? (
+                    <MdPersonRemoveAlt1
+                      size={32}
+                      color="var(--secondary-color)"
+                    />
+                  ) : (
+                    <MdGroupAdd size={32} color="var(--secondary-color)" />
+                  )}
+                </button>
                 <p className={styles.postDate}>{formatDate(post.createdAt)}</p>
                 <div className={styles.languages}>{languagesList}</div>
               </div>
