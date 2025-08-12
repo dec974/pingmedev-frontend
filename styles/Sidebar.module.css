@@ -69,7 +69,6 @@
 }
 
 .followsTitle {
- 
   margin: 2vh 0;
   font-size: clamp(12px, 2vw, 22px);
 }
@@ -100,7 +99,23 @@
   border-radius: 50%;
 }
 
-.techIcons {
+/* .techIcons {
   font-size: 12px;
   color: #666;
+} */
+
+.techBadgesRow {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+.langPill {
+  display: inline-block;
+  font-size: 12px;
+  line-height: 1;
+  padding: 2px 8px;
+  border: 1px solid var(--secondary-color);
+  border-radius: var(--radius);
+  background: #fff;
 }

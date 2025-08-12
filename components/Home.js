@@ -98,7 +98,7 @@ export default function Home() {
           </div>
 
           <div className={styles.searchArea}>
-            <SearchBar onSearch={handleSearch} />
+            <SearchBar className={styles.input} onSearch={handleSearch} />
           </div>
 
           <div className={styles.postHeader}>
