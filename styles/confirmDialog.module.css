@@ -1,0 +1,114 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.overlayOpen {
+  opacity: 1;
+}
+.overlayClose {
+  opacity: 0;
+}
+
+.content {
+  text-align: center;
+  font-family: Roboto, sans-serif;
+  background: var(--background-color-lightgrey);
+  color: var(--text-color);
+  width: min(92vw, 420px);
+  border-radius: var(--radius);
+  padding: 18px 18px 14px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(0, 0, 0, 0.12);
+  transform: translateY(6px) scale(0.98);
+  opacity: 0;
+  transition: opacity 180ms ease, transform 180ms ease;
+  border: 5px solid var(--primary-color);
+}
+
+.contentOpen {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.contentClose {
+  opacity: 0;
+  transform: translateY(6px) scale(0.98);
+}
+
+.title {
+    font-family: JetBrains Mono, monospace;
+  margin: 4px 0 10px;
+  margin-bottom: 20px;
+  font-size: 24px;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+.message {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text-color);
+}
+
+.actions {
+  display: flex;
+  justify-content: space-evenly;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.btn {
+  appearance: none;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  color: var(--text-color);
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1.2;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+
+.btn:hover {
+  background: #f3f4f6;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.primary {
+  border: none;
+  background: var(--primary-color);
+  color: var(--background-color-white);
+}
+.primary:hover {
+  background: var(--primary-color);
+}
+
+.danger {
+  border: none;
+  background: #a5131f;
+  color: #fff;
+}
+.danger:hover {
+  background: #b81725;
+}
+
+/* === Accessibilité : focus visible === */
+.btn:focus-visible,
+.content:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+  border-radius: 12px;
+}
