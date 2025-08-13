@@ -165,7 +165,6 @@ function PostsShow() {
       </div>
     );
   });
-  Modal.setAppElement("#__next");
   return (
     <MainLayout>
       <div className={styles.content}>
@@ -222,43 +221,29 @@ function PostsShow() {
             <div className={styles.responses}>
               <div className={styles.answersList}>{answersList}</div>
               <div className={styles.answerForm}>
-                <button className={styles.answerButton} onClick={openModal}>
+                <button className={styles.answerButton}>
                   <div className={styles.icon}>
                     <FaPencil size={20} />
                   </div>
                   <p>Répondre</p>
                 </button>
-                <Modal
-                  isOpen={modalIsOpen}
-                  onRequestClose={closeModal}
-                  contentLabel="Répondre au sujet"
-                  className={styles.modal}
-                  overlayClassName={styles.overlay}
-                >
-                  <div className={styles.modalHeader}>
-                    <h2>Répondre au sujet</h2>
-                    <Button variant="secondary" onClick={() => closeModal()}>
-                      Fermer
-                    </Button>
-                  </div>
-                  <form
-                    onSubmit={(e) => handleSubmitAnswer(e)}
-                    className={styles.form}
-                  >
-                    <TextArea
-                      placeholder="Votre réponse..."
-                      value={answerContent}
-                      onChange={(e) => setAnswerContent(e.target.value)}
-                      rows={10}
-                    />
-                    <div className={styles.btnSubmit}>
-                      <Button type="submit" variant="primary">
-                        Répondre
-                      </Button>
-                    </div>
-                  </form>
-                </Modal>
               </div>
+              <form
+                onSubmit={(e) => handleSubmitAnswer(e)}
+                className={styles.form}
+              >
+                <TextArea
+                  placeholder="Votre réponse..."
+                  value={answerContent}
+                  onChange={(e) => setAnswerContent(e.target.value)}
+                  rows={10}
+                />
+                <div className={styles.btnSubmit}>
+                  <Button type="submit" variant="primary">
+                    Répondre
+                  </Button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
