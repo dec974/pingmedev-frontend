@@ -64,9 +64,9 @@ export default function Profil() {
       try {
         const response = await fetch("http://localhost:3000/languages");
         const data = await response.json();
-        // console.log("retour de data langage", data);
         if (data.result && data.data) {
           setLanguages(data.data);
+          fetchProfile(data.data);
         } else {
           console.error("Erreur:", data.message);
           setLanguages([]);
@@ -77,35 +77,35 @@ export default function Profil() {
       }
     };
 
-    // }, []);
-
-    // useEffect(() => {
-    const fetchProfile = async () => {
-      console.log("Récupération du profil utilisateur...");
+    const fetchProfile = async (allLanguages) => {
+      // console.log("Récupération du profil utilisateur...");
       try {
         const token = getUserToken();
-        console.log("Token récupéré:", token);
+        // console.log("Token utilisateur:", token);
         if (!token) return;
 
-        const response = await fetch(`http://localhost:3000/users/${token}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        console.log("Profil récupéré  response :", response);
+        const response = await fetch(
+          `http://localhost:3000/users/users/${token}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        // console.log("Response de fetchProfile:", response);
         const data = await response.json();
-        console.log("Profil récupéré data :", data);
-
+        console.log("conslog de data.user.exp:", data.user.experience);
         if (data.result && data.user) {
-          setSelectedExperience(data.user.experience || "");
-
-          // setLocality(data.user.locality || "");
+          const expValue = experienceOptions.find(
+            (opt) => opt.toLowerCase() === (data.user.experience || "").toLowerCase()
+          );
+          setSelectedExperience(expValue || "");
 
           // if (Array.isArray(data.user.languages)) {
           //   const langsMapped = data.user.languages.map((name) => {
-          //     const foundLang = languages.find((l) => l.name === name);
+          //     const foundLang = allLanguages.find((l) => l.name === name);
           //     return {
           //       value: name,
           //       label: name,
@@ -121,7 +121,6 @@ export default function Profil() {
       }
     };
 
-    fetchProfile();
     fetchLanguages();
   }, []);
 
