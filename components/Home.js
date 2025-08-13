@@ -7,14 +7,14 @@ import Footer from "../ui-kit/organisms/Footer";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import SearchBar from "./SearchBar";
-
+import { useSelector } from "react-redux";
 export default function Home() {
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [languages, setLanguages] = useState([]);
   const router = useRouter();
-
+  const user = useSelector((state) => state.user);
   const handleNewPostClick = () => {
     router.push("/posts/new");
   };
@@ -90,12 +90,14 @@ export default function Home() {
           </div>
         </div>
 
-      {/* Colonne centrale */}
-      <div className={styles.colCenter}>
-        <div className={styles.centerHeader}>
-          <h1 className={styles.title}>Bienvenue sur PingMe<span className={styles.dot}>.</span>dev</h1>
-          <h2 className={styles.nameTitle}>{user.username}</h2>
-        </div>
+        {/* Colonne centrale */}
+        <div className={styles.colCenter}>
+          <div className={styles.centerHeader}>
+            <h1 className={styles.title}>
+              Bienvenue sur PingMe<span className={styles.dot}>.</span>dev
+            </h1>
+            <h2 className={styles.nameTitle}>{user.username}</h2>
+          </div>
 
           <div className={styles.searchArea}>
             <SearchBar onSearch={handleSearch} />
