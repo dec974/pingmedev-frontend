@@ -6,7 +6,6 @@
   margin: 1vw 3vw;
   border-radius: var(--radius);
   background-color: white;
-  border-radius: var(--radius);
 }
 
 .userContentContainer {
@@ -14,18 +13,19 @@
   flex-direction: column;
   background-color: white;
   padding: 3vw 4vw;
-  border-radius: var(--radius);
   background-color: var(--background-color-white);
 }
 
 .buttons {
   align-items: center;
+  max-width: 800px;
   height: 3rem;
   display: flex;
   gap: 1vw;
   margin-bottom: 0;
   padding: 0 2vw;
-  border-radius: var(--radius);
+  border-bottom: 1px solid var(--primary-color);
+  margin-bottom: 3vw;
 }
 
 .tab {
@@ -88,8 +88,8 @@
 }
 
 .postCard:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  transform: translateY(2px);
+  box-shadow: 0 4px 10px var(--primary-color);
+  transform: translateY(-2px);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 

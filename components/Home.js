@@ -95,7 +95,7 @@ return (
       {/* Colonne centrale */}
       <div className={styles.colCenter}>
         <div className={styles.centerHeader}>
-          <h1 className={styles.title}>Bienvenue sur PingMe.dev</h1>
+          <h1 className={styles.title}>Bienvenue sur PingMe<span className={styles.dot}>.</span>dev</h1>
           <h2 className={styles.nameTitle}>{user.username}</h2>
         </div>
 
@@ -106,7 +106,7 @@ return (
           <div className={styles.postHeader}>
             <h3 className={styles.postsTitle}>Derniers posts</h3>
             <div className={styles.newPostBtn}>
-              <Button variant="secondary" onClick={handleNewPostClick}>
+              <Button variant="primary" onClick={handleNewPostClick}>
                 Nouveau Sujet
               </Button>
             </div>

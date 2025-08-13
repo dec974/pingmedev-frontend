@@ -126,10 +126,10 @@ function Posts(props) {
             {type === "edit" ? `Sujet: ${title}` : "Nouveau Sujet"}
           </h1>
           {type !== "edit" && (
-            <p>
-              Vous souhaitez contribuer au forum ? Vous avez la possibilité de
-              poser une question technique ou de donner une astuce. Selectionnez
-              votre choix ci-dessous.
+            <p className={styles.description}>
+              Vous pouvez créer un nouveau sujet en remplissant le formulaire
+              ci-dessous. Choisissez le type de sujet (question ou astuce),
+              sélectionnez les langues pertinentes, et rédigez votre contenu.
             </p>
           )}
           <div className={styles.form}>

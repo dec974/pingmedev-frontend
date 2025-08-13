@@ -41,7 +41,7 @@ export default function PostsList({
           },
           tip: {
             prefix: "de ",
-            label: "Astuce",
+            label: "Tips",
             cls: styles.badgeAstuce,
           },
         };
@@ -68,7 +68,7 @@ export default function PostsList({
                   <Icon
                     className={styles.icon}
                     language={post.languages[0]}
-                    size={24}
+                    size={32}
                   />
                 )}
                 {showAuthor && author && (
