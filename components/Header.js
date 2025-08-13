@@ -7,9 +7,5 @@ export default function Header() {
   const handleLogin = () => {
     router.push("/connexionPage");
   };
-  return (
-    <header>
-     
-    </header>
-  );
+  return <header></header>;
 }

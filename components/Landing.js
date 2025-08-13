@@ -23,25 +23,25 @@ export default function Home() {
 
           <div className={styles.buttonContainer}>
             <Button
-              onClick={handleConnexionClick}
-              variant="primary"
-              style={{
-                fontSize: "18px",
-                padding: ".5vw 1vw",
-              }}
-            >
-              Connexion
-            </Button>
-
-            <Button
               onClick={handleVisitClick}
               variant="secondary"
               style={{
                 fontSize: "18px",
-                padding: ".5vw 1vw",
+                padding: "1vw 2vw",
               }}
             >
               Visiter*
+            </Button>
+
+            <Button
+              onClick={handleConnexionClick}
+              variant="primary"
+              style={{
+                fontSize: "18px",
+                padding: "1vw 2vw",
+              }}
+            >
+              Connexion
             </Button>
           </div>
 

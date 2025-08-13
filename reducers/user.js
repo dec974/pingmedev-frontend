@@ -24,7 +24,9 @@ export const userSlice = createSlice({
       state.value.email = action.payload.email;
       state.value.id = action.payload.id;
     },
-    signOut: () => initialState,
+    signOut: (state) => {
+      state.value = initialState.value;
+    },
     setUserId: (state, action) => {
       // Nouvelle action pour définir l'ID utilisateur
       state.value.id = action.payload;

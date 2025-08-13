@@ -75,7 +75,7 @@ function UserContent({ postId, onDeleted }) {
           return res.json();
         })
         .then((data) => {
-          // console.log(" Données reçues (posts) :", data);
+          console.log(" Données reçues (posts) :", data);
           setPosts(data);
           setLoading(false);
         });
@@ -86,7 +86,7 @@ function UserContent({ postId, onDeleted }) {
       fetch(`http://localhost:3000/users/followed-posts/${user.token}`)
         .then((res) => res.json())
         .then((data) => {
-          // console.log("data reçue (followedPosts):", data);
+          console.log("data reçue (followedPosts):", data);
           if (data.result) {
             setFollowedPosts(data.followedPosts);
           }
@@ -95,50 +95,41 @@ function UserContent({ postId, onDeleted }) {
     }
   }, [activeTab, user.token]);
 
-  const visiblePosts = sortPosts(
-    (posts ?? []).filter((p) => p?.status !== "deleted")
-  );
-
-  const getHref = (post) =>
-    post?.status === "draft" ? `/posts/edit/${post._id}` : `/posts/${post._id}`;
-
-  if (loading) return <Spinner />;
-
   return (
     <main className={styles.userContent}>
+      <div className={styles.buttons}>
+        <Button
+          variant={"primary"}
+          className={`${styles.tab} ${
+            activeTab === "posts" ? styles.active : ""
+          }`}
+          onClick={() => setActiveTab("posts")}
+        >
+          Mes posts
+        </Button>
+        <Button
+          variant={"primary"}
+          className={`${styles.tab} ${
+            activeTab === "topics" ? styles.active : ""
+          }`}
+          onClick={() => setActiveTab("topics")}
+        >
+          Mes suivis
+        </Button>
+      </div>
+
       <div className={styles.userContentContainer}>
-        <div className={styles.buttons}>
-          <Button
-            variant={"primary"}
-            className={`${styles.tab} ${
-              activeTab === "posts" ? styles.active : ""
-            }`}
-            onClick={() => setActiveTab("posts")}
-          >
-            Mes posts
-          </Button>
-          <Button
-            variant={"primary"}
-            className={`${styles.tab} ${
-              activeTab === "topics" ? styles.active : ""
-            }`}
-            onClick={() => setActiveTab("topics")}
-          >
-            Mes suivis
-          </Button>
-          <div className={styles.sort}>
-            <Button onClick={toggleSortOrder} className={styles.sortBtn}>
-              {sortOrder === "desc"
-                ? "du plus récent au plus ancien"
-                : "du plus ancien au plus récent"}
-            </Button>
-          </div>
+        <div className={styles.sort}>
+          <button onClick={toggleSortOrder} className={styles.sortBtn}>
+            {sortOrder === "desc"
+              ? "du plus récent au plus ancien"
+              : "du plus ancien au plus récent"}
+          </button>
         </div>
 
         {activeTab === "posts" ? (
           <PostsList
-            posts={visiblePosts}
-            className={styles.postCard}
+            posts={sortPosts(posts)}
             showIcons={true}
             showAuthor={false}
             showStatus={true}

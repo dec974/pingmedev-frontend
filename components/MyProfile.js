@@ -52,7 +52,7 @@ export default function Profil() {
   const getUserToken = () => {
     const token = localStorage.getItem("token");
     if (token) {
-      console.log("Token récupéré:", token);
+      // console.log("Token récupéré:", token);
       return token;
     }
     console.log("Aucun token trouvé");
@@ -63,9 +63,12 @@ export default function Profil() {
     const fetchLanguages = async () => {
       try {
         const response = await fetch("http://localhost:3000/languages");
+        //console.log("conslog de fetchLanguages response", response);
         const data = await response.json();
+        //console.log("conslog de fetchLanguages data", data);
         if (data.result && data.data) {
           setLanguages(data.data);
+          fetchProfile(data.data);
         } else {
           console.error("Erreur:", data.message);
           setLanguages([]);
@@ -75,36 +78,37 @@ export default function Profil() {
         setLanguages([]);
       }
     };
-    fetchLanguages();
-  }, []);
 
-  useEffect(() => {
-    const fetchProfile = async () => {
+    const fetchProfile = async (allLanguages) => {
+      // console.log("Récupération du profil utilisateur...");
       try {
         const token = getUserToken();
+        // console.log("Token utilisateur:", token);
         if (!token) return;
 
-        const response = await fetch(`http://localhost:3000/users/${token}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          `http://localhost:3000/users/users/${token}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        // console.log(" conslog response de fetchProfile:", response);
         const data = await response.json();
-        console.log("log de data user experience:", data.user.experience);
-        console.log("log de data user locality:", data.user.locality);
+        console.log("conslog de data.user.exp:", data.user.experience);
         if (data.result && data.user) {
           const expValue = experienceOptions.find(
-            (opt) => opt.toLowerCase() === data.user.experience?.toLowerCase()
+            (opt) =>
+              opt.toLowerCase() === (data.user.experience || "").toLowerCase()
           );
-          if (expValue) {
-            setSelectedExperience(expValue);
-          }
+          setSelectedExperience(expValue || "");
           setLocality(data.user.locality || "");
           if (Array.isArray(data.user.languages)) {
             const langsMapped = data.user.languages.map((name) => {
-              const foundLang = languages.find((l) => l.name === name);
+              const foundLang = allLanguages.find((l) => l.name === name);
               return {
                 value: name,
                 label: name,
@@ -120,7 +124,7 @@ export default function Profil() {
       }
     };
 
-    fetchProfile();
+    fetchLanguages();
   }, []);
 
   const handleExperienceChange = (experience) => {
