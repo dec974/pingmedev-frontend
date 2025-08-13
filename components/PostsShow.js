@@ -57,6 +57,13 @@ function PostsShow() {
           }
         });
     }
+    // follows get following
+    fetch("http://localhost:3000/follows/following/:userId")
+      .then(response => response.json())
+      .then(data => {
+
+      });
+
     if (postId) {
       console.log("Fetching post with ID:", postId);
       fetch(`http://localhost:3000/posts/${postId}`)
