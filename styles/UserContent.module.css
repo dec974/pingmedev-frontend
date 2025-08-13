@@ -21,10 +21,9 @@
   max-width: 800px;
   height: 3rem;
   display: flex;
-  gap: 1vw;
   margin-bottom: 0;
   padding: 0 2vw;
-  border-bottom: 1px solid var(--primary-color);
+  border-bottom: 2px solid var(--primary-color);
   margin-bottom: 3vw;
 }
 
@@ -34,14 +33,13 @@
   border-bottom: none;
   font-weight: bold;
   background: white;
-   font-weight: 600;
+  font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s ease;
   font-family: var(--jetbrains);
   font-size: clamp(16px, 1vw, 18px);
   color: var(--primary-color);
-  border-radius: 8px 8px 0 0 ;
-  
+  border-radius: 8px 8px 0 0;
 }
 .tab:hover {
   border: none;
@@ -69,7 +67,6 @@
   font-size: clamp(12px, 1vw, 16px);
   font-weight: 600;
   color: var(--primary-color);
- 
 }
 
 .sortBtn:hover {
@@ -88,8 +85,8 @@
 }
 
 .postCard:hover {
-  box-shadow: 0 4px 10px var(--primary-color);
-  transform: translateY(-2px);
+  box-shadow: 0 1px 7px rgba(3, 42, 88, 0.685);
+  transform: translateY(2px);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 

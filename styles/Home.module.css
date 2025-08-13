@@ -7,14 +7,14 @@
 }
 
 .title {
-  font-size: clamp(36px, 2.5vw, 54px);
+  font-size: clamp(36px, 2vw, 48px);
   font-weight: 500;
   margin: 1rem 0;
   text-align: center;
 }
 
 .nameTitle {
-  font-size: clamp(28px, 2vw, 36px);
+  font-size: clamp(20px, 1.5vw, 32px);
   font-weight: 500;
   margin: 0.5rem 0;
   text-align: center;
@@ -73,7 +73,7 @@
 }
 
 .link:hover {
-   box-shadow: 0 1px 7px rgba(3, 42, 88, 0.685);
+  box-shadow: 0 1px 7px rgba(3, 42, 88, 0.685);
   transform: translateY(2px);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }

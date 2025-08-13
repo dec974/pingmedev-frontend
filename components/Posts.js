@@ -127,9 +127,7 @@ function Posts(props) {
           </h1>
           {type !== "edit" && (
             <p className={styles.description}>
-              Vous pouvez créer un nouveau sujet en remplissant le formulaire
-              ci-dessous. Choisissez le type de sujet (question ou astuce),
-              sélectionnez les langues pertinentes, et rédigez votre contenu.
+              Que souhaitez-vous partager avec la communauté ?
             </p>
           )}
           <div className={styles.form}>
@@ -162,7 +160,7 @@ function Posts(props) {
                 <Select
                   options={dataListLanguages}
                   isMulti
-                  placeholder="Sélectionnez une langue"
+                  placeholder="A propos de..."
                   onChange={(selectedOptions) =>
                     setSelectLanguages(selectedOptions || [])
                   }
@@ -175,7 +173,7 @@ function Posts(props) {
                   id="title"
                   name="title"
                   required
-                  placeholder="Titre question ou Astuce"
+                  placeholder="Titre du post"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   className={type === "edit" ? "disabled" : ""}
