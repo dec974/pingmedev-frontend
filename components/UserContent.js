@@ -70,34 +70,33 @@ function UserContent() {
 
   return (
     <main className={styles.userContent}>
-      <div className={styles.buttons}>
-        <Button
-          variant={"primary"}
-          className={`${styles.tab} ${
-            activeTab === "posts" ? styles.active : ""
-          }`}
-          onClick={() => setActiveTab("posts")}
-        >
-          Mes posts
-        </Button>
-        <Button
-          variant={"primary"}
-          className={`${styles.tab} ${
-            activeTab === "topics" ? styles.active : ""
-          }`}
-          onClick={() => setActiveTab("topics")}
-        >
-          Mes suivis
-        </Button>
-      </div>
-
       <div className={styles.userContentContainer}>
-        <div className={styles.sort}>
-          <button onClick={toggleSortOrder} className={styles.sortBtn}>
-            {sortOrder === "desc"
-              ? "du plus récent au plus ancien"
-              : "du plus ancien au plus récent"}
-          </button>
+        <div className={styles.buttons}>
+          <Button
+            variant={"primary"}
+            className={`${styles.tab} ${
+              activeTab === "posts" ? styles.active : ""
+            }`}
+            onClick={() => setActiveTab("posts")}
+          >
+            Mes posts
+          </Button>
+          <Button
+            variant={"primary"}
+            className={`${styles.tab} ${
+              activeTab === "topics" ? styles.active : ""
+            }`}
+            onClick={() => setActiveTab("topics")}
+          >
+            Mes suivis
+          </Button>
+          <div className={styles.sort}>
+            <Button onClick={toggleSortOrder} className={styles.sortBtn}>
+              {sortOrder === "desc"
+                ? "du plus récent au plus ancien"
+                : "du plus ancien au plus récent"}
+            </Button>
+          </div>
         </div>
 
         {loading ? (
@@ -105,6 +104,7 @@ function UserContent() {
         ) : activeTab === "posts" ? (
           <PostsList
             posts={visiblePosts}
+            className={styles.postCard}
             showIcons={true}
             showAuthor={false}
             showStatus={true}

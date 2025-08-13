@@ -13,8 +13,7 @@ export default function Profil() {
   const [locality, setLocality] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState([]);
   const [languages, setLanguages] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [activeModifyType, setActiveModifyType] = useState(null); // 'username', 'password', 'email', ou null
+  const [activeModifyType, setActiveModifyType] = useState(null);
   const [newUsername, setNewUsername] = useState("");
   const [confirmUsername, setConfirmUsername] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
@@ -63,17 +62,10 @@ export default function Profil() {
   useEffect(() => {
     const fetchLanguages = async () => {
       try {
-        setLoading(true);
-        console.log("Récupération des langages depuis /languages...");
-
         const response = await fetch("http://localhost:3000/languages");
         const data = await response.json();
-
-        console.log("Réponse reçue:", data);
-
         if (data.result && data.data) {
           setLanguages(data.data);
-          console.log(`${data.count} langages chargés:`, data.data);
         } else {
           console.error("Erreur:", data.message);
           setLanguages([]);
@@ -81,11 +73,54 @@ export default function Profil() {
       } catch (error) {
         console.error("Erreur de connexion:", error);
         setLanguages([]);
-      } finally {
-        setLoading(false);
       }
     };
     fetchLanguages();
+  }, []);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const token = getUserToken();
+        if (!token) return;
+
+        const response = await fetch(`http://localhost:3000/users/${token}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await response.json();
+        console.log("log de data user experience:", data.user.experience);
+        console.log("log de data user locality:", data.user.locality);
+        if (data.result && data.user) {
+          const expValue = experienceOptions.find(
+            (opt) => opt.toLowerCase() === data.user.experience?.toLowerCase()
+          );
+          if (expValue) {
+            setSelectedExperience(expValue);
+          }
+          setLocality(data.user.locality || "");
+          if (Array.isArray(data.user.languages)) {
+            const langsMapped = data.user.languages.map((name) => {
+              const foundLang = languages.find((l) => l.name === name);
+              return {
+                value: name,
+                label: name,
+                color: foundLang?.color || "var(--primary-color)",
+                icon: foundLang?.icon,
+              };
+            });
+            setSelectedLanguage(langsMapped);
+          }
+        }
+      } catch (err) {
+        console.error("Erreur lors de la récupération du profil:", err);
+      }
+    };
+
+    fetchProfile();
   }, []);
 
   const handleExperienceChange = (experience) => {
@@ -326,7 +361,6 @@ export default function Profil() {
         return;
       }
 
-      // Validation simple d'email
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(newEmail)) {
         showModal(
@@ -380,8 +414,8 @@ export default function Profil() {
 
   const experienceOptions = [
     "Junior",
-    "Confirmé",
-    "Sénior",
+    "Confirme",
+    "Senior",
     "Autodidacte",
     "Mentor / Formateur",
   ];
@@ -395,7 +429,7 @@ export default function Profil() {
       icon: lang.icon,
     }));
 
-  // méthode de personnalisation de react-select
+  // méthode de personnalisation de react-select la en dessous
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
@@ -472,7 +506,6 @@ export default function Profil() {
                 activeModifyType === "username" ? null : "username"
               )
             }
-            //style.classname n est pas prit en compte via moduleE.CSS
           >
             Modifier UserName
           </Button>
