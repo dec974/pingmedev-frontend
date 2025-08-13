@@ -139,3 +139,10 @@
 .deleteBtn:hover {
   cursor: pointer;
 }
+
+/*Pour stabiliser le popover même si le parent est animé*/
+.authorWrapper {
+  display: inline-block;
+  position: relative;
+  pointer-events: auto;
+}
