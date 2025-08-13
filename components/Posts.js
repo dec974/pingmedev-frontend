@@ -126,8 +126,10 @@ function Posts(props) {
             {type === "edit" ? `Sujet: ${title}` : "Nouveau Sujet"}
           </h1>
           {type !== "edit" && (
-            <p className={styles.description}>
-              Que souhaitez-vous partager avec la communauté ?
+            <p>
+              Vous souhaitez contribuer au forum ? Vous avez la possibilité de
+              poser une question technique ou de donner une astuce. Selectionnez
+              votre choix ci-dessous.
             </p>
           )}
           <div className={styles.form}>
@@ -160,7 +162,7 @@ function Posts(props) {
                 <Select
                   options={dataListLanguages}
                   isMulti
-                  placeholder="A propos de..."
+                  placeholder="Sélectionnez une langue"
                   onChange={(selectedOptions) =>
                     setSelectLanguages(selectedOptions || [])
                   }
@@ -173,7 +175,7 @@ function Posts(props) {
                   id="title"
                   name="title"
                   required
-                  placeholder="Titre du post"
+                  placeholder="Titre question ou Astuce"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   className={type === "edit" ? "disabled" : ""}

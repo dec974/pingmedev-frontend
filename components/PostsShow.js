@@ -9,18 +9,39 @@ import { formatDate } from "../modules/formatDate";
 import Spinner from "../ui-kit/atoms/Spinner";
 import Image from "next/image";
 import Icon from "../ui-kit/atoms/Icon";
-import Modal from "react-modal";
 import { FaPencil } from "react-icons/fa6";
 import { MdGroupAdd, MdPersonRemoveAlt1 } from "react-icons/md";
 
 function PostsShow() {
+  const [modal, setModal] = useState({
+    isOpen: false,
+    title: "",
+    message: "",
+    type: "info",
+  });
+
+  const showModal = (title, message, type = "info") => {
+    setModal({
+      isOpen: true,
+      title,
+      message,
+      type,
+    });
+  };
+
+  const closeModal = () => {
+    setModal({
+      isOpen: false,
+      title: "",
+      message: "",
+      type: "info",
+    });
+  };
   const router = useRouter();
   const user = useSelector((state) => state.user.value);
   const { postId } = router.query;
   const [post, setPost] = useState(null);
   const [answerContent, setAnswerContent] = useState("");
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-
   const [followedAuthor, setFollowedAuthor] = useState(false);
   const [loadingFollow, setLoadingFollow] = useState(false);
 
@@ -94,13 +115,6 @@ function PostsShow() {
       });
   }
 
-  function openModal() {
-    setModalIsOpen(true);
-  }
-  function closeModal() {
-    setModalIsOpen(false);
-  }
-
   function handleSubmitAnswer(e) {
     e.preventDefault();
     // check if user is connected
@@ -136,35 +150,6 @@ function PostsShow() {
         } else {
           console.error("Erreur lors de l'ajout de la réponse");
         }
-      });
-  }
-
-  function handleNewMessage() {
-    if (!user) {
-      alert("Vous devez être connecté pour envoyer un message.");
-      return;
-    }
-    fetch(`http://localhost:3000/messages/send`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        senderId: user.id,
-        recipientId: post.userId._id,
-        content: `Bonjour ${post.userId.username}, j'aimerais discuter de votre sujet "${post.title}".`,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.result) {
-          router.push("//messenger");
-        } else {
-          console.error("Erreur lors de l'envoi du message");
-        }
-      })
-      .catch((error) => {
-        console.error("Error sending message:", error);
       });
   }
 
@@ -211,7 +196,9 @@ function PostsShow() {
                 height={60}
                 className={styles.logoImg}
                 alt="PingMe logo"
+                style={{ cursor: "pointer" }}
               />
+
               {post ? post.userId.username : "Loading..."}
             </div>
 
@@ -273,41 +260,6 @@ function PostsShow() {
                   </Button>
                 </div>
               </form>
-              {user.id !== post.userId._id && (
-                <a href="#" onClick={() => handleNewMessage()}>
-                  Discussion
-                </a>
-              )}
-              <Modal
-                isOpen={modalIsOpen}
-                onRequestClose={closeModal}
-                contentLabel="Répondre au sujet"
-                className={styles.modal}
-                overlayClassName={styles.overlay}
-              >
-                <div className={styles.modalHeader}>
-                  <h2>Répondre au sujet</h2>
-                  <Button variant="secondary" onClick={() => closeModal()}>
-                    Fermer
-                  </Button>
-                </div>
-                <form
-                  onSubmit={(e) => handleSubmitAnswer(e)}
-                  className={styles.form}
-                >
-                  <TextArea
-                    placeholder="Votre réponse..."
-                    value={answerContent}
-                    onChange={(e) => setAnswerContent(e.target.value)}
-                    rows={10}
-                  />
-                  <div className={styles.btnSubmit}>
-                    <Button type="submit" variant="primary">
-                      Répondre
-                    </Button>
-                  </div>
-                </form>
-              </Modal>
             </div>
           </div>
         </div>

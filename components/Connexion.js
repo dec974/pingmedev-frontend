@@ -8,7 +8,6 @@ import Button from "../ui-kit/atoms/Button";
 import Input from "../ui-kit/atoms/Input";
 import styles from "../styles/Connexion.module.css";
 import Checkbox from "../ui-kit/atoms/Checkbox";
-
 const clientId =
   "492308766796-4rukpcc44v9mhjrtk98ibj9eoan212qa.apps.googleusercontent.com";
 
@@ -247,12 +246,14 @@ export default function Connexion() {
           localStorage.setItem("username", data.username);
           localStorage.setItem("email", data.email);
 
-          dispatch({
-            id: data._id,
-            username: data.username,
-            token: data.token,
-            email: data.email,
-          });
+          dispatch(
+            signIn({
+              id: data._id,
+              username: data.username,
+              token: data.token,
+              email: data.email,
+            })
+          );
 
           if (data.isNewUser) {
             router.push("/profilPage");
@@ -411,7 +412,7 @@ export default function Connexion() {
 
       <div className={styles.section}>
         <div className={styles.signContainer}>
-          <h2 className={styles.textLog}>Inscription</h2>
+          <h2 className={styles.textLog}>S'inscrire</h2>
           <div className={styles.inputWrapper}>
             <Input
               type="text"
@@ -516,7 +517,7 @@ export default function Connexion() {
               margin: ".5vw",
             }}
           >
-            Envoyer
+            S'inscrire
           </Button>
 
           <GoogleOAuthProvider clientId={clientId}>
@@ -539,7 +540,7 @@ export default function Connexion() {
         </div>
 
         <div className={styles.logContainer}>
-          <h2 className={styles.textLog}>Connexion</h2>
+          <h2 className={styles.textLog}>Se connecter</h2>
 
           <div className={styles.inputWrapper}>
             <Input
