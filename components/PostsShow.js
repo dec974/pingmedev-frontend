@@ -11,6 +11,7 @@ import Image from "next/image";
 import Icon from "../ui-kit/atoms/Icon";
 import { FaPencil } from "react-icons/fa6";
 import { MdGroupAdd, MdPersonRemoveAlt1 } from "react-icons/md";
+import ProfilePopover from "./ProfilePopover";
 
 function PostsShow() {
   const [modal, setModal] = useState({
@@ -171,7 +172,7 @@ function PostsShow() {
   }
   // affichage de icons langages
   const languagesList = post.languages.map((language, index) => {
-    return <Icon key={index} language={language} size={60} />;
+    return <Icon key={index} language={language} size={50} />;
   });
 
   console.log("Post data:", post);
@@ -198,18 +199,24 @@ function PostsShow() {
         </div>
         <div className={styles.postContainer}>
           <div className={styles.postHeader}>
-            <div className={styles.postAuthor}>
-              <Image
-                src="/avatar.png"
-                width={60}
-                height={60}
-                className={styles.logoImg}
-                alt="PingMe logo"
-                style={{ cursor: "pointer" }}
-              />
-
-              {post ? post.userId.username : "Loading..."}
-            </div>
+            <ProfilePopover
+              userIdOrUsername={post?.userId?.username}
+              trigger={
+                <div className={styles.postAuthor}>
+                  <Image
+                    src="/avatar.png"
+                    width={60}
+                    height={60}
+                    className={styles.logoImg}
+                    alt="PingMe logo"
+                  />
+                  {post ? post.userId.username : "Loading..."}
+                </div>
+              }
+              onDiscuss={handleNewMessage}
+              onToggleFollow={toggleFollowAuthor}
+              followedAuthor={followedAuthor}
+            />
 
             <div className={styles.postHeaderTitle}>
               <h1 className={styles.postTitle}>{post.title}</h1>
@@ -227,7 +234,7 @@ function PostsShow() {
                 >
                   {followedAuthor ? (
                     <MdPersonRemoveAlt1
-                      size={32}
+                      size={38}
                       color="var(--secondary-color)"
                     />
                   ) : (
