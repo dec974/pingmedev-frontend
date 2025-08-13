@@ -5,7 +5,7 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
   font-family: var(--font-jetbrains);
-  font-size: clamp(16px, 1vw, 18px);
+  font-size: clamp(15px, .7vw, 18px);
   border: 1px solid var(--background-color-white);
 }
 

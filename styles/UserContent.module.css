@@ -37,7 +37,7 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
   font-family: var(--jetbrains);
-  font-size: clamp(16px, 1vw, 18px);
+  font-size: clamp(15px, 0.7vw, 18px);
   color: var(--primary-color);
   border-radius: 8px 8px 0 0;
 }
@@ -55,7 +55,7 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
   font-family: var(--font-jetbrains);
-  font-size: clamp(16px, 1vw, 18px);
+  font-size: clamp(15px, 0.7vw, 18px);
   background-color: var(--primary-color);
   color: var(--background-color-white);
 }
@@ -64,7 +64,7 @@
   text-decoration: none;
   border: none;
   background: none;
-  font-size: clamp(12px, 1vw, 16px);
+  font-size: clamp(15px, 0.7vw, 18px);
   font-weight: 600;
   color: var(--primary-color);
 }
