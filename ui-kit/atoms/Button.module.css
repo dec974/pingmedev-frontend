@@ -5,30 +5,30 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
   font-family: var(--font-jetbrains);
-  font-size: clamp(16px, 1vw, 18px);
+  font-size: clamp(16px, 1vw, 16px);
   border: 1px solid var(--background-color-white);
 }
 
 .primary {
   background-color: var(--primary-color);
-  color: #f2f2f2;
+  color: var(--background-color-white);
 }
 
 .primary:hover {
-  background-color: white;
+  background-color: var(--background-color-white);
   color: var(--secondary-color);
   border-color: var(--secondary-color);
   font-weight: 600;
 }
 
 .secondary {
-  background-color: white;
+  background-color: var(--background-color-white);
   color: var(--primary-color);
   border-color: var(--primary-color);
 }
 
 .secondary:hover {
-  background-color: white;
+  background-color: var(--background-color-white);
   border-color: var(--secondary-color);
   color: var(--secondary-color);
 }

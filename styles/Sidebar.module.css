@@ -1,5 +1,8 @@
 .sidebar {
+  margin-top: 10vh;
+  display: flex;
   width: 28%;
+  min-height: 90vh;
   min-width: 275px;
   padding: 1vw;
   background-color: var(--background-color-lightgrey);
@@ -8,6 +11,7 @@
 
 .profile {
   display: flex;
+  width: 98%;
   padding: 1vw;
   gap: 1vw;
   flex-direction: column;
