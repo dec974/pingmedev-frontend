@@ -412,7 +412,7 @@ export default function Connexion() {
 
       <div className={styles.section}>
         <div className={styles.signContainer}>
-          <h2 className={styles.textLog}>Inscription</h2>
+          <h2 className={styles.textLog}>S'inscrire</h2>
           <div className={styles.inputWrapper}>
             <Input
               type="text"
@@ -517,7 +517,7 @@ export default function Connexion() {
               margin: ".5vw",
             }}
           >
-            Envoyer
+            S'inscrire
           </Button>
 
           <GoogleOAuthProvider clientId={clientId}>
@@ -540,7 +540,7 @@ export default function Connexion() {
         </div>
 
         <div className={styles.logContainer}>
-          <h2 className={styles.textLog}>Connexion</h2>
+          <h2 className={styles.textLog}>Se connecter</h2>
 
           <div className={styles.inputWrapper}>
             <Input

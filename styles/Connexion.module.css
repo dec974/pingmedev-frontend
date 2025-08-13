@@ -60,6 +60,7 @@
   width: 440px;
   border-radius: var(--radius);
   background-color: var(--background-color-white);
+  border: 1px solid var(--background-color-grey);
 }
 
 .textLog {

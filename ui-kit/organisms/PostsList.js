@@ -22,7 +22,6 @@ export default function PostsList({
   getHref,
   showTypeBadge = true,
 }) {
-    console.log("PostsList props:", posts);
   // on s'assure de recevoir un tableau.
   if (!Array.isArray(posts) || posts.length === 0) {
     return <p>Aucun post à afficher.</p>;
@@ -108,13 +107,7 @@ export default function PostsList({
                         e.preventDefault(); // empêche le comportement par défaut de <Link>
                         e.stopPropagation(); // bloque la remontée du clic vers le parent
 
-                        if (!onDelete) return;
-                        if (
-                          window.confirm(
-                            "Êtes-vous sûr de vouloir supprimer ce post ?"
-                          )
-                        )
-                          onDelete(post._id);
+                        onDelete?.(post._id, post);
                       }}
                     >
                       <FaTrash size={16} />
@@ -128,9 +121,8 @@ export default function PostsList({
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        if (!onUnfollow) return;
-                        if (window.confirm("Ne plus suivre ce post ?"))
-                          onUnfollow(post._id);
+                        
+                          onUnfollow?.(post._id, post);
                       }}
                     >
                       <FaRegBookmark size={16} />

@@ -1,32 +1,21 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { signOut } from "../reducers/user";
+import { useSelector } from "react-redux";
 import styles from "../styles/Sidebar.module.css";
 import TextArea from "../ui-kit/atoms/TextArea";
 import Button from "../ui-kit/atoms/Button";
 import { FaPencil } from "react-icons/fa6";
 import { useRouter } from "next/router";
-// Uncomment l'import Icon pour utiliser les icones au lieu des tags
-// import Icon from "../ui-kit/atoms/Icon.js";
-import { PiKeyReturnLight } from "react-icons/pi";
+import Icon from "../ui-kit/atoms/Icon.js";
 
 function Sidebar() {
   const router = useRouter();
   const username = useSelector((state) => state.user.value.username);
   const token = useSelector((state) => state.user.value.token);
-  const user = useSelector((state) => state.user.value);
-  const dispatch = useDispatch();
-  const [followedUsers, setFollowedUsers] = useState([]);
-  
 
-  // deconnexion user
-  const handleDisconnectUser = () => {
-    dispatch(signOut());
-    localStorage.removeItem("token");  
-    localStorage.removeItem("username");
-    localStorage.removeItem("email");
-    
-    router.replace("/");
+  const [followedUsers, setFollowedUsers] = useState([]);
+
+  const handleRetourClick = () => {
+    router.push("/home");
   };
 
   const handleMyAccountClick = () => {
@@ -35,58 +24,28 @@ function Sidebar() {
 
   useEffect(() => {
     if (!token) return;
-    fetch(`http://localhost:3000/follows/users/${user.id}`)
+    fetch(`http://localhost:3000/users/followed-users/${token}`)
       .then((res) => res.json())
       .then((data) => {
-        console.log("Fetched followed users:", data);
         if (data.result) {
-          setFollowedUsers(data.follows);
+          setFollowedUsers(data.followedUsers);
         }
       });
   }, [token]);
 
-  // Met à jour la note localement dans followedUsers
-  const handleNoteChange = (e, followId) => {
-    const newNote = e.target.value;
-    setFollowedUsers((prev) =>
-      prev.map((u) =>
-        u._id === followId ? { ...u, internalNote: newNote } : u
-      )
+  useEffect(() => {
+    console.log(
+      "followedUsers sample:",
+      JSON.stringify(followedUsers[0]?.profile?.languages, null, 2)
     );
-  };
-
-  // Soumet la note au backend
-  const handleSubmitNote = (e, followId) => {
-    e.preventDefault();
-    const note = followedUsers.find((u) => u._id === followId)?.internalNote || "";
-    console.log("Note submitted:", note, "for user ID:", followId);
-    fetch(`http://localhost:3000/follows/users/${user.id}/${followId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ internalNote: note }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.result) {
-          console.log("Note updated successfully");
-          alert("Note mise à jour avec succès !");
-        } else {
-          console.error("Failed to update note:", data.message);
-        }
-      })
-      .catch((error) => {
-        console.error("Error updating note:", error);
-      });
-  };
+  }, [followedUsers]);
 
   return (
     <aside className={styles.sidebar}>
       <div className={styles.profile}>
         <div className={styles.profilCardTop}>
           <img src="/avatar.png" className={styles.avatar} alt="avatar" />
-          <Button variant={"secondary"} onClick={handleDisconnectUser}>
+          <Button variant={"secondary"} onClick={handleRetourClick}>
             Déconnexion
           </Button>
         </div>
@@ -109,7 +68,6 @@ function Sidebar() {
             <p className={styles.noFollow}>Aucune personne suivie</p>
           ) : (
             followedUsers.map((u) => (
-              console.log("Followed User:", u),
               <div className={styles.followedUser} key={u._id}>
                 <div className={styles.followLine}>
                   <div className={styles.userLine}>
@@ -118,53 +76,27 @@ function Sidebar() {
                       className={styles.smallAvatar}
                       alt="avatar"
                     />
-                    <p className={styles.followedUsername}>{u.following.username}</p>
+                    <p className={styles.followedUsername}>{u.username}</p>
 
-                    <span className={styles.techBadgesRow}>
+                    <span className={styles.techIcons}>
                       {Array.isArray(u.profile?.languages) &&
                         u.profile.languages.map((lang, i) => (
-                          <>
-                            {/* Uncomment pour utiliser les icones */}
-                            {/* <Icon
-                              key={lang?._id || i}
-                              language={lang}
-                              size={16}
-                              className={styles.techIcon}
-                            /> */}
-                            {/* Affichage des badges de langages */}
-                            <span
-                              key={
-                                (typeof lang === "string" ? lang : lang?._id) ||
-                                i
-                              }
-                              className={styles.langPill}
-                            >
-                              {typeof lang === "string" ? lang : lang?.name}
-                            </span>
-                          </>
+                          <Icon
+                            key={lang?._id || i}
+                            language={lang} // { icon, color, name }
+                            size={16}
+                            className={styles.techIcon}
+                          />
                         ))}
                     </span>
                   </div>
 
                   <div className={styles.textarea}>
-                    <form onSubmit={(e) => handleSubmitNote(e, u._id)}>
-                      <TextArea
-                        placeholder="Notes"
-                        rows={4}
-                        className={styles.notes}
-                        value={u.internalNote || ""}
-                        onChange={(e) => handleNoteChange(e, u._id)}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter" && !e.shiftKey) {
-                            e.preventDefault();
-                            e.target.form && e.target.form.requestSubmit();
-                          }
-                        }}
-                      />
-                      <div style={{ fontSize: "0.65em", color: "#888", marginTop: 4 }}>
-                        <b>Shift + Entrée</b> <PiKeyReturnLight size={18}/>
-                      </div>
-                    </form>
+                    <TextArea
+                      placeholder="Notes"
+                      rows={4}
+                      className={styles.notes}
+                    />
                   </div>
                 </div>
               </div>
