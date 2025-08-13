@@ -140,8 +140,8 @@ export default function Profil() {
 
   const experienceOptions = [
     "Junior",
-    "Confirmé",
-    "Sénior",
+    "Confirme",
+    "Senior",
     "Autodidacte",
     "Mentor / Formateur",
   ];
