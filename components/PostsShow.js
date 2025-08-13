@@ -94,6 +94,8 @@ function PostsShow() {
       });
   }
 
+  
+
   function openModal() {
     setModalIsOpen(true);
   }
