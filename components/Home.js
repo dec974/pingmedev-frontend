@@ -90,12 +90,12 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Colonne centrale */}
-        <div className={styles.colCenter}>
-          <div className={styles.centerHeader}>
-            <h1 className={styles.title}>Bienvenue sur PingMeDev</h1>
-            <h2 className={styles.nameTitle}>John Doe</h2>
-          </div>
+      {/* Colonne centrale */}
+      <div className={styles.colCenter}>
+        <div className={styles.centerHeader}>
+          <h1 className={styles.title}>Bienvenue sur PingMe<span className={styles.dot}>.</span>dev</h1>
+          <h2 className={styles.nameTitle}>{user.username}</h2>
+        </div>
 
           <div className={styles.searchArea}>
             <SearchBar onSearch={handleSearch} />

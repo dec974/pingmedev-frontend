@@ -3,12 +3,15 @@ import { useSelector } from "react-redux";
 import styles from "../styles/UserContent.module.css";
 import Button from "../ui-kit/atoms/Button";
 import PostsList from "../ui-kit/organisms/PostsList";
+import Spinner from "../ui-kit/atoms/Spinner";
+import ConfirmDialog from "./ConfirmDialog";
 
-function UserContent() {
+function UserContent({ postId, onDeleted }) {
   const [activeTab, setActiveTab] = useState("posts");
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [followedPosts, setFollowedPosts] = useState([]);
+  const [open, setOpen] = useState(false);
   const user = useSelector((state) => state.user.value);
 
   // Stockage en local du tri des posts par défaut (les plus récents au-dessus)
@@ -25,6 +28,31 @@ function UserContent() {
       const dateB = new Date(b.createdAt);
       return sortOrder === "desc" ? dateB - dateA : dateA - dateB;
     });
+  };
+
+  const [confirmState, setConfirmState] = useState({
+    open: false,
+    title: "",
+    message: "",
+    confirmLabel: "Confirmer",
+    confirmVariant: "danger",
+    onConfirm: () => {},
+    isBusy: false,
+  });
+
+  const openConfirm = (opts) =>
+    setConfirmState((s) => ({ ...s, open: true, ...opts, isBusy: false }));
+
+  const closeConfirm = () =>
+    setConfirmState((s) => ({ ...s, open: false, isBusy: false }));
+
+  const runConfirm = async () => {
+    try {
+      setConfirmState((s) => ({ ...s, isBusy: true }));
+      await confirmState.onConfirm?.();
+    } finally {
+      closeConfirm();
+    }
   };
 
   // Récupération des posts de l'utilisateur
@@ -90,9 +118,7 @@ function UserContent() {
           </button>
         </div>
 
-        {loading ? (
-          <p>Chargement des posts...</p>
-        ) : activeTab === "posts" ? (
+        {activeTab === "posts" ? (
           <PostsList
             posts={sortPosts(posts)}
             showIcons={true}
@@ -100,17 +126,35 @@ function UserContent() {
             showStatus={true}
             showDelete={true}
             linkToDetail={true}
-            onDelete={(postId) => {
-              // Suppression d'un de MES posts
-
-              fetch(`http://localhost:3000/posts/${postId}/deleted`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-              })
-                .then((res) => res.json())
-                .then(() => {
-                  setPosts((prev) => prev.filter((p) => p._id !== postId));
-                });
+            getHref={getHref}
+            onDelete={(id, post) => {
+              post = posts.find((p) => p._id === id);
+              openConfirm({
+                title: "Supprimer le post",
+                message: (
+                  <>
+                    Êtes-vous sûr de vouloir supprimer{" "}
+                    <strong>{post?.title ?? "ce post"}</strong> ?<br />
+                    Cette action est irréversible.
+                  </>
+                ),
+                confirmLabel: "Supprimer",
+                confirmVariant: "danger",
+                onConfirm: () => {
+                  return fetch(`http://localhost:3000/posts/${id}/deleted`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                  })
+                    .then((res) =>
+                      res.ok
+                        ? res.json()
+                        : res.json().then((e) => Promise.reject(e))
+                    )
+                    .then(() => {
+                      setPosts((prev) => prev.filter((p) => p._id !== id));
+                    });
+                },
+              });
             }}
           />
         ) : (
@@ -118,24 +162,60 @@ function UserContent() {
             posts={sortPosts(followedPosts)}
             showIcons={true}
             showUnfollow={true}
-            onUnfollow={(postId) => {
-              // CE post ne sera plus suivi
+            onUnfollow={(id, post) => {
+              const target = post ?? followedPosts.find((p) => p._id === id);
 
-              fetch(`http://localhost:3000/users/unfollow-post`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ token: user.token, postId }),
-              })
-                .then((res) => res.json())
-                .then(() => {
-                  setFollowedPosts((prev) =>
-                    prev.filter((p) => p._id !== postId)
-                  );
-                });
+              openConfirm({
+                title: "Ne plus suivre ce post",
+                message: (
+                  <>
+                    Voulez-vous arrêter de suivre{" "}
+                    <strong>{target?.title ?? "ce post"}</strong> ?
+                  </>
+                ),
+                confirmLabel: "Désuivre",
+                confirmVariant: "danger",
+
+                onConfirm: () => {
+                  fetch("http://localhost:3000/users/unfollow-post", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ token: user.token, postId: id }),
+                  })
+                    .then((res) =>
+                      res
+                        .json()
+                        .catch(() => ({
+                          result: false,
+                          error: "Réponse JSON invalide",
+                        }))
+                        .then((data) => ({ ok: res.ok, data }))
+                    )
+                    .then(({ ok, data }) => {
+                      if (!ok || !data.result) {
+                        return;
+                      }
+                      setFollowedPosts((prev) =>
+                        prev.filter((p) => p._id !== id)
+                      );
+                    });
+                },
+              });
             }}
           />
         )}
       </div>
+      <ConfirmDialog
+        isOpen={confirmState.open}
+        onClose={closeConfirm}
+        onConfirm={runConfirm}
+        title={confirmState.title}
+        message={confirmState.message}
+        confirmLabel={confirmState.confirmLabel}
+        confirmVariant={confirmState.confirmVariant}
+        cancelLabel="Annuler"
+        isBusy={confirmState.isBusy}
+      />
     </main>
   );
 }
