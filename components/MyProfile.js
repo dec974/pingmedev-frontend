@@ -63,7 +63,9 @@ export default function Profil() {
     const fetchLanguages = async () => {
       try {
         const response = await fetch("http://localhost:3000/languages");
+        //console.log("conslog de fetchLanguages response", response);
         const data = await response.json();
+        //console.log("conslog de fetchLanguages data", data);
         if (data.result && data.data) {
           setLanguages(data.data);
           fetchProfile(data.data);
@@ -94,27 +96,28 @@ export default function Profil() {
             },
           }
         );
-        // console.log("Response de fetchProfile:", response);
+        // console.log(" conslog response de fetchProfile:", response);
         const data = await response.json();
         console.log("conslog de data.user.exp:", data.user.experience);
         if (data.result && data.user) {
           const expValue = experienceOptions.find(
-            (opt) => opt.toLowerCase() === (data.user.experience || "").toLowerCase()
+            (opt) =>
+              opt.toLowerCase() === (data.user.experience || "").toLowerCase()
           );
           setSelectedExperience(expValue || "");
-
-          // if (Array.isArray(data.user.languages)) {
-          //   const langsMapped = data.user.languages.map((name) => {
-          //     const foundLang = allLanguages.find((l) => l.name === name);
-          //     return {
-          //       value: name,
-          //       label: name,
-          //       color: foundLang?.color || "var(--primary-color)",
-          //       icon: foundLang?.icon,
-          //     };
-          //   });
-          //   setSelectedLanguage(langsMapped);
-          // }
+          setLocality(data.user.locality || "");
+          if (Array.isArray(data.user.languages)) {
+            const langsMapped = data.user.languages.map((name) => {
+              const foundLang = allLanguages.find((l) => l.name === name);
+              return {
+                value: name,
+                label: name,
+                color: foundLang?.color || "var(--primary-color)",
+                icon: foundLang?.icon,
+              };
+            });
+            setSelectedLanguage(langsMapped);
+          }
         }
       } catch (err) {
         console.error("Erreur lors de la récupération du profil:", err);
