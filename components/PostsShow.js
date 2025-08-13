@@ -77,7 +77,7 @@ function PostsShow() {
         if (!ok || !data.result) {
           console.warn(data.error || "Erreur follow/unfollow");
           alert("Impossible de mettre à jour le suivi. Réessayez plus tard.");
-          return; 
+          return;
         }
 
         const next =
@@ -136,6 +136,35 @@ function PostsShow() {
         } else {
           console.error("Erreur lors de l'ajout de la réponse");
         }
+      });
+  }
+
+  function handleNewMessage() {
+    if (!user) {
+      alert("Vous devez être connecté pour envoyer un message.");
+      return;
+    }
+    fetch(`http://localhost:3000/messages/send`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        senderId: user.id,
+        recipientId: post.userId._id,
+        content: `Bonjour ${post.userId.username}, j'aimerais discuter de votre sujet "${post.title}".`,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          router.push("//messenger");
+        } else {
+          console.error("Erreur lors de l'envoi du message");
+        }
+      })
+      .catch((error) => {
+        console.error("Error sending message:", error);
       });
   }
 
@@ -244,6 +273,41 @@ function PostsShow() {
                   </Button>
                 </div>
               </form>
+              {user.id !== post.userId._id && (
+                <a href="#" onClick={() => handleNewMessage()}>
+                  Discussion
+                </a>
+              )}
+              <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={closeModal}
+                contentLabel="Répondre au sujet"
+                className={styles.modal}
+                overlayClassName={styles.overlay}
+              >
+                <div className={styles.modalHeader}>
+                  <h2>Répondre au sujet</h2>
+                  <Button variant="secondary" onClick={() => closeModal()}>
+                    Fermer
+                  </Button>
+                </div>
+                <form
+                  onSubmit={(e) => handleSubmitAnswer(e)}
+                  className={styles.form}
+                >
+                  <TextArea
+                    placeholder="Votre réponse..."
+                    value={answerContent}
+                    onChange={(e) => setAnswerContent(e.target.value)}
+                    rows={10}
+                  />
+                  <div className={styles.btnSubmit}>
+                    <Button type="submit" variant="primary">
+                      Répondre
+                    </Button>
+                  </div>
+                </form>
+              </Modal>
             </div>
           </div>
         </div>

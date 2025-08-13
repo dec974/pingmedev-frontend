@@ -22,6 +22,7 @@ export default function PostsList({
   getHref,
   showTypeBadge = true,
 }) {
+    console.log("PostsList props:", posts);
   // on s'assure de recevoir un tableau.
   if (!Array.isArray(posts) || posts.length === 0) {
     return <p>Aucun post à afficher.</p>;
