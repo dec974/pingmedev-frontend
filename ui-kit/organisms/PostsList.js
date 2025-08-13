@@ -1,7 +1,6 @@
 import styles from "./PostsList.module.css";
 import Link from "next/link";
-import ProfilePopover from "../../components/ProfilePopover.js";
-import { SiJavascript, SiReact } from "react-icons/si";
+
 import { FaTrash } from "react-icons/fa";
 import { FaRegBookmark } from "react-icons/fa";
 import { formatDate } from "../../modules/formatDate";
@@ -20,27 +19,39 @@ export default function PostsList({
   linkToDetail = true,
   maxTitle = 255,
   showStatus = false,
+  getHref,
+  showTypeBadge = true,
 }) {
     console.log("PostsList props:", posts);
   // on s'assure de recevoir un tableau.
   if (!Array.isArray(posts) || posts.length === 0) {
     return <p>Aucun post à afficher.</p>;
   }
-
   return (
     <div className={styles.list}>
       {posts.map((post) => {
         // on prend la première valeur qui remonte (populate Mongoose ou autre format, sinon null)
         const author = post?.userId?.username ?? post?.username ?? null;
-        //stockage de l'id auteur dans une variable stable pour éviter les bugs liés aux animations
-        const authorId = post?.userId?._id ?? post?.userId ?? null;
 
+        const typeKey = (post?.type || "").toLowerCase(); // "question" | "astuce" | ""
+        const TYPE_META = {
+          question: {
+            prefix: "de ",
+            label: "Question",
+            cls: styles.badgeQuestion,
+          },
+          tip: {
+            prefix: "de ",
+            label: "Tips",
+            cls: styles.badgeAstuce,
+          },
+        };
+        const meta = TYPE_META[typeKey] ?? { prefix: "", label: null, cls: "" };
+        const href =
+          typeof getHref === "function" ? getHref(post) : `/posts/${post._id}`;
         const Card = ({ children, className = "" }) =>
           linkToDetail ? (
-            <Link
-              href={`/posts/${post._id}`}
-              className={`${styles.postLink} ${className}`}
-            >
+            <Link href={href} className={`${styles.postLink} ${className}`}>
               {children}
             </Link>
           ) : (
@@ -58,18 +69,18 @@ export default function PostsList({
                   <Icon
                     className={styles.icon}
                     language={post.languages[0]}
-                    size={24}
+                    size={32}
                   />
                 )}
                 {showAuthor && author && (
                   <p className={styles.username}>
-                    <span className={styles.type}>Question de </span>
-                    <span className={styles.authorWrapper}>
-                      <ProfilePopover
-                        userId={authorId}
-                        trigger={<span className={styles.author}>{author}</span>}
-                      />
-                    </span>
+                    {showTypeBadge && meta.label && (
+                      <span className={`${styles.typeBadge} ${meta.cls}`}>
+                        {meta.label}
+                      </span>
+                    )}
+                    <span className={styles.type}>{meta.prefix}</span>
+                    {author}
                   </p>
                 )}
               </div>
@@ -93,7 +104,10 @@ export default function PostsList({
                   {showDelete && (
                     <button
                       className={styles.deleteBtn}
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.preventDefault(); // empêche le comportement par défaut de <Link>
+                        e.stopPropagation(); // bloque la remontée du clic vers le parent
+
                         if (!onDelete) return;
                         if (
                           window.confirm(
@@ -111,7 +125,9 @@ export default function PostsList({
                     <button
                       className={styles.deleteBtn}
                       title="Ne plus suivre"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
                         if (!onUnfollow) return;
                         if (window.confirm("Ne plus suivre ce post ?"))
                           onUnfollow(post._id);

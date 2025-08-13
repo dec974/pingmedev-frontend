@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styles from "../styles/SearchBar.module.css";
 import Input from "../ui-kit/atoms/Input";
 import Button from "../ui-kit/atoms/Button";
@@ -26,9 +26,6 @@ function SearchBar({ onSearch }) {
         onChange={handleChange}
         className={styles.input}
       />
-      <Button type="submit" className={styles.button}>
-        Chercher
-      </Button>
     </form>
   );
 }

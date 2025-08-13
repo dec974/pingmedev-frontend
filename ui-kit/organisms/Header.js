@@ -18,7 +18,7 @@ export default function Header({ unreadCount = 0, onLoginClick }) {
             alt="PingMe logo"
             priority={true}
           />
-          PingMe.dev
+          Accueil
         </Link>
 
         <div className={styles.navLinks}>

@@ -1,7 +1,6 @@
 import Header from "../organisms/Header";
 import Footer from "../organisms/Footer";
 
-
 export default function MainLayout({ children, className }) {
   return (
     <div>
@@ -11,4 +10,3 @@ export default function MainLayout({ children, className }) {
     </div>
   );
 }
-
