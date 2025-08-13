@@ -21,31 +21,31 @@ const Messenger = ()=> {
     const [newMessage, setNewMessage] = useState('');
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        if (!user || !user.token || !user.id) {
-            console.log('Pas d\'utilisateur connecté');
-            setLoading(false);
-            return;
-        }
+    // useEffect(() => {
+    //     if (!user || !user.token || !user.id) {
+    //         console.log('Pas d\'utilisateur connecté');
+    //         setLoading(false);
+    //         return;
+    //     }
 
-        // Récupération de l'ID utilisateur depuis le backend (comme dans Posts)
-        fetch('http://localhost:3000/users/' + user.token)
-            .then(response => response.json())
-            .then(data => {
-                if (data.result) {
-                    console.log('ID utilisateur récupéré:', data.user.id);
+    //     // Récupération de l'ID utilisateur depuis le backend (comme dans Posts)
+    //     fetch('http://localhost:3000/users/' + user.token)
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             if (data.result) {
+    //                 console.log('ID utilisateur récupéré:', data.user.id);
                     
-                    dispatch(setUserId(data.user.id));
-                } else {
-                    console.error('Erreur récupération utilisateur:', data.error);
-                    setLoading(false);
-                }
-            })
-            .catch(error => {
-                console.error('Erreur fetch utilisateur:', error);
-                setLoading(false);
-            });
-    }, [user.token, user.id, dispatch]);
+    //                 dispatch(setUserId(data.user.id));
+    //             } else {
+    //                 console.error('Erreur récupération utilisateur:', data.error);
+    //                 setLoading(false);
+    //             }
+    //         })
+    //         .catch(error => {
+    //             console.error('Erreur fetch utilisateur:', error);
+    //             setLoading(false);
+    //         });
+    // }, [user.token, user.id, dispatch]);
 
     useEffect(() => {
         if (user.id) {

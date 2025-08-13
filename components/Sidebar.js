@@ -20,7 +20,7 @@ function Sidebar() {
   
 
   // deconnexion user
-  const handleRetourClick = () => {
+  const handleDisconnectUser = () => {
     dispatch(signOut());
     localStorage.removeItem("token");  
     localStorage.removeItem("username");
@@ -92,7 +92,7 @@ function Sidebar() {
       <div className={styles.profile}>
         <div className={styles.profilCardTop}>
           <img src="/avatar.png" className={styles.avatar} alt="avatar" />
-          <Button variant={"secondary"} onClick={handleMyAccountClick}>
+          <Button variant={"secondary"} onClick={handleDisconnectUser}>
             Déconnexion
           </Button>
         </div>
