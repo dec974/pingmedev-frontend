@@ -1,6 +1,6 @@
 import styles from "./PostsList.module.css";
 import Link from "next/link";
-
+import ProfilePopover from "../../components/ProfilePopover.js";
 import { SiJavascript, SiReact } from "react-icons/si";
 import { FaTrash } from "react-icons/fa";
 import { FaRegBookmark } from "react-icons/fa";
@@ -21,6 +21,7 @@ export default function PostsList({
   maxTitle = 255,
   showStatus = false,
 }) {
+    console.log("PostsList props:", posts);
   // on s'assure de recevoir un tableau.
   if (!Array.isArray(posts) || posts.length === 0) {
     return <p>Aucun post à afficher.</p>;
@@ -31,6 +32,8 @@ export default function PostsList({
       {posts.map((post) => {
         // on prend la première valeur qui remonte (populate Mongoose ou autre format, sinon null)
         const author = post?.userId?.username ?? post?.username ?? null;
+        //stockage de l'id auteur dans une variable stable pour éviter les bugs liés aux animations
+        const authorId = post?.userId?._id ?? post?.userId ?? null;
 
         const Card = ({ children, className = "" }) =>
           linkToDetail ? (
@@ -61,7 +64,12 @@ export default function PostsList({
                 {showAuthor && author && (
                   <p className={styles.username}>
                     <span className={styles.type}>Question de </span>
-                    {author}
+                    <span className={styles.authorWrapper}>
+                      <ProfilePopover
+                        userId={authorId}
+                        trigger={<span className={styles.author}>{author}</span>}
+                      />
+                    </span>
                   </p>
                 )}
               </div>
