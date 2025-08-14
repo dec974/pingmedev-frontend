@@ -14,8 +14,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 7vh;
- 
+  height: 7vh; 
 }
 
 .logo {
@@ -24,7 +23,7 @@
   text-decoration: none;
   color: var(--primary-color);
   font-size: 1.3rem;
-  font-weight: bold;
+  font-weight: 750;
 }
 
 .logoImg {
@@ -36,12 +35,15 @@
   display: flex;
   gap: 1rem;
   align-items: center;
+  justify-content: space-around;
 }
 
 .navLinks a {
   text-decoration: none;
   color: var(--text-color);
   font-weight: 500;
+  display: flex;
+  justify-content: space-around;
 }
 
 .navLinks a:hover {
@@ -49,11 +51,11 @@
 }
 
 .iconLink {
-  margin-right: 40px;
   font-size: 40px;
   position: relative;
   display: flex;
   align-items: center;
+  color: var(--primary-color) !important;
 }
 
 .icon {
@@ -81,7 +83,8 @@
   line-height: 1;
 }
 
-.avatar {
-  font-size: 1rem;
+.avatarLink {
+  display: flex;
+  justify-content: space-around;
 }
 

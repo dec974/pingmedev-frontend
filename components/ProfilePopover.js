@@ -9,64 +9,64 @@ import { MdGroupAdd, MdPersonRemoveAlt1 } from "react-icons/md";
 import styles from "../styles/ProfilePopover.module.css";
 
 export default function ProfilePopover({
-  userIdOrUsername,
-  trigger,
-  onDiscuss,
-  onToggleFollow,
-  followedAuthor,
-}) {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+    userIdOrUsername,
+    trigger,
+    onDiscuss,
+    onToggleFollow,
+    followedAuthor,
+    }) {
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
-  const open = Boolean(anchorEl);
-  const router = useRouter();
+    const open = Boolean(anchorEl);
+    const router = useRouter();
 
-    const handleMouseEnter = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
+        const handleMouseEnter = (event) => {
+            setAnchorEl(event.currentTarget);
+        };
 
-    const handleMouseLeave = () => {
-          // On ferme seulement si on n'est pas en train de hover le popover
-        setTimeout(() => {
-            const popover = document.querySelector('[role="presentation"]');
-            if (popover && !popover.matches(':hover')) {
-                setAnchorEl(null);
-            }
-        }, 100);
-    };
+        const handleMouseLeave = () => {
+           // On ferme seulement si on n'est pas en train de hover le popover
+            setTimeout(() => {
+                const popover = document.querySelector('[role="presentation"]');
+                if (popover && !popover.matches(':hover')) {
+                    setAnchorEl(null);
+                }
+            }, 100);
+        };
 
-    const handleClose = () => setAnchorEl(null);
+        const handleClose = () => setAnchorEl(null);
 
     useEffect(() => {
         if (!userIdOrUsername) return;
 
-    const fetchUser = async () => {
-      try {
-        const res = await fetch(
-          `http://localhost:3000/users/${userIdOrUsername}`
-        );
-
-        if (!res.ok) {
-          throw new Error("Utilisateur non trouvé");
-        }
         const fetchUser = async () => {
-            try {
-                const res = await fetch(`http://localhost:3000/users/${userIdOrUsername}`);
-                if (!res.ok) throw new Error("Utilisateur non trouvé");
+        try {
+            const res = await fetch(
+            `http://localhost:3000/users/${userIdOrUsername}`
+            );
 
-        const data = await res.json();
-        console.log("Données utilisateur :", JSON.stringify(data, null, 2));
-        console.log("Experience:", data.experience);
-        console.log("Location:", data.location);
-        console.log("PreferredLanguages:", data.preferredLanguages);
-        setUser(data);
-      } catch (error) {
-        console.error(error.message);
-        setUser(null);
-      }
-    };
+            if (!res.ok) {
+            throw new Error("Utilisateur non trouvé");
+            }
+            const fetchUser = async () => {
+                try {
+                    const res = await fetch(`http://localhost:3000/users/${userIdOrUsername}`);
+                    if (!res.ok) throw new Error("Utilisateur non trouvé");
+
+            const data = await res.json();
+            console.log("Données utilisateur :", JSON.stringify(data, null, 2));
+            console.log("Experience:", data.experience);
+            console.log("Location:", data.location);
+            console.log("PreferredLanguages:", data.preferredLanguages);
+            setUser(data);
+        } catch (error) {
+            console.error(error.message);
+            setUser(null);
+        }
+        };
                 const data = await res.json();
                 setUser(data);
             } catch (error) {
@@ -76,7 +76,7 @@ export default function ProfilePopover({
         };
 
     fetchUser();
-  }, [userIdOrUsername]);
+    }, [userIdOrUsername]);
 
     // se ferme si la souris sort
     useEffect(() => {
@@ -98,21 +98,21 @@ export default function ProfilePopover({
                 }
             };
 
-      document.addEventListener("mousemove", handleGlobalMouseMove);
-      return () =>
-        document.removeEventListener("mousemove", handleGlobalMouseMove);
-    }
-  }, [open, anchorEl]);
+        document.addEventListener("mousemove", handleGlobalMouseMove);
+        return () =>
+            document.removeEventListener("mousemove", handleGlobalMouseMove);
+        }
+    }, [open, anchorEl]);
 
-  return (
-    <>
-      <div
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        style={{ display: "inline-block", cursor: "pointer" }}
-      >
-        {trigger}
-      </div>
+    return (
+        <>
+        <div
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            style={{ display: "inline-block", cursor: "pointer" }}
+        >
+            {trigger}
+        </div>
 
             <Popover
                 open={open}
@@ -156,7 +156,7 @@ export default function ProfilePopover({
 
                                 <span 
                                     className={styles.followIcon} 
-                                    onClick={(e) => onToggleFollow(e)} // ✅ On transmet l'événement
+                                    onClick={(e) => onToggleFollow(e)}
                                     style={{ cursor: "pointer", marginLeft: "10px" }}
                                 >
                                     {followedAuthor ? (
