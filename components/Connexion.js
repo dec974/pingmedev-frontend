@@ -199,7 +199,15 @@ export default function Connexion() {
               email: data.email,
             })
           );
-          router.push("/home");
+          showModal(
+            "Succès !",
+            "Connexion réussie ! Redirection en cours...",
+            "success"
+          );
+
+          setTimeout(() => {
+            router.push("/home");
+          }, 1200);
         } else {
           showModal(
             "Erreur de connexion",
