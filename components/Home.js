@@ -6,12 +6,10 @@ import Button from "../ui-kit/atoms/Button";
 import Footer from "../ui-kit/organisms/Footer";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { useSelector } from "react-redux";
 import SearchBar from "./SearchBar";
 import { useSelector } from "react-redux";
 
 export default function Home() {
-  const user = useSelector((s) => s.user?.value ?? s.user ?? null);
   console.log("Home user =", user);
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);

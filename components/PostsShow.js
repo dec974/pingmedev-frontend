@@ -123,14 +123,6 @@ function PostsShow() {
       });
   }
 
-  
-
-  function openModal() {
-    setModalIsOpen(true);
-  }
-  function closeModal() {
-    setModalIsOpen(false);
-  }
 
   function handleSubmitAnswer(e) {
     e.preventDefault();
