@@ -8,13 +8,15 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import SearchBar from "./SearchBar";
 import { useSelector } from "react-redux";
+
 export default function Home() {
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [languages, setLanguages] = useState([]);
   const router = useRouter();
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user.value);
+
   const handleNewPostClick = () => {
     router.push("/posts/new");
   };
@@ -93,20 +95,18 @@ export default function Home() {
         {/* Colonne centrale */}
         <div className={styles.colCenter}>
           <div className={styles.centerHeader}>
-            <h1 className={styles.title}>
-              Bienvenue sur PingMe<span className={styles.dot}>.</span>dev
-            </h1>
-            <h2 className={styles.nameTitle}>{user.username}</h2>
+            <h1 className={styles.title}>Bienvenue sur PingMe.dev</h1>
+            <h2 className={styles.nameTitle}>{user ? user.username : "…"}</h2>
           </div>
 
           <div className={styles.searchArea}>
-            <SearchBar onSearch={handleSearch} />
+            <SearchBar className={styles.input} onSearch={handleSearch} />
           </div>
 
           <div className={styles.postHeader}>
             <h3 className={styles.postsTitle}>Derniers posts</h3>
             <div className={styles.newPostBtn}>
-              <Button variant="secondary" onClick={handleNewPostClick}>
+              <Button variant="primary" onClick={handleNewPostClick}>
                 Nouveau Sujet
               </Button>
             </div>

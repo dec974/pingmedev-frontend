@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Button from "../atoms/Button";
 import styles from "./Header.module.css";
 import { FaEnvelope } from "react-icons/fa";
 import { PiChats } from "react-icons/pi";

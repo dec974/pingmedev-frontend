@@ -28,6 +28,39 @@ function UserContent() {
     });
   };
 
+  const [confirmState, setConfirmState] = useState({
+    open: false,
+    title: "",
+    message: "",
+    confirmLabel: "Confirmer",
+    confirmVariant: "danger",
+    onConfirm: () => {},
+    isBusy: false,
+  });
+
+  const openConfirm = (opts) =>
+    setConfirmState((s) => ({ ...s, open: true, ...opts, isBusy: false }));
+
+  const closeConfirm = () =>
+    setConfirmState((s) => ({ ...s, open: false, isBusy: false }));
+
+  function runConfirm() {
+    // affichage de l’état "en cours"
+    setConfirmState((s) => ({ ...s, isBusy: true }));
+
+    // Execution de l'action de confirmation si présente
+    if (confirmState.onConfirm) {
+      // le callback ne reçoit pas de valeur ni
+      confirmState.onConfirm().finally(() => {
+        // 3) Quoi qu'il arrive, on ferme la modale à la fin
+        closeConfirm();
+      });
+    } else {
+      // Pas d'action -> on ferme directement
+      closeConfirm();
+    }
+  }
+
   // Récupération des posts de l'utilisateur
   useEffect(() => {
     setLoading(true);
