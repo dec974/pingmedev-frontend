@@ -4,7 +4,6 @@ import Popover from "@mui/material/Popover";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import styles from "../styles/ProfilePopover.module.css";
 import { FaRegCommentDots } from "react-icons/fa";
 import { MdGroupAdd, MdPersonRemoveAlt1 } from "react-icons/md";
