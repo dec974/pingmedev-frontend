@@ -10,7 +10,6 @@ import SearchBar from "./SearchBar";
 import { useSelector } from "react-redux";
 
 export default function Home() {
-  console.log("Home user =", user);
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [loading, setLoading] = useState(true);
