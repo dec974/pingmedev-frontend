@@ -1,42 +1,18 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useMemo } from "react";
 import { Slate, Editable, withReact } from "slate-react";
-import { createEditor } from "slate";
+import { createEditor, Node, Element as SlateElement, Editor } from "slate";
 import { withHistory } from "slate-history";
-import { SlateHelpers } from "../../utils/slateHelpers";
-import { useSlateEditor } from "./hooks/useSlateEditor";
+import { SlateHelpers, initialValue } from "../../utils/slateHelpers";
 import Toolbar from "./Toolbar";
 import Element from "./Element";
 import Leaf from "./Leaf";
-
-// Définir une valeur par défaut locale pour éviter les problèmes d'import
-const DEFAULT_INITIAL_VALUE = [
-  {
-    type: "paragraph",
-    children: [
-      { text: "Voici un exemple d'éditeur de texte riche construit avec " },
-      { text: "Slate", bold: true },
-      { text: " et " },
-      { text: "Next.js", bold: true },
-      { text: "!" },
-    ],
-  },
-  {
-    type: "paragraph",
-    children: [
-      {
-        text: "Vous pouvez utiliser les raccourcis clavier habituels comme ",
-      },
-      { text: "Ctrl+B", code: true },
-      { text: " pour le gras, " },
-      { text: "Ctrl+I", code: true },
-      { text: " pour l'italique, etc." },
-    ],
-  },
-  {
-    type: "paragraph",
-    children: [{ text: "" }],
-  },
-];
+import styles from "../../styles/editor.module.css";
+import Prism from "prismjs";
+import "prismjs/components/prism-javascript";
+import "prismjs/components/prism-python";
+import "prismjs/components/prism-php";
+import "prismjs/components/prism-css";
+import "prismjs/components/prism-json";
 
 const RichTextEditor = ({
   value,
@@ -44,15 +20,13 @@ const RichTextEditor = ({
   placeholder = "Tapez votre texte ici...",
   style = {},
 }) => {
-  const editor = useSlateEditor();
+  const editor = useMemo(() => withHistory(withReact(createEditor())), []);
 
-  // Fonction pour valider et nettoyer la valeur
   const getValidValue = (inputValue) => {
     if (!inputValue || !Array.isArray(inputValue) || inputValue.length === 0) {
-      return initialValue || DEFAULT_INITIAL_VALUE; // Fallback sur fallback
+      return initialValue;
     }
 
-    // Vérifier que chaque élément a la structure correcte
     const isValid = inputValue.every(
       (node) =>
         node &&
@@ -61,13 +35,11 @@ const RichTextEditor = ({
         Array.isArray(node.children)
     );
 
-    return isValid ? inputValue : DEFAULT_INITIAL_VALUE;
+    return isValid ? inputValue : initialValue;
   };
 
-  // Initialiser avec une valeur valide
   const [editorValue, setEditorValue] = useState(() => getValidValue(value));
 
-  // Gérer les changements de valeur
   const handleChange = useCallback(
     (newValue) => {
       setEditorValue(newValue);
@@ -78,13 +50,69 @@ const RichTextEditor = ({
     [onChange]
   );
 
-  // Rendu des éléments
   const renderElement = useCallback((props) => <Element {...props} />, []);
 
-  // Rendu des feuilles (leaf nodes)
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
 
-  // Gérer les raccourcis clavier
+  // Fonction de décoration pour PrismJS
+  const decorate = useCallback(([node, path]) => {
+    const ranges = [];
+
+    console.log("Decorate called for node:", node, "path:", path);
+
+    // Vérifier si c'est un nœud de texte
+    if (node.text !== undefined) {
+      // Parcourir l'arbre pour trouver le parent code-block
+      try {
+        const ancestors = [];
+        let current = path;
+        while (current.length > 0) {
+          current = current.slice(0, -1);
+          const [parentNode] = Editor.node(editor, current);
+          ancestors.push(parentNode);
+        }
+
+        const codeBlockParent = ancestors.find(
+          (ancestor) =>
+            SlateElement.isElement(ancestor) && ancestor.type === "code-block"
+        );
+
+        if (codeBlockParent) {
+          console.log("Found code block parent, decorating text:", node.text);
+          const text = node.text;
+          const language = codeBlockParent.language || "javascript";
+          const grammar =
+            Prism.languages[language] || Prism.languages.javascript;
+          const tokens = Prism.tokenize(text, grammar);
+          console.log("Prism tokens for text:", tokens);
+
+          let start = 0;
+          for (const token of tokens) {
+            const length =
+              typeof token === "string" ? token.length : token.content.length;
+            const end = start + length;
+
+            if (typeof token !== "string" && token.type) {
+              const range = {
+                anchor: { path, offset: start },
+                focus: { path, offset: end },
+                [`prism-${token.type}`]: true,
+              };
+              ranges.push(range);
+              console.log("Adding text range:", range);
+            }
+            start = end;
+          }
+        }
+      } catch (error) {
+        console.log("Error finding parent:", error);
+      }
+    }
+
+    console.log("Final ranges for node:", ranges);
+    return ranges;
+  }, []);
+
   const handleKeyDown = useCallback(
     (event) => {
       if (!event.ctrlKey && !event.metaKey) {
@@ -124,29 +152,17 @@ const RichTextEditor = ({
   );
 
   return (
-    <div
-      style={{
-        border: "1px solid #ccc",
-        borderRadius: "4px",
-        backgroundColor: "#fff",
-        ...style,
-      }}
-    >
-      <Slate editor={editor} value={editorValue} onChange={handleChange}>
+    <div className={styles.editorContainer} style={style}>
+      <Slate editor={editor} initialValue={editorValue} onChange={handleChange}>
         <Toolbar />
 
         <Editable
+          className={styles.editorContent}
           renderElement={renderElement}
           renderLeaf={renderLeaf}
+          decorate={decorate}
           placeholder={placeholder}
           onKeyDown={handleKeyDown}
-          style={{
-            padding: "16px",
-            minHeight: "200px",
-            outline: "none",
-            lineHeight: "1.6",
-            fontSize: "16px",
-          }}
           spellCheck
         />
       </Slate>

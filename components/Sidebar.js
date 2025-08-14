@@ -20,9 +20,9 @@ function Sidebar() {
 
   const handleDisconnectUser = () => {
     dispatch(signOut());
-    localStorage.removeItem('username');
-    localStorage.removeItem('email');
-    localStorage.removeItem('token');
+    localStorage.removeItem("username");
+    localStorage.removeItem("email");
+    localStorage.removeItem("token");
     router.replace("/");
   };
 
@@ -120,7 +120,9 @@ function Sidebar() {
                       className={styles.smallAvatar}
                       alt="avatar"
                     />
-                    <p className={styles.followedUsername}>{u.following.username}</p>
+                    <p className={styles.followedUsername}>
+                      {u.following.username}
+                    </p>
 
                     <span className={styles.techIcons}>
                       {Array.isArray(u.profile?.languages) &&

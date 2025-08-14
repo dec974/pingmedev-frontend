@@ -16,6 +16,27 @@ const Element = ({ attributes, children, element }) => {
         </blockquote>
       );
 
+    case "code-block":
+      return (
+        <div
+          {...attributes}
+          style={{
+            backgroundColor: "#f5f5f5",
+            padding: "16px",
+            borderRadius: "4px",
+            margin: "16px 0",
+            overflow: "auto",
+            fontFamily: "'Monaco', 'Menlo', 'Ubuntu Mono', monospace",
+            fontSize: "14px",
+            lineHeight: "1.4",
+            border: "1px solid #e1e5e9",
+          }}
+          className={`language-${element.language || "javascript"}`}
+        >
+          {children}
+        </div>
+      );
+
     case "bulleted-list":
       return (
         <ul {...attributes} style={{ paddingLeft: "20px", margin: "16px 0" }}>

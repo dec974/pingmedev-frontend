@@ -199,7 +199,15 @@ export default function Connexion() {
               email: data.email,
             })
           );
-          router.push("/home");
+          showModal(
+            "Succès !",
+            "Connexion réussie ! Redirection en cours...",
+            "success"
+          );
+
+          setTimeout(() => {
+            router.push("/home");
+          }, 1200);
         } else {
           showModal(
             "Erreur de connexion",
@@ -256,9 +264,25 @@ export default function Connexion() {
           );
 
           if (data.isNewUser) {
-            router.push("/profilPage");
+            showModal(
+              "Succès !",
+              "Inscription réussie ! Redirection en cours...",
+              "success"
+            );
+
+            setTimeout(() => {
+              router.push("/profilPage");
+            }, 1200);
           } else {
-            router.push("/home");
+            showModal(
+              "Succès !",
+              "Connexion réussie ! Redirection en cours...",
+              "success"
+            );
+
+            setTimeout(() => {
+              router.push("/home");
+            }, 1200);
           }
         } else {
           showModal(
@@ -314,11 +338,18 @@ export default function Connexion() {
               email: signUpMail,
             })
           );
-
           setSignUpUsername("");
           setSignUpPassword("");
           setSignUpMail("");
-          router.push("/profilPage");
+          showModal(
+            "Succès !",
+            "Inscritption réussie ! Redirection en cours...",
+            "success"
+          );
+
+          setTimeout(() => {
+            router.push("/profilPage");
+          }, 1200);
         } else {
           showModal(
             "Erreur d'inscription",
@@ -374,7 +405,16 @@ export default function Connexion() {
           setSignInUsername("");
           setSignInPassword("");
           setSignUpMail("");
-          router.push("/home");
+
+          showModal(
+            "Succès !",
+            "Connexion réussie ! Redirection en cours...",
+            "success"
+          );
+
+          setTimeout(() => {
+            router.push("/home");
+          }, 1200);
         } else {
           showModal(
             "Erreur de connexion",

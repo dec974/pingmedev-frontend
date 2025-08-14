@@ -7,19 +7,16 @@ export default function EditorPage() {
 
   const handleContentChange = (value) => {
     setContent(value);
-    // Ici vous pouvez sauvegarder le contenu
     console.log("Contenu mis à jour:", JSON.stringify(value));
   };
 
   const saveContent = () => {
-    // Exemple de sauvegarde
     const contentString = JSON.stringify(content);
     localStorage.setItem("editorContent", contentString);
     alert("Contenu sauvegardé!");
   };
 
   const loadContent = () => {
-    // Exemple de chargement
     const savedContent = localStorage.getItem("editorContent");
     if (savedContent) {
       setContent(JSON.parse(savedContent));
@@ -29,9 +26,9 @@ export default function EditorPage() {
 
   return (
     <div style={{ maxWidth: "800px", margin: "40px auto", padding: "20px" }}>
-      <h1 style={{ marginBottom: "20px" }}>Éditeur de texte riche</h1>
+      <h1 style={{ marginBottom: "20px" }}>SLATE EDITOR</h1>
 
-      <div style={{ marginBottom: "20px" }}>
+      {/* <div style={{ marginBottom: "20px" }}>
         <button
           onClick={saveContent}
           style={{
@@ -60,7 +57,7 @@ export default function EditorPage() {
         >
           Charger
         </button>
-      </div>
+      </div> */}
 
       <RichTextEditor
         value={content}
@@ -69,8 +66,7 @@ export default function EditorPage() {
         style={{ minHeight: "400px" }}
       />
 
-      {/* Aperçu du contenu JSON (pour debug) */}
-      <details style={{ marginTop: "20px" }}>
+      {/* <details style={{ marginTop: "20px" }}>
         <summary>Aperçu du contenu (JSON)</summary>
         <pre
           style={{
@@ -83,7 +79,7 @@ export default function EditorPage() {
         >
           {JSON.stringify(content, null, 2)}
         </pre>
-      </details>
+      </details> */}
     </div>
   );
 }
