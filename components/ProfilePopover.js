@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Popover from "@mui/material/Popover";
 import Avatar from "@mui/material/Avatar";
@@ -20,163 +20,161 @@ export default function ProfilePopover({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // sert à éviter que la fermeture ne soit immédiate
-  const hoverTimeoutRef = useRef(null);
-  const anchorRef = useRef(null);
-  const open = Boolean(anchorEl);
-  const router = useRouter();
+    const open = Boolean(anchorEl);
+    const router = useRouter();
 
-  // la souris entre sur le trigger
-  const handleMouseEnter = (event) => {
-    if (hoverTimeoutRef.current) {
-      clearTimeout(hoverTimeoutRef.current);
-      hoverTimeoutRef.current = null;
-    }
-    anchorRef.current = event.currentTarget;
-    setAnchorEl(event.currentTarget);
-  };
+    // Simple hover - pas de timeout compliqué
+    const handleMouseEnter = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
 
-  // la souris quitte le trigger
-  const handleMouseLeave = () => {
-    hoverTimeoutRef.current = setTimeout(() => {
-      setAnchorEl(null);
-      hoverTimeoutRef.current = null;
-    }, 150); // petit délai pour éviter le clignotement
-  };
-
-  //la souris entre dans le popover = on annule la fermeture
-  const handlePopoverMouseEnter = () => {
-    if (hoverTimeoutRef.current) {
-      clearTimeout(hoverTimeoutRef.current);
-      hoverTimeoutRef.current = null;
-    }
-    if (anchorRef.current) setAnchorEl(anchorRef.current);
-  };
-
-  //la souris quitte le popover = on ferme
-  const handlePopoverMouseLeave = () => {
-    setAnchorEl(null);
-  };
+    const handleMouseLeave = () => {
+        // On ferme seulement si on n'est pas en train de hover le popover
+        setTimeout(() => {
+            const popover = document.querySelector('[role="presentation"]');
+            if (popover && !popover.matches(':hover')) {
+                setAnchorEl(null);
+            }
+        }, 100);
+    };
 
   const handleClose = () => setAnchorEl(null);
 
-  const handleDiscussClick = () => {
-    if (user?.username) router.push(`/messenger`);
-  };
+    const handleDiscussClick = () => {
+        if (user?.username) router.push(`/messenger`);
+    };
 
   useEffect(() => {
     if (!userIdOrUsername) return;
 
-    console.log("userIdOrUsername reçu :", userIdOrUsername);
+        console.log("userIdOrUsername reçu :", userIdOrUsername);
 
-    const fetchUser = async () => {
-      try {
-        // On pointe sur le backend (port 3000)
-        const res = await fetch(
-          `http://localhost:3000/users/${userIdOrUsername}`
-        );
+        const fetchUser = async () => {
+            try {
+                const res = await fetch(`http://localhost:3000/users/${userIdOrUsername}`);
 
-        if (!res.ok) {
-          throw new Error("Utilisateur non trouvé");
+                if (!res.ok) {
+                    throw new Error("Utilisateur non trouvé");
+                }
+
+                const data = await res.json();
+                console.log("Données utilisateur :", JSON.stringify(data, null, 2));
+                console.log("Experience:", data.experience);
+                console.log("Location:", data.location);
+                console.log("PreferredLanguages:", data.preferredLanguages);
+                setUser(data);
+            } catch (error) {
+                console.error(error.message);
+                setUser(null);
+            }
+        };
+
+        fetchUser();
+    }, [userIdOrUsername]);
+
+    // Gestion globale du hover sur le popover
+    useEffect(() => {
+        if (open) {
+            const handleGlobalMouseMove = (e) => {
+                const popover = document.querySelector('[role="presentation"]');
+                const trigger = anchorEl;
+                
+                if (popover && trigger) {
+                    const popoverRect = popover.getBoundingClientRect();
+                    const triggerRect = trigger.getBoundingClientRect();
+                    
+                    // Vérifie si la souris est sur le trigger ou le popover
+                    const isOverTrigger = e.clientX >= triggerRect.left && 
+                                        e.clientX <= triggerRect.right && 
+                                        e.clientY >= triggerRect.top && 
+                                        e.clientY <= triggerRect.bottom;
+                    
+                    const isOverPopover = e.clientX >= popoverRect.left && 
+                                        e.clientX <= popoverRect.right && 
+                                        e.clientY >= popoverRect.top && 
+                                        e.clientY <= popoverRect.bottom;
+                    
+                    if (!isOverTrigger && !isOverPopover) {
+                        setAnchorEl(null);
+                    }
+                }
+            };
+
+            document.addEventListener('mousemove', handleGlobalMouseMove);
+            return () => document.removeEventListener('mousemove', handleGlobalMouseMove);
         }
+    }, [open, anchorEl]);
 
-        const data = await res.json();
-        console.log("Données utilisateur :", data);
-        setUser(data);
-      } catch (error) {
-        console.error(error.message);
-        setUser(null);
-      }
-    };
-
-    fetchUser();
-  }, [userIdOrUsername]);
-
-  return (
-    <>
-      {/* trigger */}
-      <div
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        style={{ display: "inline-block", cursor: "pointer" }}
-      >
-        {trigger}
-      </div>
-
-      <Popover
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        transformOrigin={{ vertical: "bottom", horizontal: "center" }}
-        disableRestoreFocus
-      >
-        <Box
-          className={styles.popoverContainer}
-          p={2}
-          minWidth={250}
-          // on garde ouvert si la souris est dessus
-          onMouseEnter={handlePopoverMouseEnter}
-          onMouseLeave={handlePopoverMouseLeave}
-        >
-          {loading && <Typography>Chargement...</Typography>}
-          {error && <Typography>{error}</Typography>}
-
-          {!loading && user && (
-            <div className={styles.profileContent}>
-              <Avatar
-                src={user.avatar || ""}
-                alt={`${user.username} avatar`}
-                className={styles.avatar}
-              />
-              <h3 className={styles.username}>{user.username}</h3>
-              {user.profile?.experience && (
-                <Typography>Expérience : {user.profile.experience}</Typography>
-              )}
-              {user.profile?.location && (
-                <Typography>{user.profile.location}</Typography>
-              )}
-              {user.profile?.languages?.length > 0 && (
-                <div className={styles.languagesContainer}>
-                  <strong>Langues :</strong>
-                  <div className={styles.languagesList}>
-                    {user.profile.languages.map((lang) => (
-                      <span key={lang} className={styles.languageIcon}>
-                        {lang}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-              <div className={styles.actions}>
-                <span
-                  className={styles.discuss}
-                  onClick={onDiscuss}
-                  style={{ cursor: "pointer", fontSize: "1.1rem" }}
-                >
-                  <FaRegCommentDots size={28} />
-                  Discuter
-                </span>
-
-                <span
-                  className={styles.followIcon}
-                  onClick={onToggleFollow}
-                  style={{ cursor: "pointer", marginLeft: "10px" }}
-                >
-                  {followedAuthor ? (
-                    <MdPersonRemoveAlt1
-                      size={32}
-                      color="var(--secondary-color)"
-                    />
-                  ) : (
-                    <MdGroupAdd size={32} color="var(--secondary-color)" />
-                  )}
-                </span>
-              </div>
+    return (
+        <>
+            <div
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+                style={{ display: "inline-block", cursor: "pointer" }}
+            >
+                {trigger}
             </div>
-          )}
-        </Box>
-      </Popover>
-    </>
-  );
+
+            <Popover
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                transformOrigin={{ vertical: "bottom", horizontal: "center" }}
+                disableRestoreFocus
+            >
+                <Box
+                    className={styles.popoverContainer}
+                    p={2}
+                    minWidth={250}
+                >
+                    {loading && <Typography>Chargement...</Typography>}
+                    {error && <Typography>{error}</Typography>}
+
+                    {!loading && user && (
+                        <div className={styles.profileContent}>
+                            <Avatar src={user.avatar || ""} alt={`${user.username} avatar`} className={styles.avatar} />
+                            <h3 className={styles.username}>{user.username}</h3>
+                            {user.profile?.experience && <Typography>Expérience : {user.profile.experience}</Typography>}
+                            {user.profile?.location && <Typography>Localisation : {user.profile.location}</Typography>}
+                            {user.profile?.languages?.length > 0 && (
+                                <div className={styles.languagesContainer}>
+                                    <strong>Langues :</strong>
+                                    <div className={styles.languagesList}>
+                                        {user.profile.languages.map((lang) => (
+                                            <span key={lang} className={styles.languageIcon}>
+                                                {lang}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                            <div className={styles.actions}>
+                                <span 
+                                    className={styles.discuss} 
+                                    onClick={onDiscuss} 
+                                    style={{ cursor: "pointer", fontSize: "1.1rem" }}
+                                >
+                                    <FaRegCommentDots size={28} /> 
+                                    Discuter
+                                </span>
+
+                                <span 
+                                    className={styles.followIcon} 
+                                    onClick={onToggleFollow} 
+                                    style={{ cursor: "pointer", marginLeft: "10px" }}
+                                >
+                                    {followedAuthor ? (
+                                        <MdPersonRemoveAlt1 size={32} color="var(--secondary-color)" />
+                                    ) : (
+                                        <MdGroupAdd size={32} color="var(--secondary-color)" />
+                                    )}
+                                </span>
+                            </div>
+                        </div>
+                    )}
+                </Box>
+            </Popover>
+        </>
+    );
 }
