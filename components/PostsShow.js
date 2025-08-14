@@ -43,9 +43,7 @@ function PostsShow() {
         .then((data) => {
           if (data.result) {
             setPost(data.post);
-
-            const initial = data.post?.userId?.isFollowedByMe ?? false;
-            setFollowedAuthor(Boolean(initial));
+            // On ne set plus ici followedAuthor, on laisse le useEffect suivant gérer
           } else {
             console.error("Failed to fetch post data");
           }
@@ -54,18 +52,21 @@ function PostsShow() {
           console.error("Error fetching post:", error);
         });
     }
-       // follow user list
-      fetch(`http://localhost:3000/follows/users/${user.id}`)
-        .then(response => response.json())
-        .then(data => {
-          const following = data.follows.map(f => f.following._id);
-          setFollowingList(following);
-          if(post && followingList.includes(post?.userId._id)){
-            setFollowedAuthor(true);
-            console.log('isfollow');
-          }
-        });
+    // follow user list
+    fetch(`http://localhost:3000/follows/users/${user.id}`)
+      .then(response => response.json())
+      .then(data => {
+        const following = data.follows.map(f => f.following._id);
+        setFollowingList(following);
+      });
   }, [postId]);
+
+  // Met à jour followedAuthor après la mise à jour de followingList ou post
+  useEffect(() => {
+    if (post && post.userId && followingList) {
+      setFollowedAuthor(followingList.includes(post.userId._id));
+    }
+  }, [followingList, post]);
   
 
   function toggleFollowAuthor() {
@@ -269,7 +270,7 @@ function PostsShow() {
             <div className={styles.postHeaderTitle}>
               <h1 className={styles.postTitle}>{post.title}</h1>
               <div className={styles.subTitle}>
-                <button
+                {/* <button
                   className={styles.followButton}
                   onClick={toggleFollowAuthor}
                   disabled={loadingFollow}
@@ -288,7 +289,7 @@ function PostsShow() {
                   ) : (
                     <MdGroupAdd size={32} color="var(--secondary-color)" />
                   )}
-                </button>
+                </button> */}
                 <p className={styles.postDate}>{formatDate(post.createdAt)}</p>
                 <div className={styles.languages}>{languagesList}</div>
               </div>
@@ -307,7 +308,6 @@ function PostsShow() {
                   </div>
                   <p>Répondre</p>
                 </button>
-                {user.id !== post.userId._id && <a href="#" onClick={() => handleNewMessage()}>Discussion</a>}
                 <Modal
                   isOpen={modalIsOpen}
                   onRequestClose={closeModal}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import Popover from "@mui/material/Popover";
 import Avatar from "@mui/material/Avatar";
@@ -8,33 +8,39 @@ import { FaRegCommentDots } from "react-icons/fa";
 import { MdGroupAdd, MdPersonRemoveAlt1 } from "react-icons/md";
 import styles from "../styles/ProfilePopover.module.css";
 
+
 export default function ProfilePopover({
-  userIdOrUsername,
-  trigger,
-  onDiscuss,
-  onToggleFollow,
-  followedAuthor,
+    userIdOrUsername,
+    trigger,
+    onDiscuss,
+    onToggleFollow,
+    followedAuthor,
 }) {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const closeTimer = useRef();
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
-  const open = Boolean(anchorEl);
-  const router = useRouter();
+    const open = Boolean(anchorEl);
+    const router = useRouter();
 
-    const handleMouseEnter = (event) => {
+
+    // Hover sur le trigger
+    const handleTriggerMouseEnter = (event) => {
+        if (closeTimer.current) clearTimeout(closeTimer.current);
         setAnchorEl(event.currentTarget);
     };
+    const handleTriggerMouseLeave = () => {
+        closeTimer.current = setTimeout(() => setAnchorEl(null), 600);
+    };
 
-    const handleMouseLeave = () => {
-          // On ferme seulement si on n'est pas en train de hover le popover
-        setTimeout(() => {
-            const popover = document.querySelector('[role="presentation"]');
-            if (popover && !popover.matches(':hover')) {
-                setAnchorEl(null);
-            }
-        }, 100);
+    // Hover sur la popover
+    const handlePopoverMouseEnter = () => {
+        if (closeTimer.current) clearTimeout(closeTimer.current);
+    };
+    const handlePopoverMouseLeave = () => {
+        closeTimer.current = setTimeout(() => setAnchorEl(null), 600);
     };
 
     const handleClose = () => setAnchorEl(null);
@@ -43,29 +49,29 @@ export default function ProfilePopover({
         if (!userIdOrUsername) return;
 
     const fetchUser = async () => {
-      try {
-        const res = await fetch(
-          `http://localhost:3000/users/${userIdOrUsername}`
-        );
+        try {
+            const res = await fetch(
+                `http://localhost:3000/users/${userIdOrUsername}`
+            );
 
-        if (!res.ok) {
-          throw new Error("Utilisateur non trouvé");
+            if (!res.ok) {
+                throw new Error("Utilisateur non trouvé");
+            }
+            const fetchUser = async () => {
+                try {
+                    const res = await fetch(`http://localhost:3000/users/${userIdOrUsername}`);
+                    if (!res.ok) throw new Error("Utilisateur non trouvé");
+
+            const data = await res.json();
+            console.log("Données utilisateur :", JSON.stringify(data, null, 2));
+            console.log("Experience:", data.experience);
+            console.log("Location:", data.location);
+            console.log("PreferredLanguages:", data.preferredLanguages);
+            setUser(data);
+        } catch (error) {
+            console.error(error.message);
+            setUser(null);
         }
-        const fetchUser = async () => {
-            try {
-                const res = await fetch(`http://localhost:3000/users/${userIdOrUsername}`);
-                if (!res.ok) throw new Error("Utilisateur non trouvé");
-
-        const data = await res.json();
-        console.log("Données utilisateur :", JSON.stringify(data, null, 2));
-        console.log("Experience:", data.experience);
-        console.log("Location:", data.location);
-        console.log("PreferredLanguages:", data.preferredLanguages);
-        setUser(data);
-      } catch (error) {
-        console.error(error.message);
-        setUser(null);
-      }
     };
                 const data = await res.json();
                 setUser(data);
@@ -75,44 +81,20 @@ export default function ProfilePopover({
             }
         };
 
-    fetchUser();
-  }, [userIdOrUsername]);
+        fetchUser();
+    }, [userIdOrUsername]);
 
-    // se ferme si la souris sort
-    useEffect(() => {
-        if (open) {
-            const handleGlobalMouseMove = (e) => {
-                const popover = document.querySelector('[role="presentation"]');
-                const triggerEl = anchorEl;
-                
-                if (popover && triggerEl) {
-                    const popoverRect = popover.getBoundingClientRect();
-                    const triggerRect = triggerEl.getBoundingClientRect();
-                    
-                    const isOverTrigger = e.clientX >= triggerRect.left && e.clientX <= triggerRect.right && e.clientY >= triggerRect.top && e.clientY <= triggerRect.bottom;
-                    const isOverPopover = e.clientX >= popoverRect.left && e.clientX <= popoverRect.right && e.clientY >= popoverRect.top && e.clientY <= popoverRect.bottom;
-                    
-                    if (!isOverTrigger && !isOverPopover) {
-                        setAnchorEl(null);
-                    }
-                }
-            };
 
-      document.addEventListener("mousemove", handleGlobalMouseMove);
-      return () =>
-        document.removeEventListener("mousemove", handleGlobalMouseMove);
-    }
-  }, [open, anchorEl]);
 
-  return (
-    <>
-      <div
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        style={{ display: "inline-block", cursor: "pointer" }}
-      >
-        {trigger}
-      </div>
+    return (
+        <>
+            <div
+                onMouseEnter={handleTriggerMouseEnter}
+                onMouseLeave={handleTriggerMouseLeave}
+                style={{ display: "inline-block", cursor: "pointer" }}
+            >
+                {trigger}
+            </div>
 
             <Popover
                 open={open}
@@ -121,6 +103,13 @@ export default function ProfilePopover({
                 anchorOrigin={{ vertical: "top", horizontal: "center" }}
                 transformOrigin={{ vertical: "bottom", horizontal: "center" }}
                 disableRestoreFocus
+                slotProps={{
+                    paper: {
+                        onMouseEnter: handlePopoverMouseEnter,
+                        onMouseLeave: handlePopoverMouseLeave,
+                        style: { pointerEvents: 'auto' },
+                    }
+                }}
             >
                 <Box className={styles.popoverContainer} p={2} minWidth={250}>
                     {loading && <Typography>Chargement...</Typography>}
