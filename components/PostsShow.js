@@ -9,40 +9,19 @@ import { formatDate } from "../modules/formatDate";
 import Spinner from "../ui-kit/atoms/Spinner";
 import Image from "next/image";
 import Icon from "../ui-kit/atoms/Icon";
+import Modal from "react-modal";
 import { FaPencil } from "react-icons/fa6";
 import { MdGroupAdd, MdPersonRemoveAlt1 } from "react-icons/md";
 import ProfilePopover from "./ProfilePopover";
 
 function PostsShow() {
-  const [modal, setModal] = useState({
-    isOpen: false,
-    title: "",
-    message: "",
-    type: "info",
-  });
-
-  const showModal = (title, message, type = "info") => {
-    setModal({
-      isOpen: true,
-      title,
-      message,
-      type,
-    });
-  };
-
-  const closeModal = () => {
-    setModal({
-      isOpen: false,
-      title: "",
-      message: "",
-      type: "info",
-    });
-  };
   const router = useRouter();
   const user = useSelector((state) => state.user.value);
   const { postId } = router.query;
   const [post, setPost] = useState(null);
   const [answerContent, setAnswerContent] = useState("");
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
   const [followedAuthor, setFollowedAuthor] = useState(false);
   const [loadingFollow, setLoadingFollow] = useState(false);
 
@@ -58,13 +37,6 @@ function PostsShow() {
           }
         });
     }
-    // follows get following
-    fetch("http://localhost:3000/follows/following/:userId")
-      .then(response => response.json())
-      .then(data => {
-
-      });
-
     if (postId) {
       console.log("Fetching post with ID:", postId);
       fetch(`http://localhost:3000/posts/${postId}`)
@@ -106,7 +78,7 @@ function PostsShow() {
         if (!ok || !data.result) {
           console.warn(data.error || "Erreur follow/unfollow");
           alert("Impossible de mettre à jour le suivi. Réessayez plus tard.");
-          return;
+          return; 
         }
 
         const next =
@@ -123,6 +95,12 @@ function PostsShow() {
       });
   }
 
+  function openModal() {
+    setModalIsOpen(true);
+  }
+  function closeModal() {
+    setModalIsOpen(false);
+  }
 
   function handleSubmitAnswer(e) {
     e.preventDefault();
@@ -169,7 +147,7 @@ function PostsShow() {
       alert("Vous devez être connecté pour envoyer un message.");
       return;
     }
-    fetch("http://localhost:3000/messages/send", {
+    fetch(`http://localhost:3000/messages/send`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -219,6 +197,7 @@ function PostsShow() {
       </div>
     );
   });
+  Modal.setAppElement("#__next");
   return (
     <MainLayout>
       <div className={styles.content}>
@@ -283,29 +262,44 @@ function PostsShow() {
             <div className={styles.responses}>
               <div className={styles.answersList}>{answersList}</div>
               <div className={styles.answerForm}>
-                <button className={styles.answerButton}>
+                <button className={styles.answerButton} onClick={openModal}>
                   <div className={styles.icon}>
                     <FaPencil size={20} />
                   </div>
                   <p>Répondre</p>
                 </button>
+                {user.id !== post.userId._id && <a href="#" onClick={() => handleNewMessage()}>Discussion</a>}
+                <Modal
+                  isOpen={modalIsOpen}
+                  onRequestClose={closeModal}
+                  contentLabel="Répondre au sujet"
+                  className={styles.modal}
+                  overlayClassName={styles.overlay}
+                >
+                  <div className={styles.modalHeader}>
+                    <h2>Répondre au sujet</h2>
+                    <Button variant="secondary" onClick={() => closeModal()}>
+                      Fermer
+                    </Button>
+                  </div>
+                  <form
+                    onSubmit={(e) => handleSubmitAnswer(e)}
+                    className={styles.form}
+                  >
+                    <TextArea
+                      placeholder="Votre réponse..."
+                      value={answerContent}
+                      onChange={(e) => setAnswerContent(e.target.value)}
+                      rows={10}
+                    />
+                    <div className={styles.btnSubmit}>
+                      <Button type="submit" variant="primary">
+                        Répondre
+                      </Button>
+                    </div>
+                  </form>
+                </Modal>
               </div>
-              <form
-                onSubmit={(e) => handleSubmitAnswer(e)}
-                className={styles.form}
-              >
-                <TextArea
-                  placeholder="Votre réponse..."
-                  value={answerContent}
-                  onChange={(e) => setAnswerContent(e.target.value)}
-                  rows={10}
-                />
-                <div className={styles.btnSubmit}>
-                  <Button type="submit" variant="primary">
-                    Répondre
-                  </Button>
-                </div>
-              </form>
             </div>
           </div>
         </div>
