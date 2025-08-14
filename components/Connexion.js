@@ -256,7 +256,15 @@ export default function Connexion() {
           );
 
           if (data.isNewUser) {
-            router.push("/profilPage");
+            showModal(
+              "Inscription réussie",
+              "Votre compte a bien été créé !",
+              "success"
+            );
+            setTimeout(() => {
+              closeModal();
+              router.push("/profilPage");
+            }, 1200);
           } else {
             router.push("/home");
           }
@@ -314,11 +322,18 @@ export default function Connexion() {
               email: signUpMail,
             })
           );
-
           setSignUpUsername("");
           setSignUpPassword("");
           setSignUpMail("");
-          router.push("/profilPage");
+          showModal(
+            "Inscription réussie",
+            "Votre compte a bien été créé !",
+            "success"
+          );
+          setTimeout(() => {
+            closeModal();
+            router.push("/profilPage");
+          }, 1200);
         } else {
           showModal(
             "Erreur d'inscription",
@@ -374,7 +389,15 @@ export default function Connexion() {
           setSignInUsername("");
           setSignInPassword("");
           setSignUpMail("");
-          router.push("/home");
+          showModal(
+            "Connexion réussie",
+            "Redirection sur la page principale en cours ... !",
+            "success"
+          );
+          setTimeout(() => {
+            closeModal();
+            router.push("/home");
+          }, 1200);
         } else {
           showModal(
             "Erreur de connexion",
