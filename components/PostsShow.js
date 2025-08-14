@@ -159,6 +159,8 @@ function PostsShow() {
     };
     console.log("Submitting answer:", answerData);
 
+    
+
     fetch(`http://localhost:3000/posts/${postId}/answers`, {
       method: "PUT",
       headers: {

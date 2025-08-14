@@ -31,20 +31,21 @@ export default function Home() {
         setLoading(false);
       });
 
-      // get all languages for the sidebar
+    // get all languages for the sidebar
     fetch("http://localhost:3000/languages")
       .then((res) => res.json())
       .then((data) => {
         // Handle languages data if needed
         console.log(data.data);
         // setlanguges sort by name
-        const sortedLanguages = data.data.sort((a, b) => a.name.localeCompare(b.name));
+        const sortedLanguages = data.data.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
         setLanguages(sortedLanguages);
       })
       .catch((error) => {
         console.error("Error fetching languages:", error);
       });
-
   }, []);
 
   const handleSearch = (query) => {
@@ -68,35 +69,35 @@ export default function Home() {
 
   const languagesList = languages.map((lang) => (
     <li key={lang._id} className={styles.languageItem}>
-      <Link href={`/languages/${lang._id}`} className={styles.link}>{lang.name}</Link> 
+      <Link href={`/languages/${lang._id}`} className={styles.link}>
+        {lang.name}
+      </Link>
     </li>
   ));
   //voici le composant Home qui affiche les posts
-return (
-  <>
-    <Header />
-    <div className={styles.home}>
-      {/* Colonne gauche */}
-      <div className={styles.colLeft}>
-        <div className={styles.sidebar}>
-          <div className={styles.sidebarHeader}>
-            <h2 className={styles.sidebarTitle}>Langages</h2>
-          </div>
-          <div className={styles.sidebarContent}>
-            {/* language sort by name */}
-            <ul className={styles.languageList}>
-              {languagesList}
-            </ul>
+  return (
+    <>
+      <Header />
+      <div className={styles.home}>
+        {/* Colonne gauche */}
+        <div className={styles.colLeft}>
+          <div className={styles.sidebar}>
+            <div className={styles.sidebarHeader}>
+              <h2 className={styles.sidebarTitle}>Langages</h2>
+            </div>
+            <div className={styles.sidebarContent}>
+              {/* language sort by name */}
+              <ul className={styles.languageList}>{languagesList}</ul>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Colonne centrale */}
-      <div className={styles.colCenter}>
-        <div className={styles.centerHeader}>
-          <h1 className={styles.title}>Bienvenue sur PingMe.dev</h1>
-          <h2 className={styles.nameTitle}>{user ? user.username : "…"}</h2>
-        </div>
+        {/* Colonne centrale */}
+        <div className={styles.colCenter}>
+          <div className={styles.centerHeader}>
+            <h1 className={styles.title}>Bienvenue sur PingMe.dev</h1>
+            <h2 className={styles.nameTitle}>{user ? user.username : "…"}</h2>
+          </div>
 
           <div className={styles.searchArea}>
             <SearchBar className={styles.input} onSearch={handleSearch} />

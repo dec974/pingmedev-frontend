@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { signOut } from "../reducers/user.js";
 import styles from "../styles/Sidebar.module.css";
 import TextArea from "../ui-kit/atoms/TextArea";
 import Button from "../ui-kit/atoms/Button";
@@ -9,6 +10,7 @@ import Icon from "../ui-kit/atoms/Icon.js";
 import { signOut } from "../reducers/user";
 
 function Sidebar() {
+  const dispatch = useDispatch();
   const router = useRouter();
   const username = useSelector((state) => state.user.value.username);
   const token = useSelector((state) => state.user.value.token);

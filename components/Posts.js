@@ -162,7 +162,7 @@ function Posts(props) {
                 <Select
                   options={dataListLanguages}
                   isMulti
-                  placeholder="Sélectionnez une langue"
+                  placeholder="Sélectionnez le(s) langages concerné(s)"
                   onChange={(selectedOptions) =>
                     setSelectLanguages(selectedOptions || [])
                   }

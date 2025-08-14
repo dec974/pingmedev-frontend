@@ -1,11 +1,10 @@
 import styles from "./PostsList.module.css";
 import Link from "next/link";
-
-import { FaTrash } from "react-icons/fa";
-import { FaRegBookmark } from "react-icons/fa";
+import { FaTrash, FaRegBookmark } from "react-icons/fa";
 import { formatDate } from "../../modules/formatDate";
 import { truncateInput } from "../../modules/truncateInput";
 import Icon from "../atoms/Icon.js";
+import ProfilePopover from "../../components/ProfilePopover.js";
 
 export default function PostsList({
   posts,
@@ -22,32 +21,37 @@ export default function PostsList({
   getHref,
   showTypeBadge = true,
 }) {
-  // on s'assure de recevoir un tableau.
+  const handleDiscuss = (userId) => {
+    console.log("Discuter avec:", userId);
+  };
+
+  const handleToggleFollow = (userId) => {
+    console.log("Toggle follow pour:", userId);
+  };
+
   if (!Array.isArray(posts) || posts.length === 0) {
     return <p>Aucun post à afficher.</p>;
   }
+
   return (
     <div className={styles.list}>
       {posts.map((post) => {
-        // on prend la première valeur qui remonte (populate Mongoose ou autre format, sinon null)
         const author = post?.userId?.username ?? post?.username ?? null;
+        const authorId = post?.userId?._id ?? post?.userId ?? null;
 
-        const typeKey = (post?.type || "").toLowerCase(); // "question" | "astuce" | ""
+        const typeKey = (post?.type || "").toLowerCase();
         const TYPE_META = {
-          question: {
-            prefix: "de ",
-            label: "Question",
-            cls: styles.badgeQuestion,
-          },
-          tip: {
-            prefix: "de ",
-            label: "Astuce",
-            cls: styles.badgeAstuce,
-          },
+          question: { prefix: "de ", 
+            label: "Question", 
+            cls: styles.badgeQuestion },
+          tip: { prefix: "de ", 
+            label: "Astuce", 
+            cls: styles.badgeAstuce },
         };
         const meta = TYPE_META[typeKey] ?? { prefix: "", label: null, cls: "" };
         const href =
           typeof getHref === "function" ? getHref(post) : `/posts/${post._id}`;
+
         const Card = ({ children, className = "" }) =>
           linkToDetail ? (
             <Link href={href} className={`${styles.postLink} ${className}`}>
@@ -57,9 +61,6 @@ export default function PostsList({
             <div className={styles.post}>{children}</div>
           );
 
-        if (showIcons) {
-          console.log("languages", post.languages[0]);
-        }
         return (
           <Card key={post._id} className={`${styles.card} ${className}`}>
             <div className={styles.header}>
@@ -71,6 +72,7 @@ export default function PostsList({
                     size={32}
                   />
                 )}
+
                 {showAuthor && author && (
                   <p className={styles.username}>
                     {showTypeBadge && meta.label && (
@@ -79,10 +81,37 @@ export default function PostsList({
                       </span>
                     )}
                     <span className={styles.type}>{meta.prefix}</span>
-                    {author}
+
+                    <ProfilePopover
+                      userIdOrUsername={authorId || author}
+                      trigger={
+                        <span
+                          className={styles.authorName}
+                          style={{
+                            cursor: "pointer",
+                            textDecoration: "underline",
+                          }}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {author}
+                        </span>
+                      }
+                      onDiscuss={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleDiscuss(authorId || author);
+                      }}
+                      onToggleFollow={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleToggleFollow(authorId || author);
+                      }}
+                      followedAuthor={false}
+                    />
                   </p>
                 )}
               </div>
+
               <div className={styles.headerright}>
                 <div className={styles.meta}>
                   {showStatus && (
@@ -96,6 +125,7 @@ export default function PostsList({
                       {post.status === "published" ? "Publié" : "Brouillon"}
                     </span>
                   )}
+
                   <time className={styles.date}>
                     {formatDate(post.createdAt)}
                   </time>
@@ -104,9 +134,8 @@ export default function PostsList({
                     <button
                       className={styles.deleteBtn}
                       onClick={(e) => {
-                        e.preventDefault(); // empêche le comportement par défaut de <Link>
-                        e.stopPropagation(); // bloque la remontée du clic vers le parent
-
+                        e.preventDefault();
+                        e.stopPropagation();
                         onDelete?.(post._id, post);
                       }}
                     >
@@ -121,8 +150,7 @@ export default function PostsList({
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        
-                          onUnfollow?.(post._id, post);
+                        onUnfollow?.(post._id, post);
                       }}
                     >
                       <FaRegBookmark size={16} />
@@ -132,7 +160,6 @@ export default function PostsList({
               </div>
             </div>
 
-            {/* Titre limité à 255 caractères avec module truncateInput*/}
             <h3 className={styles.title}>
               {truncateInput(post.title, maxTitle)}
             </h3>
