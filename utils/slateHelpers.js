@@ -1,6 +1,7 @@
 import { Editor, Element as SlateElement, Transforms } from "slate";
 
 const LIST_TYPES = ["numbered-list", "bulleted-list"];
+const CODE_BLOCK_TYPE = "code-block";
 
 export const SlateHelpers = {
   isMarkActive(editor, format) {
@@ -72,9 +73,7 @@ export const SlateHelpers = {
 export const initialValue = [
   {
     type: "paragraph",
-    children: [
-      { text: "Slate Editor Fonctionne Bien On Peut Ecrire Ici Pour Test" },
-    ],
+    children: [{ text: "Écrivez votre code ici ..." }],
   },
 ];
 console.log("initialValue exported:", initialValue);

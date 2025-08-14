@@ -68,6 +68,8 @@ const Toolbar = () => {
 
       <BlockButton format="block-quote">"</BlockButton>
 
+      <BlockButton format="code-block">{"{ }"}</BlockButton>
+
       <BlockButton format="numbered-list">1.</BlockButton>
 
       <BlockButton format="bulleted-list">•</BlockButton>

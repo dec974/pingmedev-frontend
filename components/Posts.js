@@ -8,6 +8,7 @@ import TextArea from "../ui-kit/atoms/TextArea";
 import Select from "react-select";
 import { useSelector } from "react-redux";
 import Spinner from "../ui-kit/atoms/Spinner";
+import RichTextEditor from "../components/editor/RichTextEditor";
 
 function Posts(props) {
   let user = useSelector((state) => state.user.value);
@@ -183,7 +184,7 @@ function Posts(props) {
                 />
               </div>
               <div className={styles.formGroup}>
-                <TextArea
+                {/* <TextArea
                   placeholder="Écrivez votre message ici..."
                   id="content"
                   name="content"
@@ -191,6 +192,12 @@ function Posts(props) {
                   required
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
+                /> */}
+                <RichTextEditor
+                  value={content}
+                  placeholder="Commencez à taper votre texte..."
+                  style={{ minHeight: "80px" }}
+                  // onChange={(e) => setContent(e.target.value)}
                 />
               </div>
               <div className={styles.buttonGroup}>
