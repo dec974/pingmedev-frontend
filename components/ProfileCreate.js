@@ -119,7 +119,7 @@ export default function Profil() {
 
         setTimeout(() => {
           router.push("/home");
-        }, 2000);
+        }, 1200);
       } else {
         console.error("Erreur:", data.error);
         showModal(

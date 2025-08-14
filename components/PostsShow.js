@@ -21,7 +21,7 @@ function PostsShow() {
   const [post, setPost] = useState(null);
   const [answerContent, setAnswerContent] = useState("");
   const [modalIsOpen, setModalIsOpen] = useState(false);
-
+  const [followingList, setFollowingList] = useState([]);
   const [followedAuthor, setFollowedAuthor] = useState(false);
   const [loadingFollow, setLoadingFollow] = useState(false);
 
@@ -38,7 +38,6 @@ function PostsShow() {
         });
     }
     if (postId) {
-      console.log("Fetching post with ID:", postId);
       fetch(`http://localhost:3000/posts/${postId}`)
         .then((response) => response.json())
         .then((data) => {
@@ -55,44 +54,84 @@ function PostsShow() {
           console.error("Error fetching post:", error);
         });
     }
+       // follow user list
+      fetch(`http://localhost:3000/follows/users/${user.id}`)
+        .then(response => response.json())
+        .then(data => {
+          const following = data.follows.map(f => f.following._id);
+          setFollowingList(following);
+          if(post && followingList.includes(post?.userId._id)){
+            setFollowedAuthor(true);
+            console.log('isfollow');
+          }
+        });
   }, [postId]);
+  
 
   function toggleFollowAuthor() {
+
     if (!user?.token || !post?.userId?._id) {
       alert("Vous devez être connecté pour suivre un utilisateur.");
       return;
     }
 
-    const targetUserId = post.userId._id;
-    const endpoint = followedAuthor ? "unfollow-user" : "follow-user";
+    if(followedAuthor) {
+      // unfollow
+      fetch(`http://localhost:3000/follows/users/${user.id}/${post.userId._id}`, {
+        method: 'DELETE',
+        headers: {"Content-Type" : "application/json"},
+        body: JSON.stringify({following : post?.userId?._id})
+      })
+        .then(response => response.json())
+        .then(data => {
+          if(data.result) {
+            setFollowingList(followingList.filter(f => f !== post.userId._id ));
+            setFollowedAuthor(false);
+          }
+        });
+    } else {
+      // follow
+      fetch(`http://localhost:3000/follows/users/${user.id}`, {
+        method: 'POST',
+        headers: {"Content-Type" : "application/json"},
+        body: JSON.stringify({following : post?.userId?._id})
+      })
+        .then(response => response.json())
+        .then(data => {
+          setFollowingList((prev) => [...prev, data.follow.following._id]);
+          setFollowedAuthor(true);
+        });
+    }
+    // const targetUserId = post.userId._id;
+    // const endpoint = followedAuthor ? "unfollow-user" : "follow-user";
 
-    setLoadingFollow(true);
+    // setLoadingFollow(true);
 
-    fetch(`http://localhost:3000/users/${endpoint}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token: user.token, targetUserId }),
-    })
-      .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
-      .then(({ ok, data }) => {
-        if (!ok || !data.result) {
-          console.warn(data.error || "Erreur follow/unfollow");
-          alert("Impossible de mettre à jour le suivi. Réessayez plus tard.");
-          return; 
-        }
+    // fetch(`http://localhost:3000/users/${endpoint}`, {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({ token: user.token, targetUserId }),
+    // })
+    //   .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
+    //   .then(({ ok, data }) => {
+    //     if (!ok || !data.result) {
+    //       console.warn(data.error || "Erreur follow/unfollow");
+    //       alert("Impossible de mettre à jour le suivi. Réessayez plus tard.");
+    //       return; 
+    //     }
 
-        const next =
-          typeof data.following === "boolean"
-            ? data.following
-            : !followedAuthor;
+    //     const next =
+    //       typeof data.following === "boolean"
+    //         ? data.following
+    //         : !followedAuthor;
 
-        setFollowedAuthor(next);
+    //     setFollowedAuthor(next);
 
         // stockage de l'information de suivi dans le post
-        setPost((p) =>
-          p ? { ...p, userId: { ...p.userId, isFollowedByMe: next } } : p
-        );
-      });
+      //   setPost((p) =>
+      //     p ? { ...p, userId: { ...p.userId, isFollowedByMe: next } } : p
+      //   );
+      // });
   }
 
   function openModal() {
@@ -119,6 +158,8 @@ function PostsShow() {
       postId: postId,
     };
     console.log("Submitting answer:", answerData);
+
+    
 
     fetch(`http://localhost:3000/posts/${postId}/answers`, {
       method: "PUT",

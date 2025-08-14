@@ -257,16 +257,24 @@ export default function Connexion() {
 
           if (data.isNewUser) {
             showModal(
-              "Inscription réussie",
-              "Votre compte a bien été créé !",
+              "Succès !",
+              "Inscription réussie ! Redirection en cours...",
               "success"
             );
+
             setTimeout(() => {
-              closeModal();
               router.push("/profilPage");
             }, 1200);
           } else {
-            router.push("/home");
+            showModal(
+              "Succès !",
+              "Connexion réussie ! Redirection en cours...",
+              "success"
+            );
+
+            setTimeout(() => {
+              router.push("/home");
+            }, 1200);
           }
         } else {
           showModal(
@@ -326,12 +334,12 @@ export default function Connexion() {
           setSignUpPassword("");
           setSignUpMail("");
           showModal(
-            "Inscription réussie",
-            "Votre compte a bien été créé !",
+            "Succès !",
+            "Inscritption réussie ! Redirection en cours...",
             "success"
           );
+
           setTimeout(() => {
-            closeModal();
             router.push("/profilPage");
           }, 1200);
         } else {
@@ -389,13 +397,14 @@ export default function Connexion() {
           setSignInUsername("");
           setSignInPassword("");
           setSignUpMail("");
+
           showModal(
-            "Connexion réussie",
-            "Redirection sur la page principale en cours ... !",
+            "Succès !",
+            "Connexion réussie ! Redirection en cours...",
             "success"
           );
+
           setTimeout(() => {
-            closeModal();
             router.push("/home");
           }, 1200);
         } else {

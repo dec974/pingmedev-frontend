@@ -22,7 +22,6 @@
   row-gap: clamp(16px, 3vh, 40px);
   align-items: start;
   justify-items: center;
-  
 }
 .containerImg {
   grid-column: 1 / -1;
@@ -50,6 +49,10 @@
   background-color: var(--background-color-white);
 }
 
+.signContainer:hover {
+  border: 1px solid var(--background-color-grey);
+}
+
 .logContainer {
   display: flex;
   height: 100%;
@@ -60,13 +63,15 @@
   width: 440px;
   border-radius: var(--radius);
   background-color: var(--background-color-white);
+}
+
+.logContainer:hover {
   border: 1px solid var(--background-color-grey);
 }
 
 .textLog {
   font-size: clamp(14px, 2vw, 30px);
   font-weight: 500;
-  border-bottom: 1px solid var(--secondary-color);
   color: var(--primary-color);
   font-family: "JetBrains Mono", monospace;
   margin-bottom: 30px;
