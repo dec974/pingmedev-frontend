@@ -52,11 +52,11 @@ function UserContent() {
     if (confirmState.onConfirm) {
       // le callback ne reçoit pas de valeur ni
       confirmState.onConfirm().finally(() => {
-        // 3) Quoi qu'il arrive, on ferme la modale à la fin
+        // Quoi qu'il arrive, on ferme la modale à la fin
         closeConfirm();
       });
     } else {
-      // Pas d'action -> on ferme directement
+      // pas d'action, on ferme directement
       closeConfirm();
     }
   }

@@ -15,7 +15,7 @@
 }
 
 .nameTitle {
-  font-size: clamp(20px, 1.5vw, 32px);
+  font-size: clamp(28px, 2vw, 38px);
   font-weight: 500;
   margin: 0.5rem 0;
   text-align: center;
