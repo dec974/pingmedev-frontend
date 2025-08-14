@@ -1,8 +1,8 @@
 .header {
   background-color: var(--background-color-grey);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   padding: 10px 20px;
-  position: sticky;
+  position: fixed;
+  width: 100%;
   top: 0;
   z-index: 1000;
 }
@@ -23,7 +23,7 @@
   align-items: center;
   text-decoration: none;
   color: var(--primary-color);
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: bold;
 }
 
@@ -49,6 +49,8 @@
 }
 
 .iconLink {
+  margin-right: 40px;
+  font-size: 40px;
   position: relative;
   display: flex;
   align-items: center;
@@ -82,3 +84,4 @@
 .avatar {
   font-size: 1rem;
 }
+

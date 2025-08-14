@@ -41,7 +41,7 @@ export default function PostsList({
           },
           tip: {
             prefix: "de ",
-            label: "Tips",
+            label: "Astuce",
             cls: styles.badgeAstuce,
           },
         };

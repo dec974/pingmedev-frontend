@@ -1,4 +1,5 @@
 .home {
+  padding-top: 10vh;
   display: grid;
   grid-template-rows: auto 1fr;
   grid-template-columns: 1fr 2fr 1fr;
@@ -31,13 +32,13 @@
 .sidebar {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  width: 100%;
   gap: 1vh;
   padding: 2vw;
   background-color: var(--background-color-white);
   border-radius: var(--radius);
   margin-top: 10rem;
-  box-shadow: 1px 0px 2px rgba(0, 0, 0, 0.15);
+  
 }
 .sidebarHeader {
   display: flex;
@@ -53,13 +54,13 @@
 }
 .sidebarContent {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
   margin-top: 1vh;
 }
 .languageList {
   list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: .3vh;
   padding: 0;
   margin: 0;
   width: 100%;

@@ -10,6 +10,7 @@
 
 .userContentContainer {
   display: flex;
+  margin-top: 5vh;
   flex-direction: column;
   background-color: white;
   padding: 3vw 4vw;
@@ -24,7 +25,7 @@
   margin-bottom: 0;
   padding: 0 2vw;
   border-bottom: 2px solid var(--primary-color);
-  margin-bottom: 3vw;
+  margin-bottom: 2vw;
 }
 
 .tab {
@@ -37,7 +38,7 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
   font-family: var(--jetbrains);
-  font-size: clamp(15px, 0.7vw, 18px);
+  font-size: clamp(16px, 1vw, 16px);
   color: var(--primary-color);
   border-radius: 8px 8px 0 0;
 }
@@ -55,7 +56,7 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
   font-family: var(--font-jetbrains);
-  font-size: clamp(15px, 0.7vw, 18px);
+  font-size: clamp(16px, 1vw, 16px);
   background-color: var(--primary-color);
   color: var(--background-color-white);
 }
