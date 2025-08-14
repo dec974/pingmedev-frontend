@@ -24,6 +24,8 @@ export default function ProfilePopover({
 
     const open = Boolean(anchorEl);
     const router = useRouter();
+    const open = Boolean(anchorEl);
+    const router = useRouter();
 
 
     // Hover sur le trigger
@@ -43,7 +45,7 @@ export default function ProfilePopover({
         closeTimer.current = setTimeout(() => setAnchorEl(null), 600);
     };
 
-    const handleClose = () => setAnchorEl(null);
+        const handleClose = () => setAnchorEl(null);
 
     useEffect(() => {
         if (!userIdOrUsername) return;
@@ -145,7 +147,7 @@ export default function ProfilePopover({
 
                                 <span 
                                     className={styles.followIcon} 
-                                    onClick={(e) => onToggleFollow(e)} // ✅ On transmet l'événement
+                                    onClick={(e) => onToggleFollow(e)}
                                     style={{ cursor: "pointer", marginLeft: "10px" }}
                                 >
                                     {followedAuthor ? (

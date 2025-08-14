@@ -57,7 +57,7 @@ function LangagesPage() {
           {posts.length > 0 ? (
             <PostsList posts={posts} />
           ) : (
-            <p>No posts found for this language.</p>
+            <p>Pas de posts pour ce language.</p>
           )}
         </div>
       </div>
