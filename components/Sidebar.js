@@ -6,8 +6,6 @@ import TextArea from "../ui-kit/atoms/TextArea";
 import Button from "../ui-kit/atoms/Button";
 import { FaPencil } from "react-icons/fa6";
 import { useRouter } from "next/router";
-import Icon from "../ui-kit/atoms/Icon.js";
-
 
 
 function Sidebar() {
@@ -86,15 +84,21 @@ function Sidebar() {
                     />
                     <p className={styles.followedUsername}>{u.following.username}</p>
 
-                    <span className={styles.techIcons}>
+                    <span className={styles.techBadgesRow}>
                       {Array.isArray(u.profile?.languages) &&
+                      
                         u.profile.languages.map((lang, i) => (
-                          <Icon
-                            key={lang?._id || i}
-                            language={lang} // { icon, color, name }
-                            size={16}
-                            className={styles.techIcon}
-                          />
+                          
+                         <span
+                         
+                              key={
+                                (typeof lang === "string" ? lang : lang?._id) ||
+                                i
+                              }
+                              className={styles.langPill}
+                            >
+                              {typeof lang === "string" ? lang : lang?.name}
+                            </span>
                         ))}
                     </span>
                   </div>
