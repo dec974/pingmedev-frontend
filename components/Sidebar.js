@@ -7,10 +7,10 @@ import Button from "../ui-kit/atoms/Button";
 import { FaPencil } from "react-icons/fa6";
 import { useRouter } from "next/router";
 import Icon from "../ui-kit/atoms/Icon.js";
-import { signOut } from "../reducers/user";
+
+
 
 function Sidebar() {
-  const dispatch = useDispatch();
   const router = useRouter();
   const username = useSelector((state) => state.user.value.username);
   const token = useSelector((state) => state.user.value.token);
