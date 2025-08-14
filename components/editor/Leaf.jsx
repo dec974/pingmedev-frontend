@@ -1,4 +1,16 @@
 const Leaf = ({ attributes, children, leaf }) => {
+  // Support pour les tokens PrismJS - chercher les propriétés qui commencent par 'prism-'
+  const prismTokens = Object.keys(leaf).filter((key) =>
+    key.startsWith("prism-")
+  );
+  console.log("Leaf props:", leaf, "Prism tokens found:", prismTokens);
+
+  if (prismTokens.length > 0) {
+    const tokenType = prismTokens[0].replace("prism-", "");
+    console.log("Applying token class:", `token ${tokenType}`);
+    children = <span className={`token ${tokenType}`}>{children}</span>;
+  }
+
   if (leaf.bold) {
     children = <strong>{children}</strong>;
   }

@@ -174,7 +174,7 @@ export default function Profil() {
 
         setTimeout(() => {
           router.push("/dashboard");
-        }, 2000);
+        }, 1200);
       } else {
         showModal(
           "Erreur",

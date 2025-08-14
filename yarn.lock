@@ -3881,27 +3881,21 @@ slate-dom@^0.118.0:
     tiny-invariant "1.3.1"
 
 slate-history@^0.118.0:
-  version "1.0.0-2021312830"
-  resolved "https://registry.yarnpkg.com/slate-history/-/slate-history-1.0.0-2021312830.tgz#1d9dfb04cc695809eef44fb0f7d24ae3c175d994"
-  integrity sha512-kwlQc9I2hhXe1GX+4S4zGcv0oqDPIw1c2S7M5BFE09E0vdghxCTXe2KutpQAEJ8Sqo6rrwrCuC3b459+AFXn0A==
-  dependencies:
-    immer "^7.0.0"
-    is-plain-object "^3.0.0"
+  version "0.115.0"
+  resolved "https://registry.yarnpkg.com/slate-history/-/slate-history-0.115.0.tgz#f27d1fc739d2844085472760bacd7f833956524c"
+  integrity sha512-QdUm9aVyQFz6JG4a84Z6Um+tJpZJmsh9bjXwTVTvYiN4rdKbqL6+/4HT94on1WYxe10Q4vY6mA6BCpoYxgF3tQ==
 
 slate-react@^0.118.0:
-  version "1.0.0-202303023441"
-  resolved "https://registry.yarnpkg.com/slate-react/-/slate-react-1.0.0-202303023441.tgz#7b6d9ddd7735aaff90819eae6c2224c3412ca659"
-  integrity sha512-2vtT+3qYs/Ww0mcdC8ab81nrEE3TBJpevqlRk1i75seJU9uO2ZDwfWQkCK1K067/7G3MERL/2D6kj2efOqyAeA==
+  version "0.117.4"
+  resolved "https://registry.yarnpkg.com/slate-react/-/slate-react-0.117.4.tgz#04c925b41e9cc507937819b4d7192e1fc2bb85a9"
+  integrity sha512-9ckilyUzQS1VHJnstIpgInhcWnTDgv2Cd7m1HOQVl3zasChoapPSMftzT/wl/48grZaZYZIi4xVuzGTcFRUWFg==
   dependencies:
     "@juggle/resize-observer" "^3.4.0"
-    "@types/is-hotkey" "^0.1.1"
-    "@types/lodash" "^4.14.149"
-    direction "^1.0.3"
-    is-hotkey "^0.1.6"
-    is-plain-object "^5.0.0"
-    lodash "^4.17.4"
-    scroll-into-view-if-needed "^2.2.20"
-    tiny-invariant "1.0.6"
+    direction "^1.0.4"
+    is-hotkey "^0.2.0"
+    lodash "^4.17.21"
+    scroll-into-view-if-needed "^3.1.0"
+    tiny-invariant "1.3.1"
 
 slate@^0.114.0:
   version "0.114.0"

@@ -6,6 +6,8 @@ import TextArea from "../ui-kit/atoms/TextArea";
 import Button from "../ui-kit/atoms/Button";
 import { FaPencil } from "react-icons/fa6";
 import { useRouter } from "next/router";
+import Icon from "../ui-kit/atoms/Icon.js";
+import { PiKeyReturnLight } from "react-icons/pi";
 
 
 function Sidebar() {
@@ -13,14 +15,13 @@ function Sidebar() {
   const username = useSelector((state) => state.user.value.username);
   const token = useSelector((state) => state.user.value.token);
   const user = useSelector((state) => state.user.value);
-  const dispatch = useDispatch();
   const [followedUsers, setFollowedUsers] = useState([]);
 
   const handleDisconnectUser = () => {
     dispatch(signOut());
-    localStorage.removeItem('username');
-    localStorage.removeItem('email');
-    localStorage.removeItem('token');
+    localStorage.removeItem("username");
+    localStorage.removeItem("email");
+    localStorage.removeItem("token");
     router.replace("/");
   };
 
@@ -45,6 +46,42 @@ function Sidebar() {
       JSON.stringify(followedUsers[0]?.profile?.languages, null, 2)
     );
   }, [followedUsers]);
+
+    // Met à jour la note localement dans followedUsers
+  const handleNoteChange = (e, followId) => {
+    const newNote = e.target.value;
+    setFollowedUsers((prev) =>
+      prev.map((u) =>
+        u._id === followId ? { ...u, internalNote: newNote } : u
+      )
+    );
+  };
+
+  // Soumet la note au backend
+  const handleSubmitNote = (e, followId) => {
+    e.preventDefault();
+    const note = followedUsers.find((u) => u._id === followId)?.internalNote || "";
+    console.log("Note submitted:", note, "for user ID:", followId);
+    fetch(`http://localhost:3000/follows/users/${user.id}/${followId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ internalNote: note }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.result) {
+          console.log("Note updated successfully");
+          alert("Note mise à jour avec succès !");
+        } else {
+          console.error("Failed to update note:", data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating note:", error);
+      });
+  };
 
   return (
     <aside className={styles.sidebar}>
@@ -82,7 +119,9 @@ function Sidebar() {
                       className={styles.smallAvatar}
                       alt="avatar"
                     />
-                    <p className={styles.followedUsername}>{u.following.username}</p>
+                    <p className={styles.followedUsername}>
+                      {u.following.username}
+                    </p>
 
                     <span className={styles.techBadgesRow}>
                       {Array.isArray(u.profile?.languages) &&
@@ -104,11 +143,24 @@ function Sidebar() {
                   </div>
 
                   <div className={styles.textarea}>
-                    <TextArea
-                      placeholder="Notes"
-                      rows={4}
-                      className={styles.notes}
-                    />
+                    <form onSubmit={(e) => handleSubmitNote(e, u._id)}>
+                      <TextArea
+                        placeholder="Notes"
+                        rows={4}
+                        className={styles.notes}
+                        value={u.internalNote || ""}
+                        onChange={(e) => handleNoteChange(e, u._id)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" && !e.shiftKey) {
+                            e.preventDefault();
+                            e.target.form && e.target.form.requestSubmit();
+                          }
+                        }}
+                      />
+                      <div style={{ fontSize: "0.65em", color: "#888", marginTop: 4 }}>
+                        <b>Shift + Entrée</b> <PiKeyReturnLight size={18}/>
+                      </div>
+                    </form>
                   </div>
                 </div>
               </div>
