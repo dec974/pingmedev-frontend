@@ -46,23 +46,22 @@ function UserContent({ postId, onDeleted }) {
   const closeConfirm = () =>
     setConfirmState((s) => ({ ...s, open: false, isBusy: false }));
 
- function runConfirm() {
-  // affichage de l’état "en cours"
-  setConfirmState((s) => ({ ...s, isBusy: true }));
+  function runConfirm() {
+    // affichage de l’état "en cours"
+    setConfirmState((s) => ({ ...s, isBusy: true }));
 
-  // Execution de l'action de confirmation si présente
-  if (confirmState.onConfirm) {
-    // le callback ne reçoit pas de valeur ni 
-    confirmState.onConfirm().finally(() => {
-      // 3) Quoi qu'il arrive, on ferme la modale à la fin
+    // Execution de l'action de confirmation si présente
+    if (confirmState.onConfirm) {
+      // le callback ne reçoit pas de valeur ni
+      confirmState.onConfirm().finally(() => {
+        // 3) Quoi qu'il arrive, on ferme la modale à la fin
+        closeConfirm();
+      });
+    } else {
+      // Pas d'action -> on ferme directement
       closeConfirm();
-    });
-  } else {
-    // Pas d'action -> on ferme directement
-    closeConfirm();
+    }
   }
-}
-
 
   // Récupération des posts de l'utilisateur
   useEffect(() => {
@@ -94,6 +93,15 @@ function UserContent({ postId, onDeleted }) {
         });
     }
   }, [activeTab, user.token]);
+
+  const visiblePosts = sortPosts(
+    (posts ?? []).filter((p) => p?.status !== "deleted")
+  );
+
+  const getHref = (post) =>
+    post?.status === "draft" ? `/posts/edit/${post._id}` : `/posts/${post._id}`;
+
+  if (loading) return <Spinner />;
 
   return (
     <main className={styles.userContent}>

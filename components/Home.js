@@ -7,8 +7,11 @@ import Footer from "../ui-kit/organisms/Footer";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import SearchBar from "./SearchBar";
+import { useSelector } from "react-redux";
 
 export default function Home() {
+  const user = useSelector((s) => s.user?.value ?? s.user ?? null);
+  console.log("Home user =", user);
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -73,6 +76,7 @@ export default function Home() {
     </li>
   ));
   //voici le composant Home qui affiche les posts
+  console.log("Home user =", user);
   return (
     <>
       <Header />
@@ -94,7 +98,7 @@ export default function Home() {
       <div className={styles.colCenter}>
         <div className={styles.centerHeader}>
           <h1 className={styles.title}>Bienvenue sur PingMe.dev</h1>
-          <h2 className={styles.nameTitle}>{user.username}</h2>
+          <h2 className={styles.nameTitle}>{user ? user.username : "…"}</h2>
         </div>
 
           <div className={styles.searchArea}>
