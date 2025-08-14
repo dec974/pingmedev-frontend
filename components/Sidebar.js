@@ -1,21 +1,27 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styles from "../styles/Sidebar.module.css";
 import TextArea from "../ui-kit/atoms/TextArea";
 import Button from "../ui-kit/atoms/Button";
 import { FaPencil } from "react-icons/fa6";
 import { useRouter } from "next/router";
 import Icon from "../ui-kit/atoms/Icon.js";
+import { signOut } from "../reducers/user";
 
 function Sidebar() {
   const router = useRouter();
   const username = useSelector((state) => state.user.value.username);
   const token = useSelector((state) => state.user.value.token);
-
+  const user = useSelector((state) => state.user.value);
+  const dispatch = useDispatch();
   const [followedUsers, setFollowedUsers] = useState([]);
 
-  const handleRetourClick = () => {
-    router.push("/home");
+  const handleDisconnectUser = () => {
+    dispatch(signOut());
+    localStorage.removeItem('username');
+    localStorage.removeItem('email');
+    localStorage.removeItem('token');
+    router.replace("/");
   };
 
   const handleMyAccountClick = () => {
@@ -24,11 +30,11 @@ function Sidebar() {
 
   useEffect(() => {
     if (!token) return;
-    fetch(`http://localhost:3000/users/followed-users/${token}`)
+    fetch(`http://localhost:3000/follows/users/${user.id}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.result) {
-          setFollowedUsers(data.followedUsers);
+          setFollowedUsers(data.follows);
         }
       });
   }, [token]);
@@ -45,7 +51,7 @@ function Sidebar() {
       <div className={styles.profile}>
         <div className={styles.profilCardTop}>
           <img src="/avatar.png" className={styles.avatar} alt="avatar" />
-          <Button variant={"secondary"} onClick={handleRetourClick}>
+          <Button variant={"secondary"} onClick={handleDisconnectUser}>
             Déconnexion
           </Button>
         </div>
@@ -76,7 +82,7 @@ function Sidebar() {
                       className={styles.smallAvatar}
                       alt="avatar"
                     />
-                    <p className={styles.followedUsername}>{u.username}</p>
+                    <p className={styles.followedUsername}>{u.following.username}</p>
 
                     <span className={styles.techIcons}>
                       {Array.isArray(u.profile?.languages) &&
