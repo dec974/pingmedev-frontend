@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { signOut } from "../reducers/user.js";
 import styles from "../styles/Sidebar.module.css";
 import TextArea from "../ui-kit/atoms/TextArea";
 import Button from "../ui-kit/atoms/Button";
@@ -8,6 +9,7 @@ import { useRouter } from "next/router";
 import Icon from "../ui-kit/atoms/Icon.js";
 
 function Sidebar() {
+  const dispatch = useDispatch();
   const router = useRouter();
   const username = useSelector((state) => state.user.value.username);
   const token = useSelector((state) => state.user.value.token);
@@ -15,7 +17,8 @@ function Sidebar() {
   const [followedUsers, setFollowedUsers] = useState([]);
 
   const handleRetourClick = () => {
-    router.push("/home");
+    dispatch(signOut())
+    router.push("/connexionPage");
   };
 
   const handleMyAccountClick = () => {

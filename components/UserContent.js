@@ -54,11 +54,11 @@ function UserContent({ postId, onDeleted }) {
     if (confirmState.onConfirm) {
       // le callback ne reçoit pas de valeur ni
       confirmState.onConfirm().finally(() => {
-        // 3) Quoi qu'il arrive, on ferme la modale à la fin
+        // Quoi qu'il arrive, on ferme la modale à la fin
         closeConfirm();
       });
     } else {
-      // Pas d'action -> on ferme directement
+      // pas d'action, on ferme directement
       closeConfirm();
     }
   }
@@ -137,7 +137,7 @@ function UserContent({ postId, onDeleted }) {
 
         {activeTab === "posts" ? (
           <PostsList
-            posts={sortPosts(posts)}
+            posts={visiblePosts}
             showIcons={true}
             showAuthor={false}
             showStatus={true}
