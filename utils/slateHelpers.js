@@ -3,13 +3,11 @@ import { Editor, Element as SlateElement, Transforms } from "slate";
 const LIST_TYPES = ["numbered-list", "bulleted-list"];
 
 export const SlateHelpers = {
-  // Vérifier si une marque est active
   isMarkActive(editor, format) {
     const marks = Editor.marks(editor);
     return marks ? marks[format] === true : false;
   },
 
-  // Vérifier si un block est actif
   isBlockActive(editor, format) {
     const { selection } = editor;
     if (!selection) return false;
@@ -25,7 +23,6 @@ export const SlateHelpers = {
     return !!match;
   },
 
-  // Basculer une marque de formatage
   toggleMark(editor, format) {
     const isActive = SlateHelpers.isMarkActive(editor, format);
 
@@ -36,12 +33,10 @@ export const SlateHelpers = {
     }
   },
 
-  // Basculer un type de block
   toggleBlock(editor, format) {
     const isActive = SlateHelpers.isBlockActive(editor, format);
     const isList = LIST_TYPES.includes(format);
 
-    // Unwrap any existing lists
     Transforms.unwrapNodes(editor, {
       match: (n) =>
         !Editor.isEditor(n) &&
@@ -74,33 +69,12 @@ export const SlateHelpers = {
   },
 };
 
-// Valeurs initiales pour l'éditeur
 export const initialValue = [
   {
     type: "paragraph",
     children: [
-      { text: "Voici un exemple d'éditeur de texte riche construit avec " },
-      { text: "Slate", bold: true },
-      { text: " et " },
-      { text: "Next.js", bold: true },
-      { text: "!" },
+      { text: "Slate Editor Fonctionne Bien On Peut Ecrire Ici Pour Test" },
     ],
-  },
-  {
-    type: "paragraph",
-    children: [
-      {
-        text: "Vous pouvez utiliser les raccourcis clavier habituels comme ",
-      },
-      { text: "Ctrl+B", code: true },
-      { text: " pour le gras, " },
-      { text: "Ctrl+I", code: true },
-      { text: " pour l'italique, etc." },
-    ],
-  },
-  {
-    type: "paragraph",
-    children: [{ text: "" }],
   },
 ];
 console.log("initialValue exported:", initialValue);
