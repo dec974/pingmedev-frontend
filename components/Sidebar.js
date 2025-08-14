@@ -6,7 +6,6 @@ import TextArea from "../ui-kit/atoms/TextArea";
 import Button from "../ui-kit/atoms/Button";
 import { FaPencil } from "react-icons/fa6";
 import { useRouter } from "next/router";
-import Icon from "../ui-kit/atoms/Icon.js";
 import { PiKeyReturnLight } from "react-icons/pi";
 
 
@@ -15,6 +14,7 @@ function Sidebar() {
   const username = useSelector((state) => state.user.value.username);
   const token = useSelector((state) => state.user.value.token);
   const user = useSelector((state) => state.user.value);
+  const dispatch = useDispatch();
   const [followedUsers, setFollowedUsers] = useState([]);
 
   const handleDisconnectUser = () => {
