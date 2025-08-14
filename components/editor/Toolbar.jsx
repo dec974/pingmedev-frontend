@@ -1,21 +1,21 @@
 import { useSlate } from "slate-react";
 import { SlateHelpers } from "../../utils/slateHelpers";
-import Button from "../ui/Button";
+import styles from "../../styles/editor.module.css";
 
 const MarkButton = ({ format, children }) => {
   const editor = useSlate();
   const isActive = SlateHelpers.isMarkActive(editor, format);
 
   return (
-    <Button
-      active={isActive}
+    <button
+      className={`${styles.button} ${isActive ? styles.buttonActive : ""}`}
       onMouseDown={(event) => {
         event.preventDefault();
         SlateHelpers.toggleMark(editor, format);
       }}
     >
       {children}
-    </Button>
+    </button>
   );
 };
 
@@ -24,31 +24,21 @@ const BlockButton = ({ format, children }) => {
   const isActive = SlateHelpers.isBlockActive(editor, format);
 
   return (
-    <Button
-      active={isActive}
+    <button
+      className={`${styles.button} ${isActive ? styles.buttonActive : ""}`}
       onMouseDown={(event) => {
         event.preventDefault();
         SlateHelpers.toggleBlock(editor, format);
       }}
     >
       {children}
-    </Button>
+    </button>
   );
 };
 
 const Toolbar = () => {
   return (
-    <div
-      style={{
-        padding: "10px",
-        borderBottom: "1px solid #ccc",
-        backgroundColor: "#f9f9f9",
-        display: "flex",
-        flexWrap: "wrap",
-        gap: "4px",
-      }}
-    >
-      {/* Boutons de formatage de texte */}
+    <div className={styles.toolbar}>
       <MarkButton format="bold">
         <strong>B</strong>
       </MarkButton>
@@ -63,7 +53,6 @@ const Toolbar = () => {
 
       <MarkButton format="code">{"</>"}</MarkButton>
 
-      {/* Séparateur */}
       <div
         style={{
           width: "1px",
@@ -73,7 +62,6 @@ const Toolbar = () => {
         }}
       />
 
-      {/* Boutons de bloc */}
       <BlockButton format="heading-one">H1</BlockButton>
 
       <BlockButton format="heading-two">H2</BlockButton>
