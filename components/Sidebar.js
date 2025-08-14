@@ -7,7 +7,6 @@ import Button from "../ui-kit/atoms/Button";
 import { FaPencil } from "react-icons/fa6";
 import { useRouter } from "next/router";
 import Icon from "../ui-kit/atoms/Icon.js";
-import { signOut } from "../reducers/user";
 
 function Sidebar() {
   const dispatch = useDispatch();
@@ -15,14 +14,13 @@ function Sidebar() {
   const username = useSelector((state) => state.user.value.username);
   const token = useSelector((state) => state.user.value.token);
   const user = useSelector((state) => state.user.value);
-  const dispatch = useDispatch();
   const [followedUsers, setFollowedUsers] = useState([]);
 
   const handleDisconnectUser = () => {
     dispatch(signOut());
-    localStorage.removeItem('username');
-    localStorage.removeItem('email');
-    localStorage.removeItem('token');
+    localStorage.removeItem("username");
+    localStorage.removeItem("email");
+    localStorage.removeItem("token");
     router.replace("/");
   };
 
@@ -84,7 +82,9 @@ function Sidebar() {
                       className={styles.smallAvatar}
                       alt="avatar"
                     />
-                    <p className={styles.followedUsername}>{u.following.username}</p>
+                    <p className={styles.followedUsername}>
+                      {u.following.username}
+                    </p>
 
                     <span className={styles.techIcons}>
                       {Array.isArray(u.profile?.languages) &&
