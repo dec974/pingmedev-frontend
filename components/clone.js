@@ -9,40 +9,19 @@ import { formatDate } from "../modules/formatDate";
 import Spinner from "../ui-kit/atoms/Spinner";
 import Image from "next/image";
 import Icon from "../ui-kit/atoms/Icon";
+import Modal from "react-modal";
 import { FaPencil } from "react-icons/fa6";
 import { MdGroupAdd, MdPersonRemoveAlt1 } from "react-icons/md";
 import ProfilePopover from "./ProfilePopover";
 
 function PostsShow() {
-  const [modal, setModal] = useState({
-    isOpen: false,
-    title: "",
-    message: "",
-    type: "info",
-  });
-
-  const showModal = (title, message, type = "info") => {
-    setModal({
-      isOpen: true,
-      title,
-      message,
-      type,
-    });
-  };
-
-  const closeModal = () => {
-    setModal({
-      isOpen: false,
-      title: "",
-      message: "",
-      type: "info",
-    });
-  };
   const router = useRouter();
   const user = useSelector((state) => state.user.value);
   const { postId } = router.query;
   const [post, setPost] = useState(null);
   const [answerContent, setAnswerContent] = useState("");
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
   const [followedAuthor, setFollowedAuthor] = useState(false);
   const [loadingFollow, setLoadingFollow] = useState(false);
 
@@ -58,31 +37,24 @@ function PostsShow() {
           }
         });
     }
-    // follows get following
-    fetch("http://localhost:3000/follows/following/:userId")
-      .then(response => response.json())
-      .then(data => {
-
-      });
-
     if (postId) {
       console.log("Fetching post with ID:", postId);
-      fetch(`http://localhost:3000/posts/${postId}`)
+      fetch(http://localhost:3000/posts/${postId})
         .then((response) => response.json())
         .then((data) => {
           if (data.result) {
             setPost(data.post);
 
-            const initial = data.post?.userId?.isFollowedByMe ?? false;
-            setFollowedAuthor(Boolean(initial));
-          } else {
-            console.error("Failed to fetch post data");
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching post:", error);
-        });
-    }
+        const initial = data.post?.userId?.isFollowedByMe ?? false;
+        setFollowedAuthor(Boolean(initial));
+      } else {
+        console.error("Failed to fetch post data");
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching post:", error);
+    });
+}
   }, [postId]);
 
   function toggleFollowAuthor() {
@@ -91,38 +63,44 @@ function PostsShow() {
       return;
     }
 
-    const targetUserId = post.userId._id;
-    const endpoint = followedAuthor ? "unfollow-user" : "follow-user";
+const targetUserId = post.userId._id;
+const endpoint = followedAuthor ? "unfollow-user" : "follow-user";
 
-    setLoadingFollow(true);
+setLoadingFollow(true);
 
-    fetch(`http://localhost:3000/users/${endpoint}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token: user.token, targetUserId }),
-    })
-      .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
-      .then(({ ok, data }) => {
-        if (!ok || !data.result) {
-          console.warn(data.error || "Erreur follow/unfollow");
-          alert("Impossible de mettre à jour le suivi. Réessayez plus tard.");
-          return;
-        }
+fetch(`http://localhost:3000/users/${endpoint}`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ token: user.token, targetUserId }),
+})
+  .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
+  .then(({ ok, data }) => {
+    if (!ok || !data.result) {
+      console.warn(data.error || "Erreur follow/unfollow");
+      alert("Impossible de mettre à jour le suivi. Réessayez plus tard.");
+      return; 
+    }
 
-        const next =
-          typeof data.following === "boolean"
-            ? data.following
-            : !followedAuthor;
+    const next =
+      typeof data.following === "boolean"
+        ? data.following
+        : !followedAuthor;
 
-        setFollowedAuthor(next);
+    setFollowedAuthor(next);
 
-        // stockage de l'information de suivi dans le post
-        setPost((p) =>
-          p ? { ...p, userId: { ...p.userId, isFollowedByMe: next } } : p
-        );
-      });
+    // stockage de l'information de suivi dans le post
+    setPost((p) =>
+      p ? { ...p, userId: { ...p.userId, isFollowedByMe: next } } : p
+    );
+  });
   }
 
+  function openModal() {
+    setModalIsOpen(true);
+  }
+  function closeModal() {
+    setModalIsOpen(false);
+  }
 
   function handleSubmitAnswer(e) {
     e.preventDefault();
@@ -142,25 +120,52 @@ function PostsShow() {
     };
     console.log("Submitting answer:", answerData);
 
-    
+fetch(`http://localhost:3000/posts/${postId}/answers`, {
+  method: "PUT",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify(answerData),
+})
+  .then((response) => response.json())
+  .then((data) => {
+    if (data.result) {
+      console.log("Réponse ajoutée avec succès:", data.answer);
+      setPost(data.post);
+      setAnswerContent("");
+      closeModal();
+    } else {
+      console.error("Erreur lors de l'ajout de la réponse");
+    }
+  });
+  }
 
-    fetch(`http://localhost:3000/posts/${postId}/answers`, {
-      method: "PUT",
+  function handleNewMessage() {
+    if (!user) {
+      alert("Vous devez être connecté pour envoyer un message.");
+      return;
+    }
+    fetch(http://localhost:3000/messages/send, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(answerData),
+      body: JSON.stringify({
+        senderId: user.id,
+        recipientId: post.userId._id,
+        content: Bonjour ${post.userId.username}, j'aimerais discuter de votre sujet "${post.title}".,
+      }),
     })
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
-          console.log("Réponse ajoutée avec succès:", data.answer);
-          setPost(data.post);
-          setAnswerContent("");
-          closeModal();
+          router.push('//messenger');
         } else {
-          console.error("Erreur lors de l'ajout de la réponse");
+          console.error("Erreur lors de l'envoi du message");
         }
+      })
+      .catch((error) => {
+        console.error("Error sending message:", error); 
       });
   }
 
@@ -190,6 +195,7 @@ function PostsShow() {
       </div>
     );
   });
+  Modal.setAppElement("#__next");
   return (
     <MainLayout>
       <div className={styles.content}>
@@ -219,47 +225,60 @@ function PostsShow() {
               followedAuthor={followedAuthor}
             />
 
-            <div className={styles.postHeaderTitle}>
-              <h1 className={styles.postTitle}>{post.title}</h1>
-              <div className={styles.subTitle}>
-                <button
-                  className={styles.followButton}
-                  onClick={toggleFollowAuthor}
-                  disabled={loadingFollow}
-                  title={
-                    followedAuthor
-                      ? "Ne plus suivre l’auteur"
-                      : "Suivre l’auteur"
-                  }
-                  aria-pressed={followedAuthor}
-                >
-                  {followedAuthor ? (
-                    <MdPersonRemoveAlt1
-                      size={38}
-                      color="var(--secondary-color)"
-                    />
-                  ) : (
-                    <MdGroupAdd size={32} color="var(--secondary-color)" />
-                  )}
-                </button>
-                <p className={styles.postDate}>{formatDate(post.createdAt)}</p>
-                <div className={styles.languages}>{languagesList}</div>
-              </div>
-            </div>
+        <div className={styles.postHeaderTitle}>
+          <h1 className={styles.postTitle}>{post.title}</h1>
+          <div className={styles.subTitle}>
+            <button
+              className={styles.followButton}
+              onClick={toggleFollowAuthor}
+              disabled={loadingFollow}
+              title={
+                followedAuthor
+                  ? "Ne plus suivre l’auteur"
+                  : "Suivre l’auteur"
+              }
+              aria-pressed={followedAuthor}
+            >
+              {followedAuthor ? (
+                <MdPersonRemoveAlt1
+                  size={38}
+                  color="var(--secondary-color)"
+                />
+              ) : (
+                <MdGroupAdd size={32} color="var(--secondary-color)" />
+              )}
+            </button>
+            <p className={styles.postDate}>{formatDate(post.createdAt)}</p>
+            <div className={styles.languages}>{languagesList}</div>
           </div>
-          <div className={styles.postContent}>
-            <div className={styles.sujectContent}>
-              <p>{post.content}</p>
-            </div>
-            <div className={styles.responses}>
-              <div className={styles.answersList}>{answersList}</div>
-              <div className={styles.answerForm}>
-                <button className={styles.answerButton}>
-                  <div className={styles.icon}>
-                    <FaPencil size={20} />
-                  </div>
-                  <p>Répondre</p>
-                </button>
+        </div>
+      </div>
+      <div className={styles.postContent}>
+        <div className={styles.sujectContent}>
+          <p>{post.content}</p>
+        </div>
+        <div className={styles.responses}>
+          <div className={styles.answersList}>{answersList}</div>
+          <div className={styles.answerForm}>
+            <button className={styles.answerButton} onClick={openModal}>
+              <div className={styles.icon}>
+                <FaPencil size={20} />
+              </div>
+              <p>Répondre</p>
+            </button>
+            {user.id !== post.userId._id && <a href="#" onClick={() => handleNewMessage()}>Discussion</a>}
+            <Modal
+              isOpen={modalIsOpen}
+              onRequestClose={closeModal}
+              contentLabel="Répondre au sujet"
+              className={styles.modal}
+              overlayClassName={styles.overlay}
+            >
+              <div className={styles.modalHeader}>
+                <h2>Répondre au sujet</h2>
+                <Button variant="secondary" onClick={() => closeModal()}>
+                  Fermer
+                </Button>
               </div>
               <form
                 onSubmit={(e) => handleSubmitAnswer(e)}
@@ -277,12 +296,15 @@ function PostsShow() {
                   </Button>
                 </div>
               </form>
-            </div>
+            </Modal>
           </div>
         </div>
       </div>
-    </MainLayout>
+    </div>
+  </div>
+</MainLayout>
   );
 }
 
 export default PostsShow;
+
