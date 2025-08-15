@@ -11,7 +11,6 @@ import { PiKeyReturnLight } from "react-icons/pi";
 
 
 function Sidebar() {
-  const dispatch = useDispatch();
   const router = useRouter();
   const username = useSelector((state) => state.user.value.username);
   const token = useSelector((state) => state.user.value.token);
@@ -124,15 +123,21 @@ function Sidebar() {
                       {u.following.username}
                     </p>
 
-                    <span className={styles.techIcons}>
+                    <span className={styles.techBadgesRow}>
                       {Array.isArray(u.profile?.languages) &&
+                      
                         u.profile.languages.map((lang, i) => (
-                          <Icon
-                            key={lang?._id || i}
-                            language={lang} // { icon, color, name }
-                            size={16}
-                            className={styles.techIcon}
-                          />
+                          
+                         <span
+                         
+                              key={
+                                (typeof lang === "string" ? lang : lang?._id) ||
+                                i
+                              }
+                              className={styles.langPill}
+                            >
+                              {typeof lang === "string" ? lang : lang?.name}
+                            </span>
                         ))}
                     </span>
                   </div>
