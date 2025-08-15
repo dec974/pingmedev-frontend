@@ -24,9 +24,6 @@ export default function ProfilePopover({
 
     const open = Boolean(anchorEl);
     const router = useRouter();
-    const open = Boolean(anchorEl);
-    const router = useRouter();
-
 
     // Hover sur le trigger
     const handleTriggerMouseEnter = (event) => {
