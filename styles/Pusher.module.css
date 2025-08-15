@@ -9,10 +9,10 @@
   display: flex;
   flex-direction: column;
   height: 80vh;
-  background-color: var(--background-color-lightgrey);
+  background-color: #dde2e9;
   border-radius: var(--radius);
-  border: 3px solid var(--background-color-grey);
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--background-color-grey);
+  
 }
 
 .messages {
@@ -27,14 +27,11 @@
 .message {
   padding: 0.5rem;
   font-size: 0.95rem;
-  border-bottom: 1px solid var(--background-color-grey);
 }
 
 .message b {
   font-size: 1rem;
   color: var(--primary-color);
-  border-bottom: 1px solid var(--primary-color);
-  background-color: var(--background-color-white);
   padding: 0 7px;
   border-radius: 33%;
 }
