@@ -8,7 +8,14 @@ import TextArea from "../ui-kit/atoms/TextArea";
 import Select from "react-select";
 import { useSelector } from "react-redux";
 import Spinner from "../ui-kit/atoms/Spinner";
-import RichTextEditor from "../components/editor/RichTextEditor";
+import ReactEditor from './ReactEditor';
+
+// Nettoie le HTML Quill pour supprimer les <p><br></p> inutiles
+function cleanQuillHtml(html) {
+  if (!html) return html;
+  // Supprime les paragraphes vides ou ne contenant qu'un <br>
+  return html.replace(/<p><br\/?><\/p>/g, '');
+}
 
 function Posts(props) {
   let user = useSelector((state) => state.user.value);
@@ -47,7 +54,8 @@ function Posts(props) {
         .then((data) => {
           if (data.result) {
             setTitle(data.post.title);
-            setContent(data.post.content);
+            // Pour Quill, le contenu est une string HTML
+            setContent(data.post.content || "");
             setPostType(data.post.type);
             const selectedLanguages = data.post.languages.map((lang) => ({
               key: lang._id,
@@ -71,11 +79,14 @@ function Posts(props) {
         ? selectLanguages.map((lang) => lang.key)
         : [];
 
+    // Nettoyage du HTML avant envoi
+    const cleanedContent = cleanQuillHtml(content);
+
     const postData = {
       userId: user.id,
       type: postType,
       title: title,
-      content: content,
+      content: cleanedContent, // string HTML pour Quill
       languages: selectedLanguageValues,
       status: status,
     };
@@ -127,7 +138,7 @@ function Posts(props) {
             {type === "edit" ? `Sujet: ${title}` : "Nouveau Sujet"}
           </h1>
           {type !== "edit" && (
-            <p>
+            <p className={styles.textIntro}>
               Vous souhaitez contribuer au forum ? Vous avez la possibilité de
               poser une question technique ou de donner une astuce. Selectionnez
               votre choix ci-dessous.
@@ -183,22 +194,8 @@ function Posts(props) {
                   disabled={type === "edit"}
                 />
               </div>
-              <div className={styles.formGroup}>
-                {/* <TextArea
-                  placeholder="Écrivez votre message ici..."
-                  id="content"
-                  name="content"
-                  rows={5}
-                  required
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                /> */}
-                <RichTextEditor
-                  value={content}
-                  placeholder="Commencez à taper votre texte..."
-                  style={{ minHeight: "80px" }}
-                  // onChange={(e) => setContent(e.target.value)}
-                />
+              <div className={styles.formEditor}>
+                  <ReactEditor value={content} onChange={setContent} />
               </div>
               <div className={styles.buttonGroup}>
                 <Button
