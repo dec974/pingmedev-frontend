@@ -9,13 +9,14 @@ import Select from "react-select";
 import { useSelector } from "react-redux";
 import Spinner from "../ui-kit/atoms/Spinner";
 import RichTextEditor from "../components/editor/RichTextEditor";
+import { initialValue } from "../utils/slateHelpers";
 
 function Posts(props) {
   let user = useSelector((state) => state.user.value);
   const { type } = props;
   const router = useRouter();
   const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState(initialValue);
   const [postType, setPostType] = useState("question");
   const [selectLanguages, setSelectLanguages] = useState([]);
   const [languages, setLanguages] = useState([]);
@@ -75,7 +76,7 @@ function Posts(props) {
       userId: user.id,
       type: postType,
       title: title,
-      content: content,
+      content: JSON.stringify(content),
       languages: selectedLanguageValues,
       status: status,
     };
@@ -197,7 +198,7 @@ function Posts(props) {
                   value={content}
                   placeholder="Commencez à taper votre texte..."
                   style={{ minHeight: "80px" }}
-                  // onChange={(e) => setContent(e.target.value)}
+                  onChange={(newValue) => setContent(newValue)}
                 />
               </div>
               <div className={styles.buttonGroup}>

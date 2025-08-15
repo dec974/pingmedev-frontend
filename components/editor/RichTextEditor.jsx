@@ -44,7 +44,7 @@ const RichTextEditor = ({
     (newValue) => {
       setEditorValue(newValue);
       if (onChange) {
-        onChange(newValue);
+        onChange(JSON.stringify(newValue));
       }
     },
     [onChange]

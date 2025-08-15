@@ -1,9 +1,10 @@
 .content {
   width: 100%;
-  height: calc(100vh - 8.5rem);
   padding: 10px;
   display: flex;
   flex-direction: column;
+  min-height: calc(100vh - 8.5rem);
+  padding-bottom: 100px;
 }
 
 .btnBack {
