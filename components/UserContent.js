@@ -197,7 +197,7 @@ function UserContent(postId, onDeleted) {
                 confirmVariant: "danger",
 
                 onConfirm: () => {
-                  fetch("http://localhost:3000/users/unfollow-post", {
+                  return fetch("http://localhost:3000/users/unfollow-post", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ token: user.token, postId: id }),

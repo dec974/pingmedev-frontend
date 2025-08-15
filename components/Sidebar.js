@@ -6,15 +6,15 @@ import TextArea from "../ui-kit/atoms/TextArea";
 import Button from "../ui-kit/atoms/Button";
 import { FaPencil } from "react-icons/fa6";
 import { useRouter } from "next/router";
-import Icon from "../ui-kit/atoms/Icon.js";
 import { PiKeyReturnLight } from "react-icons/pi";
-
+import Avatar from "../ui-kit/atoms/Avatar.js";
 
 function Sidebar() {
   const router = useRouter();
   const username = useSelector((state) => state.user.value.username);
   const token = useSelector((state) => state.user.value.token);
   const user = useSelector((state) => state.user.value);
+  const dispatch = useDispatch();
   const [followedUsers, setFollowedUsers] = useState([]);
 
   const handleDisconnectUser = () => {
@@ -28,6 +28,9 @@ function Sidebar() {
   const handleMyAccountClick = () => {
     router.push("/myProfile");
   };
+
+  console.log("Redux user =", user);
+  console.log("Redux user id =", user?._id || user?.id);
 
   useEffect(() => {
     if (!token) return;
@@ -47,7 +50,7 @@ function Sidebar() {
     );
   }, [followedUsers]);
 
-    // Met à jour la note localement dans followedUsers
+  // Met à jour la note localement dans followedUsers
   const handleNoteChange = (e, followId) => {
     const newNote = e.target.value;
     setFollowedUsers((prev) =>
@@ -60,7 +63,8 @@ function Sidebar() {
   // Soumet la note au backend
   const handleSubmitNote = (e, followId) => {
     e.preventDefault();
-    const note = followedUsers.find((u) => u._id === followId)?.internalNote || "";
+    const note =
+      followedUsers.find((u) => u._id === followId)?.internalNote || "";
     console.log("Note submitted:", note, "for user ID:", followId);
     fetch(`http://localhost:3000/follows/users/${user.id}/${followId}`, {
       method: "PUT",
@@ -87,7 +91,7 @@ function Sidebar() {
     <aside className={styles.sidebar}>
       <div className={styles.profile}>
         <div className={styles.profilCardTop}>
-          <img src="/avatar.png" className={styles.avatar} alt="avatar" />
+          <Avatar seed={user?.id || user?.username} size={64} />
           <Button variant={"secondary"} onClick={handleDisconnectUser}>
             Déconnexion
           </Button>
@@ -125,19 +129,15 @@ function Sidebar() {
 
                     <span className={styles.techBadgesRow}>
                       {Array.isArray(u.profile?.languages) &&
-                      
                         u.profile.languages.map((lang, i) => (
-                          
-                         <span
-                         
-                              key={
-                                (typeof lang === "string" ? lang : lang?._id) ||
-                                i
-                              }
-                              className={styles.langPill}
-                            >
-                              {typeof lang === "string" ? lang : lang?.name}
-                            </span>
+                          <span
+                            key={
+                              (typeof lang === "string" ? lang : lang?._id) || i
+                            }
+                            className={styles.langPill}
+                          >
+                            {typeof lang === "string" ? lang : lang?.name}
+                          </span>
                         ))}
                     </span>
                   </div>
@@ -157,8 +157,14 @@ function Sidebar() {
                           }
                         }}
                       />
-                      <div style={{ fontSize: "0.65em", color: "#888", marginTop: 4 }}>
-                        <b>Shift + Entrée</b> <PiKeyReturnLight size={18}/>
+                      <div
+                        style={{
+                          fontSize: "0.65em",
+                          color: "#888",
+                          marginTop: 4,
+                        }}
+                      >
+                        <b>Shift + Entrée</b> <PiKeyReturnLight size={18} />
                       </div>
                     </form>
                   </div>
