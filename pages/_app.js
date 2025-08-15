@@ -1,6 +1,8 @@
 import { SessionProvider } from "next-auth/react";
 import "../styles/globals.css";
 import "prismjs/themes/prism.css";
+import 'react-quill/dist/quill.snow.css'; // Pour le thème de Quill
+import 'highlight.js/styles/atom-one-dark.css'; // Pour le thème de coloration syntaxique
 import Head from "next/head";
 import Header from "../components/Header";
 
