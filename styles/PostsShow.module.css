@@ -42,9 +42,12 @@
   justify-content: space-between;
 }
 
-.followButton {
-  border: none;
-  background-color: var(--background-color-white);
+.followTopicBtn {
+  color: var(--primary-color);
+}
+
+.followTopicBtn:hover {
+  cursor: pointer
 }
 
 .postContent {

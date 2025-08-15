@@ -11,7 +11,7 @@ import Image from "next/image";
 import Icon from "../ui-kit/atoms/Icon";
 import Modal from "react-modal";
 import { FaPencil } from "react-icons/fa6";
-import { MdGroupAdd, MdPersonRemoveAlt1 } from "react-icons/md";
+import { FaRegBookmark, MdPersonRemoveAlt1 } from "react-icons/fa";
 import ProfilePopover from "./ProfilePopover";
 
 function PostsShow() {
@@ -23,7 +23,8 @@ function PostsShow() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [followingList, setFollowingList] = useState([]);
   const [followedAuthor, setFollowedAuthor] = useState(false);
-  const [loadingFollow, setLoadingFollow] = useState(false);
+  const [followBusy, setFollowBusy] = useState(false);
+  const [followedOnce, setFollowedOnce] = useState(false);
 
   useEffect(() => {
     if (!user.id) {
@@ -54,9 +55,9 @@ function PostsShow() {
     }
     // follow user list
     fetch(`http://localhost:3000/follows/users/${user.id}`)
-      .then(response => response.json())
-      .then(data => {
-        const following = data.follows.map(f => f.following._id);
+      .then((response) => response.json())
+      .then((data) => {
+        const following = data.follows.map((f) => f.following._id);
         setFollowingList(following);
       });
   }, [postId]);
@@ -67,38 +68,41 @@ function PostsShow() {
       setFollowedAuthor(followingList.includes(post.userId._id));
     }
   }, [followingList, post]);
-  
 
   function toggleFollowAuthor() {
-
     if (!user?.token || !post?.userId?._id) {
       alert("Vous devez être connecté pour suivre un utilisateur.");
       return;
     }
 
-    if(followedAuthor) {
+    if (followedAuthor) {
       // unfollow
-      fetch(`http://localhost:3000/follows/users/${user.id}/${post.userId._id}`, {
-        method: 'DELETE',
-        headers: {"Content-Type" : "application/json"},
-        body: JSON.stringify({following : post?.userId?._id})
-      })
-        .then(response => response.json())
-        .then(data => {
-          if(data.result) {
-            setFollowingList(followingList.filter(f => f !== post.userId._id ));
+      fetch(
+        `http://localhost:3000/follows/users/${user.id}/${post.userId._id}`,
+        {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ following: post?.userId?._id }),
+        }
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.result) {
+            setFollowingList(
+              followingList.filter((f) => f !== post.userId._id)
+            );
             setFollowedAuthor(false);
           }
         });
     } else {
       // follow
       fetch(`http://localhost:3000/follows/users/${user.id}`, {
-        method: 'POST',
-        headers: {"Content-Type" : "application/json"},
-        body: JSON.stringify({following : post?.userId?._id})
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ following: post?.userId?._id }),
       })
-        .then(response => response.json())
-        .then(data => {
+        .then((response) => response.json())
+        .then((data) => {
           setFollowingList((prev) => [...prev, data.follow.following._id]);
           setFollowedAuthor(true);
         });
@@ -118,7 +122,7 @@ function PostsShow() {
     //     if (!ok || !data.result) {
     //       console.warn(data.error || "Erreur follow/unfollow");
     //       alert("Impossible de mettre à jour le suivi. Réessayez plus tard.");
-    //       return; 
+    //       return;
     //     }
 
     //     const next =
@@ -128,11 +132,38 @@ function PostsShow() {
 
     //     setFollowedAuthor(next);
 
-        // stockage de l'information de suivi dans le post
-      //   setPost((p) =>
-      //     p ? { ...p, userId: { ...p.userId, isFollowedByMe: next } } : p
-      //   );
-      // });
+    // stockage de l'information de suivi dans le post
+    //   setPost((p) =>
+    //     p ? { ...p, userId: { ...p.userId, isFollowedByMe: next } } : p
+    //   );
+    // });
+  }
+
+  function handleFollowPost() {
+    if (!user?.token || !post?._id) {
+      alert("Vous devez être connecté pour suivre un sujet.");
+      return;
+    }
+    setFollowBusy(true);
+    fetch("http://localhost:3000/users/follow-post", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token: user.token, postId: post._id }),
+    })
+      .then((res) =>
+        res
+          .json()
+          .catch(() => ({}))
+          .then((data) => ({ ok: res.ok, data }))
+      )
+      .then(({ ok, data }) => {
+        if (!ok || !data?.result) throw data;
+        setFollowedOnce(true);
+      })
+      .catch(() => {
+        alert("Impossible de suivre ce sujet pour le moment.");
+      })
+      .finally(() => setFollowBusy(false));
   }
 
   function openModal() {
@@ -159,8 +190,6 @@ function PostsShow() {
       postId: postId,
     };
     console.log("Submitting answer:", answerData);
-
-    
 
     fetch(`http://localhost:3000/posts/${postId}/answers`, {
       method: "PUT",
@@ -201,13 +230,13 @@ function PostsShow() {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
-          router.push('//messenger');
+          router.push("//messenger");
         } else {
           console.error("Erreur lors de l'envoi du message");
         }
       })
       .catch((error) => {
-        console.error("Error sending message:", error); 
+        console.error("Error sending message:", error);
       });
   }
 
@@ -270,26 +299,21 @@ function PostsShow() {
             <div className={styles.postHeaderTitle}>
               <h1 className={styles.postTitle}>{post.title}</h1>
               <div className={styles.subTitle}>
-                {/* <button
+                  <button
                   className={styles.followButton}
-                  onClick={toggleFollowAuthor}
-                  disabled={loadingFollow}
-                  title={
-                    followedAuthor
-                      ? "Ne plus suivre l’auteur"
-                      : "Suivre l’auteur"
-                  }
-                  aria-pressed={followedAuthor}
+                  onClick={handleFollowPost}
+                  disabled={followBusy || followedOnce}
+                  title="Suivre ce sujet"
                 >
-                  {followedAuthor ? (
-                    <MdPersonRemoveAlt1
-                      size={38}
-                      color="var(--secondary-color)"
-                    />
-                  ) : (
-                    <MdGroupAdd size={32} color="var(--secondary-color)" />
-                  )}
-                </button> */}
+                  <FaRegBookmark className={styles.followTopicBtn}size={22} />
+                  <span style={{ marginLeft: 6 }}>
+                    {followedOnce
+                      ? "Suivi"
+                      : followBusy
+                      ? "…"
+                      : ""}
+                  </span>
+                </button>
                 <p className={styles.postDate}>{formatDate(post.createdAt)}</p>
                 <div className={styles.languages}>{languagesList}</div>
               </div>
