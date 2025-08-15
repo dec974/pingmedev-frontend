@@ -49,6 +49,7 @@
 }
 
 .followTopicBtn {
+  border: none;
   color: var(--primary-color);
 }
 

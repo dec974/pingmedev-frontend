@@ -17,7 +17,7 @@ import ProfilePopover from "./ProfilePopover";
 // Nettoie le HTML Quill pour supprimer les <p><br></p> inutiles
 function cleanQuillHtml(html) {
   if (!html) return html;
-  return html.replace(/<p><br\/?><\/p>/g, '');
+  return html.replace(/<p><br\/?><\/p>/g, "");
 }
 
 function PostsShow() {
@@ -305,21 +305,18 @@ function PostsShow() {
             <div className={styles.postHeaderTitle}>
               <h1 className={styles.postTitle}>{post.title}</h1>
               <div className={styles.subTitle}>
-                  <button
-                  className={styles.followButton}
-                  onClick={handleFollowPost}
-                  disabled={followBusy || followedOnce}
-                  title="Suivre ce sujet"
-                >
-                  <FaRegBookmark className={styles.followTopicBtn}size={22} />
-                  <span style={{ marginLeft: 6 }}>
-                    {followedOnce
-                      ? "Suivi"
-                      : followBusy
-                      ? "…"
-                      : ""}
+                <div>
+                  {" "}
+                  <FaRegBookmark
+                    onClick={handleFollowPost}
+                    className={styles.followTopicBtn}
+                    size={22}
+                  />
+                  <span style={{ marginLeft: 6, fontSize: 14 }}>
+                    {followedOnce ? "Suivi" : followBusy ? "…" : ""}
                   </span>
-                </button>
+                </div>
+
                 <p className={styles.postDate}>{formatDate(post.createdAt)}</p>
                 <div className={styles.languages}>{languagesList}</div>
               </div>
@@ -327,7 +324,11 @@ function PostsShow() {
           </div>
           <div className={styles.postContent}>
             <div className={styles.sujectContent}>
-              <div dangerouslySetInnerHTML={{ __html: cleanQuillHtml(post.content) }} />
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: cleanQuillHtml(post.content),
+                }}
+              />
             </div>
             <div className={styles.responses}>
               <div className={styles.answersList}>{answersList}</div>
