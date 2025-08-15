@@ -22,7 +22,7 @@ function Posts(props) {
   const { type } = props;
   const router = useRouter();
   const [title, setTitle] = useState("");
-  const [content, setContent] = useState(initialValue);
+  const [content, setContent] = useState("");
   const [postType, setPostType] = useState("question");
   const [selectLanguages, setSelectLanguages] = useState([]);
   const [languages, setLanguages] = useState([]);
