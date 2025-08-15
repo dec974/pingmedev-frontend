@@ -14,6 +14,12 @@ import { FaPencil } from "react-icons/fa6";
 import { FaRegBookmark, MdPersonRemoveAlt1 } from "react-icons/fa";
 import ProfilePopover from "./ProfilePopover";
 
+// Nettoie le HTML Quill pour supprimer les <p><br></p> inutiles
+function cleanQuillHtml(html) {
+  if (!html) return html;
+  return html.replace(/<p><br\/?><\/p>/g, '');
+}
+
 function PostsShow() {
   const router = useRouter();
   const user = useSelector((state) => state.user.value);
@@ -321,7 +327,7 @@ function PostsShow() {
           </div>
           <div className={styles.postContent}>
             <div className={styles.sujectContent}>
-              <p>{post.content}</p>
+              <div dangerouslySetInnerHTML={{ __html: cleanQuillHtml(post.content) }} />
             </div>
             <div className={styles.responses}>
               <div className={styles.answersList}>{answersList}</div>
