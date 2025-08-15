@@ -132,7 +132,7 @@ function Sidebar() {
                         u.profile.languages.map((lang, i) => (
                           <span
                             key={
-                              (typeof lang === "string" ? lang : lang?._id) || i
+                              (typeof lang === "string" ? lang : i)
                             }
                             className={styles.langPill}
                           >

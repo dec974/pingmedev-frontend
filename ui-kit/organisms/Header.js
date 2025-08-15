@@ -5,7 +5,7 @@ import { PiChats } from "react-icons/pi";
 import Image from "next/image";
 import Avatar from "../atoms/Avatar";
 
-export default function Header({ unreadCount = 0, onLoginClick }) {
+export default function Header({ unreadCount = 0,  }) {
   return (
     <header className={styles.header}>
       <div className={styles.navbar}>
