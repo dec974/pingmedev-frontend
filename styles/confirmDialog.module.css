@@ -27,7 +27,7 @@
   transform: translateY(6px) scale(0.98);
   opacity: 0;
   transition: opacity 180ms ease, transform 180ms ease;
-  border: 5px solid var(--primary-color);
+  
 }
 
 .contentOpen {
@@ -98,7 +98,7 @@
 
 .danger {
   border: none;
-  background: #a5131f;
+  background: var(--primary-color);
   color: #fff;
 }
 .danger:hover {
