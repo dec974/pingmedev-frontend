@@ -66,6 +66,34 @@ export default function Home() {
       )
     );
   };
+  function handleNewMessage() {
+    if (!user) {
+      alert("Vous devez être connecté pour envoyer un message.");
+      return;
+    }
+    fetch(`http://localhost:3000/messages/send`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        senderId: user.id,
+        recipientId: post.userId._id,
+        content: `Bonjour ${post.userId.username}, j'aimerais discuter de votre sujet "${post.title}".`,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          router.push("//messenger");
+        } else {
+          console.error("Erreur lors de l'envoi du message");
+        }
+      })
+      .catch((error) => {
+        console.error("Error sending message:", error);
+      });
+  }
 
   const languagesList = languages.map((lang) => (
     <li key={lang._id} className={styles.languageItem}>
