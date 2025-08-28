@@ -53,7 +53,7 @@ export default function Profil() {
       try {
         setLoading(true);
 
-        const response = await fetch("http://localhost:3000/languages");
+        const response = await fetch("https://pingmedev-backend.vercel.app/languages");
         const data = await response.json();
 
         if (data.result && data.data) {
@@ -100,7 +100,7 @@ export default function Profil() {
         locality: locality,
       };
 
-      const response = await fetch("http://localhost:3000/users/profile", {
+      const response = await fetch("https://pingmedev-backend.vercel.app/users/profile", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

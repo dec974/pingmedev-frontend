@@ -22,7 +22,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-    fetch("http://localhost:3000/posts")
+    fetch("https://pingmedev-backend.vercel.app/posts")
       .then((res) => res.json())
       .then((data) => {
         const tenPosts = data.slice(0, 10);
@@ -32,7 +32,7 @@ export default function Home() {
       });
 
     // get all languages for the sidebar
-    fetch("http://localhost:3000/languages")
+    fetch("https://pingmedev-backend.vercel.app/languages")
       .then((res) => res.json())
       .then((data) => {
         // Handle languages data if needed
@@ -71,7 +71,7 @@ export default function Home() {
       alert("Vous devez être connecté pour envoyer un message.");
       return;
     }
-    fetch(`http://localhost:3000/messages/send`, {
+    fetch(`https://pingmedev-backend.vercel.app/messages/send`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

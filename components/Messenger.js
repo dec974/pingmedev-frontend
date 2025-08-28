@@ -30,7 +30,7 @@ const Messenger = () => {
     }
 
     // Récupération de l'ID utilisateur depuis le backend (comme dans Posts)
-    fetch("http://localhost:3000/users/" + user.token)
+    fetch("https://pingmedev-backend.vercel.app/users/" + user.token)
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
@@ -66,7 +66,7 @@ const Messenger = () => {
 
   const loadConversations = () => {
     console.log("loadConversations appelée pour:", user.id);
-    fetch(`http://localhost:3000/messages/chats/${user.id}`)
+    fetch(`https://pingmedev-backend.vercel.app/messages/chats/${user.id}`)
       .then((response) => response.json())
       .then((data) => {
         console.log("Conversations reçues:", data);
@@ -82,7 +82,7 @@ const Messenger = () => {
   };
 
   const loadMessages = (contactId) => {
-    fetch(`http://localhost:3000/messages/${user.id}/${contactId}`)
+    fetch(`https://pingmedev-backend.vercel.app/messages/${user.id}/${contactId}`)
       .then((response) => response.json())
       .then((data) => {
         setMessages(data);
@@ -106,7 +106,7 @@ const Messenger = () => {
       content: newMessage,
     };
 
-    fetch("http://localhost:3000/messages/send", {
+    fetch("https://pingmedev-backend.vercel.app/messages/send", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -67,7 +67,7 @@ function UserContent(postId, onDeleted) {
     setLoading(true);
 
     if (activeTab === "posts") {
-      fetch(`http://localhost:3000/users/user/${user.token}`)
+      fetch(`https://pingmedev-backend.vercel.app/users/user/${user.token}`)
         .then((res) => {
           if (!res.ok) throw new Error("HTTP " + res.status);
           return res.json();
@@ -81,7 +81,7 @@ function UserContent(postId, onDeleted) {
 
     // Récupération des posts suivis par l'utilisateur
     if (activeTab === "topics") {
-      fetch(`http://localhost:3000/users/followed-posts/${user.token}`)
+      fetch(`https://pingmedev-backend.vercel.app/users/followed-posts/${user.token}`)
         .then((res) => res.json())
         .then((data) => {
           // console.log("data reçue (followedPosts):", data);
@@ -161,7 +161,7 @@ function UserContent(postId, onDeleted) {
                 confirmLabel: "Supprimer",
                 confirmVariant: "danger",
                 onConfirm: () => {
-                  return fetch(`http://localhost:3000/posts/${id}/deleted`, {
+                  return fetch(`https://pingmedev-backend.vercel.app/posts/${id}/deleted`, {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                   })
@@ -197,7 +197,7 @@ function UserContent(postId, onDeleted) {
                 confirmVariant: "danger",
 
                 onConfirm: () => {
-                  return fetch("http://localhost:3000/users/unfollow-post", {
+                  return fetch("https://pingmedev-backend.vercel.app/users/unfollow-post", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ token: user.token, postId: id }),

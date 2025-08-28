@@ -124,7 +124,7 @@ export default function Connexion() {
   }
 
   const handleGitHubCallback = (githubUserData) => {
-    fetch("http://localhost:3000/users/signingithub", {
+    fetch("https://pingmedev-backend.vercel.app/users/signingithub", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -173,7 +173,7 @@ export default function Connexion() {
 
   const handleSignInGoogle = (credentialResponse) => {
     const userInfo = jwtDecode(credentialResponse.credential);
-    fetch("http://localhost:3000/users/signingoogle", {
+    fetch("https://pingmedev-backend.vercel.app/users/signingoogle", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -238,7 +238,7 @@ export default function Connexion() {
 
     const userInfo = jwtDecode(credentialResponse.credential);
 
-    fetch("http://localhost:3000/users/signingoogle", {
+    fetch("https://pingmedev-backend.vercel.app/users/signingoogle", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -314,7 +314,7 @@ export default function Connexion() {
     }
 
     setErrorMessage("");
-    fetch("http://localhost:3000/users/signup", {
+    fetch("https://pingmedev-backend.vercel.app/users/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -377,7 +377,7 @@ export default function Connexion() {
 
     setSignInErrorMessage("");
 
-    fetch("http://localhost:3000/users/signin", {
+    fetch("https://pingmedev-backend.vercel.app/users/signin", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

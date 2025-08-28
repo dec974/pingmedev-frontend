@@ -49,7 +49,7 @@ export default function ProfilePopover({
         const fetchUser = async () => {
             try {
                 const res = await fetch(
-                    `http://localhost:3000/users/${userIdOrUsername}`
+                    `https://pingmedev-backend.vercel.app/users/${userIdOrUsername}`
                 );
 
                 if (!res.ok) {
@@ -58,7 +58,7 @@ export default function ProfilePopover({
                 const fetchUser = async () => {
                     try {
                         const res = await fetch(
-                            `http://localhost:3000/users/${userIdOrUsername}`
+                            `https://pingmedev-backend.vercel.app/users/${userIdOrUsername}`
                         );
                         if (!res.ok) throw new Error("Utilisateur non trouvé");
 

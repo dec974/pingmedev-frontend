@@ -62,7 +62,7 @@ export default function Profil() {
   useEffect(() => {
     const fetchLanguages = async () => {
       try {
-        const response = await fetch("http://localhost:3000/languages");
+        const response = await fetch("https://pingmedev-backend.vercel.app/languages");
         //console.log("conslog de fetchLanguages response", response);
         const data = await response.json();
         //console.log("conslog de fetchLanguages data", data);
@@ -87,7 +87,7 @@ export default function Profil() {
         if (!token) return;
 
         const response = await fetch(
-          `http://localhost:3000/users/users/${token}`,
+          `https://pingmedev-backend.vercel.app/users/users/${token}`,
           {
             method: "GET",
             headers: {
@@ -155,7 +155,7 @@ export default function Profil() {
         locality: locality,
       };
 
-      const response = await fetch("http://localhost:3000/users/profile", {
+      const response = await fetch("https://pingmedev-backend.vercel.app/users/profile", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -221,7 +221,7 @@ export default function Profil() {
       };
 
       const response = await fetch(
-        "http://localhost:3000/users/update-username",
+        "https://pingmedev-backend.vercel.app/users/update-username",
         {
           method: "PUT",
           headers: {
@@ -304,7 +304,7 @@ export default function Profil() {
       };
 
       const response = await fetch(
-        "http://localhost:3000/users/update-password",
+        "https://pingmedev-backend.vercel.app/users/update-password",
         {
           method: "PUT",
           headers: {
@@ -380,7 +380,7 @@ export default function Profil() {
         newEmail: newEmail,
       };
 
-      const response = await fetch("http://localhost:3000/users/update-email", {
+      const response = await fetch("https://pingmedev-backend.vercel.app/users/update-email", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

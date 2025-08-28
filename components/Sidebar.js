@@ -34,7 +34,7 @@ function Sidebar() {
 
   useEffect(() => {
     if (!token) return;
-    fetch(`http://localhost:3000/follows/users/${user.id}`)
+    fetch(`https://pingmedev-backend.vercel.app/follows/users/${user.id}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.result) {
@@ -66,7 +66,7 @@ function Sidebar() {
     const note =
       followedUsers.find((u) => u._id === followId)?.internalNote || "";
     console.log("Note submitted:", note, "for user ID:", followId);
-    fetch(`http://localhost:3000/follows/users/${user.id}/${followId}`, {
+    fetch(`https://pingmedev-backend.vercel.app/follows/users/${user.id}/${followId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

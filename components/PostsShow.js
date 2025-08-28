@@ -34,7 +34,7 @@ function PostsShow() {
 
   useEffect(() => {
     if (!user.id) {
-      fetch("http://localhost:3000/users/" + user.token)
+      fetch("https://pingmedev-backend.vercel.app/users/" + user.token)
         .then((response) => response.json())
         .then((data) => {
           if (data.result) {
@@ -45,7 +45,7 @@ function PostsShow() {
         });
     }
     if (postId) {
-      fetch(`http://localhost:3000/posts/${postId}`)
+      fetch(`https://pingmedev-backend.vercel.app/posts/${postId}`)
         .then((response) => response.json())
         .then((data) => {
           if (data.result) {
@@ -60,7 +60,7 @@ function PostsShow() {
         });
     }
     // follow user list
-    fetch(`http://localhost:3000/follows/users/${user.id}`)
+    fetch(`https://pingmedev-backend.vercel.app/follows/users/${user.id}`)
       .then((response) => response.json())
       .then((data) => {
         const following = data.follows.map((f) => f.following._id);
@@ -84,7 +84,7 @@ function PostsShow() {
     if (followedAuthor) {
       // unfollow
       fetch(
-        `http://localhost:3000/follows/users/${user.id}/${post.userId._id}`,
+        `https://pingmedev-backend.vercel.app/follows/users/${user.id}/${post.userId._id}`,
         {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
@@ -102,7 +102,7 @@ function PostsShow() {
         });
     } else {
       // follow
-      fetch(`http://localhost:3000/follows/users/${user.id}`, {
+      fetch(`https://pingmedev-backend.vercel.app/follows/users/${user.id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ following: post?.userId?._id }),
@@ -151,7 +151,7 @@ function PostsShow() {
       return;
     }
     setFollowBusy(true);
-    fetch("http://localhost:3000/users/follow-post", {
+    fetch("https://pingmedev-backend.vercel.app/users/follow-post", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token: user.token, postId: post._id }),
@@ -197,7 +197,7 @@ function PostsShow() {
     };
     console.log("Submitting answer:", answerData);
 
-    fetch(`http://localhost:3000/posts/${postId}/answers`, {
+    fetch(`https://pingmedev-backend.vercel.app/posts/${postId}/answers`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -222,7 +222,7 @@ function PostsShow() {
       alert("Vous devez être connecté pour envoyer un message.");
       return;
     }
-    fetch(`http://localhost:3000/messages/send`, {
+    fetch(`https://pingmedev-backend.vercel.app/messages/send`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -18,7 +18,7 @@ function PusherComponent() {
     setAuthor(user.id);
     //historic
     console.log("historic");
-    fetch("http://localhost:3000/pusher/", { cache: "no-store" })
+    fetch("https://pingmedev-backend.vercel.app/pusher/", { cache: "no-store" })
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
@@ -30,7 +30,7 @@ function PusherComponent() {
   }, []);
 
   const fetchMessages = () => {
-    fetch("http://localhost:3000/pusher/", { cache: "no-store" })
+    fetch("https://pingmedev-backend.vercel.app/pusher/", { cache: "no-store" })
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
@@ -43,7 +43,7 @@ function PusherComponent() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await fetch("http://localhost:3000/pusher/", {
+    await fetch("https://pingmedev-backend.vercel.app/pusher/", {
       method: "POST",
       headers: {
         "Content-type": "application/json",

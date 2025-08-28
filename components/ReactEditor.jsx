@@ -1,6 +1,4 @@
 "use client";
-
-import { useState } from "react";
 import dynamic from "next/dynamic";
 import hljs from "highlight.js/lib/core";
 import javascript from "highlight.js/lib/languages/javascript";
@@ -21,8 +19,7 @@ hljs.registerLanguage("css", css);
 hljs.registerLanguage("json", json);
 hljs.registerLanguage("xml", xml);
 hljs.registerLanguage("bash", bash);
-hljs.registerLanguage("jsx", xml); // pour React, coloration basique
-
+hljs.registerLanguage("jsx", xml); 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const modules = {
@@ -57,7 +54,7 @@ function wrapPreWithCode(html) {
     });
 }
 
-export default function ReactEditor({ value, onChange }) {
+export default function ReactEditor({ value, onChange, ...props }) {
         // On applique le post-traitement à la sauvegarde
         const handleChange = (val) => {
             onChange(wrapPreWithCode(val));

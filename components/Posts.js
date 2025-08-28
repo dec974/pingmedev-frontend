@@ -4,16 +4,13 @@ import { useRouter } from "next/router";
 import MainLayout from "../ui-kit/template/MainLayout";
 import Button from "../ui-kit/atoms/Button";
 import Input from "../ui-kit/atoms/Input";
-import TextArea from "../ui-kit/atoms/TextArea";
 import Select from "react-select";
 import { useSelector } from "react-redux";
-import Spinner from "../ui-kit/atoms/Spinner";
 import ReactEditor from './ReactEditor';
 
 // Nettoie le HTML Quill pour supprimer les <p><br></p> inutiles
 function cleanQuillHtml(html) {
   if (!html) return html;
-  // Supprime les paragraphes vides ou ne contenant qu'un <br>
   return html.replace(/<p><br\/?><\/p>/g, '');
 }
 
@@ -36,7 +33,7 @@ function Posts(props) {
 
     // recuperation des langages via le backend
     console.log("fetch language");
-    fetch("http://localhost:3000/languages/")
+    fetch("https://pingmedev-backend.vercel.app/languages/")
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
@@ -49,7 +46,7 @@ function Posts(props) {
       const { id } = props;
       console.log("id", id);
       // Logique pour charger les données du post à éditer
-      fetch(`http://localhost:3000/posts/${id}`)
+      fetch(`https://pingmedev-backend.vercel.app/posts/${id}`)
         .then((response) => response.json())
         .then((data) => {
           if (data.result) {
@@ -73,7 +70,7 @@ function Posts(props) {
     const formData = new FormData(e.target);
     const btn = e.nativeEvent.submitter;
     const status = btn.value === "publish" ? "published" : "draft";
-    // Récupération des données du formulaire
+    // Récupération des langages du select
     const selectedLanguageValues =
       selectLanguages && selectLanguages.length > 0
         ? selectLanguages.map((lang) => lang.key)
@@ -86,12 +83,12 @@ function Posts(props) {
       userId: user.id,
       type: postType,
       title: title,
-      content: cleanedContent, // string HTML pour Quill
+      content: cleanedContent,
       languages: selectedLanguageValues,
       status: status,
     };
 
-    fetch("http://localhost:3000/posts/", {
+    fetch("https://pingmedev-backend.vercel.app/posts/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
